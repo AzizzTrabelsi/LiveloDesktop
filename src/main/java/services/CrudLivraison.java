@@ -1,11 +1,11 @@
-package tn.esprit.services;
+package services;
 
 
 import interfaces.IServiceCrud;
-import tn.esprit.models.Categorie;
-import tn.esprit.models.Livraison;
+import models.Categorie;
+import models.Livraison;
 import utils.MyDatabase;
-import tn.esprit.models.Avis;
+import models.Avis;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

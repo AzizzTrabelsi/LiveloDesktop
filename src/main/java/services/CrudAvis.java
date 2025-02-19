@@ -1,9 +1,9 @@
-package tn.esprit.services;
+package services;
 
 import interfaces.IServiceCrud;
-import tn.esprit.models.Avis;
+import models.Avis;
 import utils.MyDatabase;
-import tn.esprit.models.Livraison;
+import models.Livraison;
 import java.sql.*;
 import java.sql.*;
 import java.util.ArrayList;
