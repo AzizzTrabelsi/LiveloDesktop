@@ -1,9 +1,9 @@
-package tn.esprit.test;
+package tests;
 
-import tn.esprit.models.Avis;
-import tn.esprit.models.Livraison;
-import tn.esprit.services.CrudAvis;
-import tn.esprit.services.CrudLivraison;
+import models.Avis;
+import models.Livraison;
+import services.CrudAvis;
+import services.CrudLivraison;
 import java.util.Date;
 
 public class MainAvis {

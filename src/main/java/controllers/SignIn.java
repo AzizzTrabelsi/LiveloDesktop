@@ -1,15 +1,19 @@
 package controllers;
 
+import com.nimbusds.jose.JWSObject;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import net.minidev.json.JSONObject;
 import services.Authentification;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 public class SignIn {
 
@@ -38,13 +42,47 @@ public class SignIn {
         String token = authService.login(cin, password);
 
         if (token != null) {
-            // Proceed with the token (e.g., storing it or navigating to another scene)
             System.out.println("Connexion réussie. Token : " + token);
+
+            // Décoder le token pour récupérer les informations de l'utilisateur
+            try {
+                JWSObject jwsObject = JWSObject.parse(token);
+                JSONObject payload = (JSONObject) jwsObject.getPayload().toJSONObject();
+                String role = (String) payload.get("role"); // Récupérer le rôle de l'utilisateur
+
+                // Vérifier si l'utilisateur est admin
+                if ("ADMIN".equalsIgnoreCase(role)) {
+                    // Charger la scène homeadmin.fxml
+                    loadAdminHome();
+                } else {
+                    System.out.println("Utilisateur non admin, redirection standard.");
+                    // Ajoute ici la logique de redirection pour d'autres rôles
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         } else {
-            // Handle failed login (e.g., show an error message)
             System.out.println("Échec de la connexion.");
         }
     }
+
+    // Méthode pour charger homeadmin.fxml
+    private void loadAdminHome() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionUtilisateurs"));
+            Parent root = loader.load();
+
+            // Obtenir la scène actuelle et la remplacer
+            Stage stage = (Stage) tfCIN.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     @FXML
     private void initialize() {

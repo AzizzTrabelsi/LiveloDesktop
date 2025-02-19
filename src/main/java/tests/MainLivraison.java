@@ -1,8 +1,8 @@
-package tn.esprit.test;
+package tests;
 
 
-import tn.esprit.models.Livraison;
-import tn.esprit.services.CrudLivraison;
+import models.Livraison;
+import services.CrudLivraison;
 import java.util.Date;
 
 public class MainLivraison {
