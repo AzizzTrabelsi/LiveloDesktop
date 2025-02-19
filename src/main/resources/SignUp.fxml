@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="678.0" prefWidth="1102.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SignUp">
+   <left>
+      <AnchorPane prefHeight="678.0" prefWidth="425.0" style="-fx-background-color: #dbefe1;" BorderPane.alignment="CENTER">
+         <children>
+            <Text layoutX="80.0" layoutY="249.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome back!" wrappingWidth="284.78759765625">
+               <font>
+                  <Font name="System Bold" size="39.0" />
+               </font>
+            </Text>
+            <Text layoutX="2.0" layoutY="305.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To keep connected with us please login with your personal info" textAlignment="CENTER" wrappingWidth="440.029296875">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Button fx:id="btnSignIn" layoutX="166.0" layoutY="390.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="111.0" style="-fx-background-radius: 20; -fx-background-color: #398c3e;" text="Sign in" onAction="#navigateToSignIn"/>
+         </children>
+      </AnchorPane>
+   </left>
+   <center>
+      <AnchorPane prefHeight="678.0" prefWidth="661.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField fx:id="tfPrenom" layoutX="104.0" layoutY="304.0" prefHeight="40.0" prefWidth="206.0" promptText="First name" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
+            <TextField fx:id="tfNom" layoutX="366.0" layoutY="304.0" prefHeight="42.0" prefWidth="205.0" promptText="Last name" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
+            <TextField fx:id="tfCin" layoutX="105.0" layoutY="371.0" prefHeight="41.0" prefWidth="205.0" promptText="Cin" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
+            <TextField fx:id="tfAdresse" layoutX="104.0" layoutY="522.0" prefHeight="41.0" prefWidth="206.0" promptText="Address" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
+            <TextField fx:id="tfEmail" layoutX="105.0" layoutY="451.0" prefHeight="40.0" prefWidth="205.0" promptText="Email" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
+            <TextField fx:id="tfNumTel" layoutX="366.0" layoutY="371.0" prefHeight="41.0" prefWidth="205.0" promptText="Phone number" style="-fx-background-color: tarnsparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
+            <PasswordField fx:id="tfPassword" layoutX="366.0" layoutY="451.0" prefHeight="41.0" prefWidth="205.0" promptText="Password" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
+            <RadioButton fx:id="rbDelivery" layoutX="109.0" layoutY="259.0" mnemonicParsing="false" text="Delivery person" />
+            <RadioButton fx:id="rbPartner" layoutX="301.0" layoutY="260.0" mnemonicParsing="false" text="Partner" />
+            <RadioButton fx:id="rbClient" layoutX="480.0" layoutY="260.0" mnemonicParsing="false" text="Client" />
+            <Text fill="#398c3e" layoutX="114.0" layoutY="242.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create account as" />
+            <ComboBox fx:id="cbTypeVehicule" layoutX="366.0" layoutY="522.0" prefHeight="41.0" prefWidth="205.0" promptText="Type of transport" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
+            <Button fx:id="btnSignUp" layoutX="275.0" layoutY="609.0" mnemonicParsing="false" onAction="#handleSignUp" prefHeight="35.0" prefWidth="111.0" style="-fx-background-color: transparent; -fx-background-radius: 20; -fx-background-color: #398c3e;" text="Create account" />
+            <ImageView fitHeight="180.0" fitWidth="252.0" layoutX="207.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@/image/logo_final-removebg-preview.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
