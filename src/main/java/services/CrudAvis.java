@@ -1,141 +1,278 @@
-package services;
+package tn.esprit.services;
 
 import interfaces.IServiceCrud;
-import models.Avis;
+import tn.esprit.models.Avis;
 import utils.MyDatabase;
-
+import tn.esprit.models.Livraison;
 import java.sql.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CrudAvis implements IServiceCrud<Avis> {
-    private Connection cnx ;
-
-    public CrudAvis(){
-        cnx = MyDatabase.getInstance().getConnection();
-    }
+    Connection conn = MyDatabase.getInstance().getConnection();
 
     @Override
     public void add(Avis avis) {
-        //create Qry SQL
-        //execute Qry
-        String qry ="INSERT INTO `avis`(`created_By`, `livraisonId`,`created_at`, `description`) VALUES (?,?,?,?)";
-        try {
-            PreparedStatement preparedStatement = cnx.prepareStatement(qry);
-            preparedStatement.setInt(1, avis.getCreatedBy());
-            preparedStatement.setInt(2, avis.getDeliveryId());
-            preparedStatement.setDate(3, new Date(avis.getCreatedDate().getTime()));
-            preparedStatement.setString(4, avis.getComment());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
+        String qry = "INSERT INTO `avis` (`created_by`, `created_at`, `description`, `livraisonId`) VALUES (?, ?, ?, ?)";
 
+        try (PreparedStatement statement = conn.prepareStatement(qry, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setInt(1, avis.getCreatedBy());
+            statement.setDate(2, new java.sql.Date(avis.getCreatedAt().getTime()));
+            statement.setString(3, avis.getDescription());
 
-    }
-
-    @Override
-    public List<Avis> getAll() {
-
-        List<Avis> listAvis = new ArrayList<>();
-        String qry ="SELECT * FROM `Avis`";
-
-        try {
-            Statement stm = cnx.createStatement();
-            ResultSet resultSet = stm.executeQuery(qry);
-
-            while (resultSet.next()){
-                Avis avis = new Avis(resultSet.getInt("idAvis")
-                        ,resultSet.getInt("created_By")
-                        ,resultSet.getInt("livraisonId")
-                        ,resultSet.getDate("created_at")
-                        ,resultSet.getString("description"));
-
-                listAvis.add(avis);
+            // Vérification de la présence de la livraison liée
+            if (avis.getLivraison() != null) {
+                statement.setInt(4, avis.getLivraison().getIdLivraison());
+            } else {
+                statement.setNull(4, Types.INTEGER); // Si aucune livraison n'est associée, la valeur sera NULL
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
 
-        return listAvis;
-    }
-
-    @Override
-    public Avis getById(int id) {
-        Avis avis = null;
-        String qry = "SELECT * FROM `Avis` WHERE `idAvis` = ?";
-
-        try (PreparedStatement preparedStatement = cnx.prepareStatement(qry)) {
-            preparedStatement.setInt(1, id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    avis = new Avis(
-                            resultSet.getInt("idAvis"),
-                            resultSet.getInt("created_By"),
-                            resultSet.getInt("livraisonId"),
-                            resultSet.getDate("created_at"),
-                            resultSet.getString("description")
-                    );
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected > 0) {
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int generatedId = generatedKeys.getInt(1);
+                        avis.setIdAvis(generatedId);
+                        System.out.println("Avis ajouté avec succès avec l'ID : " + generatedId);
+                    }
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Erreur lors de la récupération de l'avis : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public List<Avis> getAll() {
+        List<Avis> avisList = new ArrayList<>();
+        String query = "SELECT * FROM avis";
+
+        try (Statement statement = conn.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            System.out.println("Executing query: " + query);
+
+            while (resultSet.next()) {
+                int idAvis = resultSet.getInt("idAvis");
+                int createdBy = resultSet.getInt("created_by");
+                Date createdAt = resultSet.getDate("created_at");
+                String description = resultSet.getString("description");
+                int livraisonId = resultSet.getInt("livraisonId");
+
+                // Création de l'objet Avis
+                Avis avis = new Avis(idAvis, createdBy, null, createdAt, description);
+
+                // Récupération de la livraison associée si présente
+                if (livraisonId > 0) {
+                    Livraison livraison = getLivraisonById(livraisonId);
+                    avis.setLivraison(livraison);
+                }
+
+                avisList.add(avis);
+                System.out.println("Avis ID: " + idAvis + " | Created By: " + createdBy + " | Description: " + description);
+            }
+
+            System.out.println("Nombre d'avis récupérés: " + avisList.size());
+            for (Avis a : avisList) {
+                System.out.println(a);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erreur SQL: " + e.getMessage());
         }
 
-        return avis;
+        return avisList;
     }
+
+    private Livraison getLivraisonById(int idLivraison) {
+        Livraison livraison = null;
+        String query = "SELECT * FROM livraison WHERE id_livraison = ?";
+
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setInt(1, idLivraison);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    // Création de l'objet Livraison
+                    int id = resultSet.getInt("id_livraison");
+                    Date dateLivraison = resultSet.getDate("date_livraison");
+                    String adresse = resultSet.getString("adresse");
+                    livraison = new Livraison(id, dateLivraison, adresse);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération de la livraison: " + e.getMessage());
+        }
+
+        return livraison;
+    }
+
+
+    public Avis getById(int id) {
+        String query = "SELECT * FROM `avis` WHERE `idAvis` = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                int idAvis = rs.getInt("idAvis");
+                String description = rs.getString("description");
+                int createdBy = rs.getInt("created_by");
+                Date createdAt = rs.getDate("created_at");
+                int livraisonId = rs.getInt("livraisonId");
+                Livraison livraison = null;
+
+                // Récupérer la livraison associée
+                if (livraisonId > 0) {
+                    String livraisonQuery = "SELECT * FROM `livraison` WHERE `livraisonId` = ?";
+                    try (PreparedStatement livraisonStmt = conn.prepareStatement(livraisonQuery)) {
+                        livraisonStmt.setInt(1, livraisonId);
+                        ResultSet livraisonRs = livraisonStmt.executeQuery();
+                        if (livraisonRs.next()) {
+                            int commandeId = livraisonRs.getInt("commandeId");
+                            int createdByLivraison = livraisonRs.getInt("createdBy");
+                            Date createdAtLivraison = livraisonRs.getDate("createdAt");
+                            int factureId = livraisonRs.getInt("factureId");
+                            int zoneId = livraisonRs.getInt("zoneId");
+                            // Crée l'objet Livraison
+                            livraison = new Livraison(livraisonId, commandeId, createdByLivraison, createdAtLivraison, factureId, zoneId);
+                        }
+                    } catch (SQLException e) {
+                        System.out.println("Erreur lors de la récupération de la livraison : " + e.getMessage());
+                    }
+                }
+
+                // Créer l'objet Avis avec la livraison récupérée
+                Avis avis = new Avis(idAvis, createdBy, null, createdAt, description);
+                System.out.println("Avis trouvé : " + avis);
+                return avis;
+            } else {
+                System.out.println("Aucun avis trouvé avec l'ID : " + id);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 
 
     @Override
     public void update(Avis avis) {
-        String qry = "UPDATE `Avis` SET `created_by`=?, `LivraisonId`=?, `created_at`=?, `description`=? WHERE `idAvis`=?";
+        // Requête SQL pour mettre à jour un avis
+        String qry = "UPDATE `avis` SET `created_by` = ?, `created_at` = ?, `description` = ?, `livraisonId` = ? WHERE `idAvis` = ?";
 
-        try (PreparedStatement preparedStatement = cnx.prepareStatement(qry)) {
-            preparedStatement.setInt(1, avis.getCreatedBy());
-            preparedStatement.setInt(2, avis.getDeliveryId());
-            if(avis.getCreatedDate() != null) {
-                preparedStatement.setDate(3, new Date(avis.getCreatedDate().getTime()));
-            }
-            preparedStatement.setString(4, avis.getComment());
-            preparedStatement.setInt(5, avis.getId());
+        try (PreparedStatement statement = conn.prepareStatement(qry)) {
+            // Assignation des valeurs dans le PreparedStatement
+            statement.setInt(1, avis.getCreatedBy());
+            statement.setDate(2, new java.sql.Date(avis.getCreatedAt().getTime()));
+            statement.setString(3, avis.getDescription());
 
-            int rowsUpdated = preparedStatement.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println("Avis updated successfully!");
+            // Vérification si l'ID de la livraison est valide et assignation
+            if (avis.getLivraison() != null) {
+                statement.setInt(4, avis.getLivraison().getIdLivraison());
             } else {
-                System.out.println("No Avis found with the given ID.");
+                statement.setNull(4, Types.INTEGER);
+            }
+
+            // ID de l'avis à mettre à jour
+            statement.setInt(5, avis.getIdAvis());
+
+            // Exécution de la mise à jour
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Avis updated successfully.");
+            } else {
+                System.out.println("No avis found with ID " + avis.getIdAvis());
             }
         } catch (SQLException e) {
-            System.out.println("Error updating Avis: " + e.getMessage());
+            e.printStackTrace();
         }
     }
+
 
 
     @Override
-    public void delete(int idReview) {
-        String qry = "DELETE FROM `Avis` WHERE `idAvis`=?";
-
-        try (PreparedStatement preparedStatement = cnx.prepareStatement(qry)) {
-            preparedStatement.setInt(1, idReview);
-
-            int rowsDeleted = preparedStatement.executeUpdate();
-            if (rowsDeleted > 0) {
-                System.out.println("Avis deleted successfully!");
-            } else {
-                System.out.println("No Avis found with the given ID.");
-            }
+    public void delete(int id) {
+        String qry = "DELETE FROM `avis` WHERE `idAvis` = " + id;
+        try (PreparedStatement statement = conn.prepareStatement(qry)) {
+            statement.executeUpdate();
+            System.out.println("Avis deleted successfully.");
         } catch (SQLException e) {
-            System.out.println("Error deleting Avis: " + e.getMessage());
+            e.printStackTrace();
         }
     }
+
 
 
 
 
     public List<Avis> search(String criteria) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<Avis> avisList = new ArrayList<>();
+        String query = "SELECT * FROM `avis` WHERE `description` LIKE ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            String searchTerm = "%" + criteria + "%";
+            stmt.setString(1, searchTerm);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int idAvis = rs.getInt("idAvis");
+                String description = rs.getString("description");
+                int createdBy = rs.getInt("created_by");
+                Date createdAt = rs.getDate("created_at");
+                int livraisonId = rs.getInt("livraisonId");
+                Livraison livraison = null;
+
+                // Récupérer la livraison associée
+                if (livraisonId > 0) {
+                    String livraisonQuery = "SELECT * FROM `livraison` WHERE `livraisonId` = ?";
+                    try (PreparedStatement livraisonStmt = conn.prepareStatement(livraisonQuery)) {
+                        livraisonStmt.setInt(1, livraisonId);
+                        ResultSet livraisonRs = livraisonStmt.executeQuery();
+                        if (livraisonRs.next()) {
+                            int commandeId = livraisonRs.getInt("commandeId");
+                            int createdByLivraison = livraisonRs.getInt("createdBy");
+                            Date createdAtLivraison = livraisonRs.getDate("created_at");
+                            int factureId = livraisonRs.getInt("factureId");
+                            int zoneId = livraisonRs.getInt("zoneId");
+                            // Créer l'objet Livraison
+                            livraison = new Livraison(livraisonId, commandeId, createdByLivraison, createdAtLivraison, factureId, zoneId);
+                        }
+                    } catch (SQLException e) {
+                        System.out.println("Erreur lors de la récupération de la livraison : " + e.getMessage());
+                    }
+                }
+
+                // Créer l'objet Avis avec la livraison récupérée
+                Avis avis = new Avis(idAvis, createdBy, null, createdAt, description);
+                avisList.add(avis);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (avisList.isEmpty()) {
+            System.out.println("Aucun avis trouvé pour le critère : " + criteria);
+        } else {
+            System.out.println("Nombre d'avis trouvés : " + avisList.size());
+            for (Avis avis : avisList) {
+                System.out.println("Avis trouvé : ");
+                System.out.println("ID: " + avis.getIdAvis());
+                System.out.println("Description: " + avis.getDescription());
+                System.out.println("Créé par (ID utilisateur): " + avis.getCreatedBy());
+                System.out.println("Date de création: " + avis.getCreatedAt());
+                System.out.println("Livraison associée: " + (avis.getLivraison() != null ? "ID: " + avis.getLivraison().getIdLivraison() : "Non définie"));
+                System.out.println();
+            }
+        }
+
+        return avisList;
     }
+
 
 
 
