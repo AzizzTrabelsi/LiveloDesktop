@@ -1,51 +1,43 @@
-package tests;
+package tn.esprit.test;
 
-import models.Livraison;
-import services.CrudLivraison;
 
+import tn.esprit.models.Livraison;
+import tn.esprit.services.CrudLivraison;
 import java.util.Date;
 
 public class MainLivraison {
-
     public static void main(String[] args) {
-        CrudLivraison serviceLivraison = new CrudLivraison();
 
-        Livraison livraison1= new Livraison(
-                2,
-                22,
-                new Date(),
-                2
+        // Création d'une nouvelle instance de Livraison
+        Livraison nouvelleLivraison = new Livraison(
+                1,                          // ID de la livraison
+                5,                        // ID de la commande (commandeId)
+                50,                        // ID de l'utilisateur (createdBy)
+                new Date(),                 // Date de la livraison (createdAt)
+                3,                        // ID de la facture (factureId)
+                404                         // ID de la zone (zoneId)
         );
 
-        Livraison livraison2= new Livraison(
-                2,
-                17,
-                new Date(),
-                2
-        );
-        serviceLivraison.add(livraison1);
-        serviceLivraison.add(livraison2);
-        serviceLivraison.getAll();
+        // Instanciation du service de gestion des livraisons
+        CrudLivraison crudLivraison = new CrudLivraison();
 
-        livraison1.setCreatedBy(17);
-        serviceLivraison.update(livraison1);
-        System.out.println(serviceLivraison.getAll());
+        // Ajouter la nouvelle livraison
+        crudLivraison.add(nouvelleLivraison);
 
+        // Récupérer toutes les livraisons
+        crudLivraison.getAll();
 
-        serviceLivraison.delete(1);
-        System.out.println(serviceLivraison.getAll());
+        // Mise à jour d'une livraison (exemple de modification)
+        //nouvelleLivraison.setCreatedAt(2025-02-19); // Changer l'ID de la commande par exemple
+        crudLivraison.update(nouvelleLivraison);
 
-        //serviceLivraison.update(new Livraison(1, 17, new Date(), 2));
+        // Récupérer toutes les livraisons après mise à jour
+        crudLivraison.getAll();
 
+        // Recherche d'une livraison par son ID
+        crudLivraison.getById(1);
 
-       Livraison livraison = serviceLivraison.getById(2);
-        if (livraison != null) {
-            System.out.println("Test get by ID : " + livraison);
-        } else {
-            System.out.println("Aucune livraison trouvée avec cet ID.");
-        }
-
-       // System.out.println(serviceLivraison.getAll());
+        // Recherche d'une livraison selon un critère (par exemple, l'ID de la commande)
+        crudLivraison.search("505");
     }
-
 }
