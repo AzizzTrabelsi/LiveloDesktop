@@ -12,7 +12,6 @@ public class User {
 
     public User() {}
 
-    // Constructeur avec type_vehicule
     public User(int id, String nom, String prenom, role_user role, boolean verified, String adresse, type_vehicule type_vehicule, String email, String password, String num_tel, String cin) {
         this.id = id;
         this.nom = nom;
@@ -27,20 +26,8 @@ public class User {
         this.type_vehicule = type_vehicule;
     }
 
-    public User(String nom, String prenom, String adresse, String email, String num_tel, String cin, boolean verified, role_user role, models.type_vehicule type_vehicule) {
-        this.nom = nom;
-        this.prenom = prenom;
-        this.adresse = adresse;
-        this.email = email;
-        this.num_tel = num_tel;
-        this.cin = cin;
-        this.verified = verified;
-        this.role = role;
-        this.type_vehicule = type_vehicule;
-    }
 
-    // Constructeur sans type_vehicule
-    public User(String nom, String prenom, role_user role, boolean verified, String adresse, String email, String password, String num_tel, String cin) {
+    public User(String nom, String prenom, role_user role, String adresse, String email, String password, String num_tel, String cin) {
         this.nom = nom;
         this.prenom = prenom;
         this.adresse = adresse;
@@ -53,7 +40,6 @@ public class User {
         this.type_vehicule = null; // Pas de type de véhicule
     }
 
-    // Constructeur avec type_vehicule
     public User(String nom, String prenom, String adresse, String email, String num_tel, String cin, String password, role_user role, type_vehicule type_vehicule) {
         this.nom = nom;
         this.prenom = prenom;
@@ -66,21 +52,7 @@ public class User {
         this.type_vehicule = type_vehicule;
     }
 
-    // Constructeur par défaut
-    public User(String nom, String prenom, String adresse, String email, String num_tel, String cin, String password, boolean verified, role_user role, type_vehicule type_vehicule) {
-        this.nom = nom;
-        this.prenom = prenom;
-        this.adresse = adresse;
-        this.email = email;
-        this.num_tel = num_tel;
-        this.cin = cin;
-        this.password = password;
-        this.verified = verified;
-        this.role = role;
-        this.type_vehicule = type_vehicule;
-    }
 
-    // Getters and Setters
     public int getId() {
         return id;
     }
