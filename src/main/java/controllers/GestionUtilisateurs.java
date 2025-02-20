@@ -486,7 +486,22 @@ public class GestionUtilisateurs implements Initializable {
 
     @FXML
     private HBox hbHedha;
+    @FXML
+    private void navigateAdminCommand() {
+        try {
+            // Load the SignUp.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homeAdmin.fxml"));
+            Scene signUpScene = new Scene(loader.load());
 
+            // Get the current stage and set the new scene
+            //Stage stage = (Stage) BtnSignUp.getScene().getWindow();
+            //stage.setScene(signUpScene);
+            //stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("homeAdmin.fxml.");
+        }
+    }
     @FXML
     private void navigateToHome() {
         try {
