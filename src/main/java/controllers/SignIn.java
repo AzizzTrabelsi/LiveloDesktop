@@ -40,12 +40,28 @@ public class SignIn {
         if (token != null) {
             // Proceed with the token (e.g., storing it or navigating to another scene)
             System.out.println("Connexion réussie. Token : " + token);
+            navigateToGestionUtilisateurs();
         } else {
             // Handle failed login (e.g., show an error message)
             System.out.println("Échec de la connexion.");
         }
     }
+    @FXML
+    private void navigateToGestionUtilisateurs() {
+        try {
+            // Load the SignUp.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionUtilisateurs.fxml"));
+            Scene signUpScene = new Scene(loader.load());
 
+            // Get the current stage and set the new scene
+            Stage stage = (Stage) BtnSignUp.getScene().getWindow();
+            stage.setScene(signUpScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("GestionUtilisateurs.fxml.");
+        }
+    }
     @FXML
     private void initialize() {
         // Bind the LoginButton to the handleLogin method
