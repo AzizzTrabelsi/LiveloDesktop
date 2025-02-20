@@ -1,37 +1,54 @@
 package tests;
 
 import models.Avis;
+import models.Livraison;
 import services.CrudAvis;
-
+import services.CrudLivraison;
 import java.util.Date;
 
-
 public class MainAvis {
-
     public static void main(String[] args) {
-        CrudAvis serviceAvis = new CrudAvis();
-        Avis avis = new Avis(
-                17,
-                5,
-                new Date(),
-                "Test 1"
+
+        // Instancier CrudLivraison pour récupérer une livraison spécifique
+        CrudLivraison crudLivraison = new CrudLivraison();
+        Livraison livraison = crudLivraison.getById(18); // Exemple d'ID de livraison (à ajuster)
+
+        if (livraison == null) {
+            System.out.println("Aucune livraison trouvée avec cet ID.");
+            return;
+        }
+
+        // Création d'un nouvel avis sans spécifier d'ID
+        Avis nouvelAvis = new Avis(
+                50,                          // ID de l'utilisateur (createdBy)
+                livraison,                   // Livraison associée
+                new Date(),                  // Date de création de l'avis
+                "Très satisfait de la livraison, tout était parfait !"  // Description de l'avis
         );
 
-        serviceAvis.add(avis);
-        System.out.println("Avis added successfully!");
 
-        System.out.println("All Avis:");
-        serviceAvis.getAll().forEach(System.out::println);
+        // Instancier le service CrudAvis
+        CrudAvis crudAvis = new CrudAvis();
 
-        System.out.println("Test get by ID : " + serviceAvis.getById(7));
+        // Ajouter le nouvel avis
+        crudAvis.add(nouvelAvis);
 
-        avis.setComment("tasnim");
-        serviceAvis.update(avis);
-        
+        // Supprimer un avis spécifique (exemple d'ID)
+        crudAvis.delete(15);
 
-        serviceAvis.delete(7);
+        // Mise à jour de l'avis (par exemple changer la description)
+        nouvelAvis.setDescription("Livraison rapide, mais l'emballage pourrait être amélioré.");
+        crudAvis.update(nouvelAvis);
 
-        System.out.println("All Avis after Delete:");
-        serviceAvis.getAll().forEach(System.out::println);
+        // Récupération de tous les avis
+        System.out.println("Récupération de tous les avis :");
+        crudAvis.getAll();
+
+        // Récupération d'un avis spécifique par ID
+        crudAvis.getById(19);
+
+        // Recherche d'avis par description
+        System.out.println("Recherche d'avis avec le critère 'livraison' :");
+        crudAvis.search("livraison");
     }
 }
