@@ -9,7 +9,7 @@ public class mainCategorie {
         Categorie nouvelleCategorie = new Categorie(
                 "lemino",
                 "description delemino",
-                "img1.jpg",
+                "C:/projetpidev/LiveloDesktop/src/main/resources/image/bin.png",
                 50
         );
 
