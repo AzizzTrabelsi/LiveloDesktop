@@ -86,12 +86,12 @@ public class HomeAdmin {
             System.out.println("Error loading SignUp.fxml.");
         }
     }
-
+    @FXML
     public void normalEffect(javafx.scene.input.MouseEvent event) {
         ((AnchorPane) event.getSource()).setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
 
     }
-
+    @FXML
     public void hoverEffect(javafx.scene.input.MouseEvent event) {
         ((AnchorPane) event.getSource()).setStyle("-fx-background-color: lightgrey; -fx-cursor: hand;");
 
