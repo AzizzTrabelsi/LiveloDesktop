@@ -12,7 +12,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import models.Role;
 import models.User;
 import services.CrudUser;
 import javafx.scene.control.TextField;
@@ -168,7 +167,8 @@ public class GestionUtilisateurs implements Initializable {
         TextField adresseField = new TextField(user.getAdresse());
         TextField emailField = new TextField(user.getEmail());
         TextField roleField = new TextField(user.getRole().name());
-        TextField transportField = new TextField(user.getType_vehicule().toString());
+
+        TextField transportField = new TextField(user.getType_vehicule() != null ? user.getType_vehicule().toString() : "");
 
         grid.add(new Label("Prénom:"), 0, 0);
         grid.add(prenomField, 1, 0);
@@ -189,20 +189,26 @@ public class GestionUtilisateurs implements Initializable {
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
-                // Update the user object with the new values
+                // Mettre à jour les valeurs de l'utilisateur
                 user.setPrenom(prenomField.getText());
                 user.setNom(nomField.getText());
                 user.setCin(cinField.getText());
                 user.setAdresse(adresseField.getText());
                 user.setEmail(emailField.getText());
                 user.setRole(User.role.valueOf(roleField.getText()));
-                user.setType_vehicule(User.type_vehicule.valueOf(transportField.getText()));
 
-                // Save the updated user to the database
+                // Vérifier si le champ transport est vide
+                if (transportField.getText().isEmpty()) {
+                    user.setType_vehicule(null);
+                } else {
+                    user.setType_vehicule(User.type_vehicule.valueOf(transportField.getText()));
+                }
+
+                // Mettre à jour l'utilisateur dans la base de données
                 su.update(user);
 
-                // Refresh the user list in the UI
-                loadUsers(); // Call loadUsers to refresh the list
+                // Rafraîchir la liste des utilisateurs dans l'interface
+                loadUsers();
 
                 return user;
             }
@@ -211,6 +217,7 @@ public class GestionUtilisateurs implements Initializable {
 
         dialog.showAndWait();
     }
+
 
 
     @FXML
