@@ -150,7 +150,7 @@ public class CrudCommande implements interfaces.IServiceCrud<Commande> {
     public void update(Commande commande) {
         // Créer la requête SQL avec des paramètres
         String qry = "UPDATE `commande` SET `adresse_dep` = ?, `adresse_arr` = ?, `type_livraison` = ?, `horaire` = ?, " +
-                "`statut` = ?, `created_by` = ? WHERE `id_commande` ="+1;
+                "`statut` = ?, `created_by` = ? WHERE `id_commande` ="+commande.getId_Commande();
 
         try (PreparedStatement statement = conn.prepareStatement(qry)) {
             // Remplacer les points d'interrogation par les valeurs
@@ -165,7 +165,7 @@ public class CrudCommande implements interfaces.IServiceCrud<Commande> {
             if (rowsAffected > 0) {
                 System.out.println("Command updated successfully.");
             } else {
-                System.out.println("No command found with ID " + 10);
+                System.out.println("No command found with ID " + commande.getId_Commande());
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -238,9 +238,9 @@ public class CrudCommande implements interfaces.IServiceCrud<Commande> {
         }
 
         if (commandes.isEmpty()) {
-            System.out.println("Aucun utilisateur trouvé pour le critère : " + criteria);
+            System.out.println("Aucun commande trouvé pour le critère : " + criteria);
         } else {
-            System.out.println("Nombre d'utilisateurs trouvés : " + commandes.size());
+            System.out.println("Nombre de commandes trouvés : " + commandes.size());
             for (Commande commande : commandes) {
                 System.out.println("Commande trouvé : ");
                 System.out.println(commande.toString());

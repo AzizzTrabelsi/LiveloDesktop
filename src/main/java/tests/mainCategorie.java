@@ -10,12 +10,12 @@ public class mainCategorie {
                 "lemino",
                 "description delemino",
                 "img1.jpg",
-                50
+                51
         );
 
         CrudCategorie crudCategorie = new CrudCategorie();
-        crudCategorie.delete(10);
         crudCategorie.add(nouvelleCategorie);
+        crudCategorie.delete(10);
         crudCategorie.getAll();
 
 
@@ -28,6 +28,5 @@ public class mainCategorie {
 
 
         crudCategorie.search("amine");
-
     }
 }

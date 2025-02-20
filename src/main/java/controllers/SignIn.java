@@ -42,6 +42,7 @@ public class SignIn {
         if (token != null) {
             System.out.println("Connexion réussie. Token : " + token);
 
+
             // Decode the token to get the user's role and verified status
             JSONObject userInfo = authService.decodeToken(token);
             if (userInfo != null) {
@@ -65,10 +66,28 @@ public class SignIn {
             } else {
                 System.out.println("Erreur lors de la lecture du token.");
             }
+
         } else {
             System.out.println("Échec de la connexion.");
         }
     }
+    @FXML
+   /* private void navigateToGestionUtilisateurs() {
+        try {
+            // Load the SignUp.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionUtilisateurs.fxml"));
+            Scene signUpScene = new Scene(loader.load());
+
+
+            // Get the current stage and set the new scene
+            Stage stage = (Stage) BtnSignUp.getScene().getWindow();
+            stage.setScene(signUpScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("GestionUtilisateurs.fxml.");
+        }
+    }*/
 
     private void navigateToHomeNotVerified() {
         try {
@@ -83,6 +102,7 @@ public class SignIn {
             e.printStackTrace();
         }
     }
+
 
     @FXML
     private void initialize() {
