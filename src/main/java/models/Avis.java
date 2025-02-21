@@ -1,81 +1,73 @@
 package models;
 
+
 import java.util.Date;
 
 public class Avis {
 
-    private int id;
-    private int createdBy;
-    private int deliveryId;
-    private Date createdDate;
-    private String comment;
+    private int idAvis, createdBy;
+    private Date createdAt;
+    private String description;
+    private Livraison livraison; // Relation avec Livraison, puisque plusieurs avis peuvent être associés à une livraison
 
-    public Avis() {
-    }
+    public Avis() {}
 
-    public Avis(int createdBy, int deliveryId, Date createdDate, String comment) {
+    public Avis(int idAvis, int createdBy, Livraison livraison, Date createdAt, String description) {
+        this.idAvis = idAvis;
         this.createdBy = createdBy;
-        this.deliveryId = deliveryId;
-        this.createdDate = createdDate;
-        this.comment = comment;
+        this.livraison = livraison;
+        this.createdAt = createdAt;
+        this.description = description;
     }
-
-    public Avis(int id, int createdBy, int deliveryId, Date createdDate, String comment) {
-        this.id = id;
+    public Avis(int createdBy, Livraison livraison, Date createdAt, String description) {
         this.createdBy = createdBy;
-        this.deliveryId = deliveryId;
-        this.createdDate = createdDate;
-        this.comment = comment;
+        this.livraison = livraison;
+        this.createdAt = createdAt;
+        this.description = description;
     }
 
-    public int getId() {
-        return id;
+    public int getIdAvis() {
+        return idAvis;
+    }
+
+    public void setIdAvis(int idAvis) {
+        this.idAvis = idAvis;
     }
 
     public int getCreatedBy() {
         return createdBy;
     }
 
-    public int getDeliveryId() {
-        return deliveryId;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public void setDeliveryId(int deliveryId) {
-        this.deliveryId = deliveryId;
-    }
-
     public void setCreatedBy(int createdBy) {
         this.createdBy = createdBy;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Livraison getLivraison() {
+        return livraison;
+    }
+
+    public void setLivraison(Livraison livraison) {
+        this.livraison = livraison;
     }
 
     @Override
     public String toString() {
-        return "Avis{" +
-                "id=" + id +
-                ", createdBy=" + createdBy +
-                ", deliveryId=" + deliveryId +
-                ", createdDate=" + createdDate +
-                ", comment='" + comment + '\'' +
-                '}';
+        return "Avis{idAvis=" + idAvis + ", createdBy=" + createdBy + ", description='" + description + "'}";
     }
 }

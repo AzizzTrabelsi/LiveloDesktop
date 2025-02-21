@@ -1,12 +1,14 @@
 package controllers;
 
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import net.minidev.json.JSONObject;
 import services.Authentification;
 
 import java.io.IOException;
@@ -38,13 +40,69 @@ public class SignIn {
         String token = authService.login(cin, password);
 
         if (token != null) {
-            // Proceed with the token (e.g., storing it or navigating to another scene)
             System.out.println("Connexion réussie. Token : " + token);
+
+
+            // Decode the token to get the user's role and verified status
+            JSONObject userInfo = authService.decodeToken(token);
+            if (userInfo != null) {
+                String role = userInfo.get("role").toString();  // Get role as string
+                boolean isVerified = Boolean.parseBoolean(userInfo.get("verified").toString()); // Get verified status as boolean
+
+                // Check if the user is verified
+                if (!isVerified) {
+                    // Redirect to the homeNotVerified view
+                    navigateToHomeNotVerified();
+                } else {
+                    // If verified, check the role
+                    if (role.equals("admin")) {
+                        // Redirect to the homeAdmin view
+                        navigateToHomeAdmin();
+                    } else {
+                        // Redirect to the regular home view (or another view for non-admin users)
+                        //navigateToHome();
+                    }
+                }
+            } else {
+                System.out.println("Erreur lors de la lecture du token.");
+            }
+
         } else {
-            // Handle failed login (e.g., show an error message)
             System.out.println("Échec de la connexion.");
         }
     }
+    @FXML
+   /* private void navigateToGestionUtilisateurs() {
+        try {
+            // Load the SignUp.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionUtilisateurs.fxml"));
+            Scene signUpScene = new Scene(loader.load());
+
+
+            // Get the current stage and set the new scene
+            Stage stage = (Stage) BtnSignUp.getScene().getWindow();
+            stage.setScene(signUpScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("GestionUtilisateurs.fxml.");
+        }
+    }*/
+
+    private void navigateToHomeNotVerified() {
+        try {
+            // Assuming you use FXMLLoader to load the FXML for homeNotVerified
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homeNotVerified.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            Stage stage = (Stage) tfCIN.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @FXML
     private void initialize() {
@@ -69,6 +127,22 @@ public class SignIn {
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error loading SignUp.fxml.");
+        }
+    }
+    @FXML
+    private void navigateToHomeAdmin() {
+        try {
+            // Load the homeAdmin.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homeAdmin.fxml"));
+            Scene homeAdminScene = new Scene(loader.load());
+
+            // Get the current stage and set the new scene
+            Stage stage = (Stage) LoginButton.getScene().getWindow();
+            stage.setScene(homeAdminScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading homeAdmin.fxml.");
         }
     }
 }

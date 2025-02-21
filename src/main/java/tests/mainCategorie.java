@@ -11,11 +11,13 @@ public class mainCategorie {
                 "description delemino",
                 "C:/projetpidev/LiveloDesktop/src/main/resources/image/bin.png",
                 50
+                "img1.jpg",
+                51
         );
 
         CrudCategorie crudCategorie = new CrudCategorie();
-        crudCategorie.delete(10);
         crudCategorie.add(nouvelleCategorie);
+        crudCategorie.delete(10);
         crudCategorie.getAll();
 
 
@@ -28,6 +30,5 @@ public class mainCategorie {
 
 
         crudCategorie.search("amine");
-
     }
 }

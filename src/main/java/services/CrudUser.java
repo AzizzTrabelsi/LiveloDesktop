@@ -30,7 +30,14 @@ public class CrudUser implements IServiceCrud<User> {
             statement.setString(3, user.getRole().toString());
             statement.setInt(4, user.isVerified() ? 1 : 0);
             statement.setString(5, user.getAdresse());
-            statement.setString(6, user.getType_vehicule().toString());
+
+            // Vérifier si `type_vehicule` est null
+            if (user.getType_vehicule() != null) {
+                statement.setString(6, user.getType_vehicule().toString());
+            } else {
+                statement.setNull(6, Types.VARCHAR);  // Insérer NULL dans la colonne si non spécifié
+            }
+
             statement.setString(7, user.getEmail());
             statement.setString(8, hashedPassword);
             statement.setString(9, user.getNum_tel());
@@ -51,6 +58,7 @@ public class CrudUser implements IServiceCrud<User> {
         }
     }
 
+
     @Override
     public List<User> getAll() {
         List<User> users = new ArrayList<>();
@@ -64,10 +72,7 @@ public class CrudUser implements IServiceCrud<User> {
                 String nom = rs.getString("nom");
                 String prenom = rs.getString("prenom");
                 String roleString = rs.getString("role");
-                String typeVehiculeString = rs.getString("type_vehicule");
-                type_vehicule typeVehicule = type_vehicule.valueOf(typeVehiculeString);
-                role_user role = role_user.valueOf(roleString);
-
+                String typeVehiculeString = rs.getString("type_vehicule"); // Peut être NULL
                 boolean verified = rs.getBoolean("verified");
                 String adresse = rs.getString("adresse");
                 String email = rs.getString("email");
@@ -75,7 +80,22 @@ public class CrudUser implements IServiceCrud<User> {
                 String num_tel = rs.getString("num_tel");
                 String cin = rs.getString("cin");
 
-                User user = new User(id,nom, prenom, role, verified, adresse,
+                // Convertir roleString en enum
+                role_user role = role_user.valueOf(roleString);
+
+                // Gérer le cas où typeVehiculeString est NULL
+                type_vehicule typeVehicule = null;
+                if (typeVehiculeString != null && !typeVehiculeString.trim().isEmpty()) {
+                    try {
+                        typeVehicule = type_vehicule.valueOf(typeVehiculeString);
+                    } catch (IllegalArgumentException e) {
+                        System.err.println("Valeur inconnue pour type_vehicule: " + typeVehiculeString);
+                        typeVehicule = null; // Gérer une valeur invalide si elle est présente dans la BD
+                    }
+                }
+
+                // Créer l'objet User
+                User user = new User(id, nom, prenom, role, verified, adresse,
                         typeVehicule, email, password, num_tel, cin);
 
                 users.add(user);
@@ -92,6 +112,7 @@ public class CrudUser implements IServiceCrud<User> {
 
         return users;
     }
+
 
     @Override
     public void update(User user) {
@@ -187,19 +208,36 @@ public class CrudUser implements IServiceCrud<User> {
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                User user = new User(
-                        rs.getInt("idUser"),
-                        rs.getString("nom"),
-                        rs.getString("prenom"),
-                       models.role_user.valueOf(rs.getString("role")),  // Fetch the role
-                        rs.getBoolean("verified"),  // Fetch the verified status
-                        rs.getString("adresse"),
-                        models.type_vehicule.valueOf(rs.getString("type_vehicule")),  // Fetch the vehicle type
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("num_tel"),
-                        rs.getString("cin")
-                );
+                int id = rs.getInt("idUser");
+                String nom = rs.getString("nom");
+                String prenom = rs.getString("prenom");
+                String roleString = rs.getString("role");
+                String typeVehiculeString = rs.getString("type_vehicule"); // Peut être NULL
+                boolean verified = rs.getBoolean("verified");
+                String adresse = rs.getString("adresse");
+                String email = rs.getString("email");
+                String password = rs.getString("password");
+                String num_tel = rs.getString("num_tel");
+                String cin = rs.getString("cin");
+
+                // Convertir roleString en enum
+                role_user role = role_user.valueOf(roleString);
+
+                // Gérer le cas où typeVehiculeString est NULL ou invalide
+                type_vehicule typeVehicule = null;
+                if (typeVehiculeString != null && !typeVehiculeString.trim().isEmpty()) {
+                    try {
+                        typeVehicule = type_vehicule.valueOf(typeVehiculeString);
+                    } catch (IllegalArgumentException e) {
+                        System.err.println("Valeur inconnue pour type_vehicule: " + typeVehiculeString);
+                        typeVehicule = null; // Gérer une valeur invalide si elle est présente dans la BD
+                    }
+                }
+
+                // Créer l'objet User
+                User user = new User(id, nom, prenom, role, verified, adresse,
+                        typeVehicule, email, password, num_tel, cin);
+
                 users.add(user);
             }
         } catch (SQLException e) {
@@ -227,6 +265,7 @@ public class CrudUser implements IServiceCrud<User> {
 
         return users;
     }
+
 
     public boolean existsCin(String cin) {
         // Ici, tu effectues une requête pour vérifier si le CIN existe déjà
