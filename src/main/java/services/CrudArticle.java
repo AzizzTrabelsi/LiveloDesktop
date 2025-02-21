@@ -52,6 +52,35 @@ public class CrudArticle implements IServiceCrud<Article> {
             e.printStackTrace();
         }
     }
+    public List<Article> getArticlesByCategoryId(int idCategorie) {
+        List<Article> articles = new ArrayList<>();
+        String qry = "SELECT * FROM article WHERE id_categorie = ?";
+
+          try (PreparedStatement statement = conn.prepareStatement(qry, Statement.RETURN_GENERATED_KEYS)){
+
+            statement.setInt(1, idCategorie);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Article article = new Article();
+                resultSet.getInt("id_article");
+               resultSet.getString("url_image");
+                 resultSet.getInt("id_categorie");
+               resultSet.getString("nom");
+                resultSet.getFloat("prix");
+                resultSet.getString("description");
+                 resultSet.getInt("created_by");
+             resultSet.getInt("quantite");
+               resultSet.getInt("nbViews");
+              resultSet.getDate("createdAt");
+
+                articles.add(article);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return articles;
+    }
 
 
     @Override
@@ -119,7 +148,7 @@ public class CrudArticle implements IServiceCrud<Article> {
     }
 
 
-    private Categorie getCategorieById(int idCategorie) {
+    public Categorie getCategorieById(int idCategorie) {
         Categorie categorie = null;
         String query = "SELECT * FROM categorie WHERE id_categorie = ?";
 

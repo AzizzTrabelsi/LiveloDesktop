@@ -24,7 +24,12 @@ public class Categorie {
         this.id_categorie = id_categorie;
         this.nom = nom;
     }
-
+    // Constructeur qui prend un nom et une description
+    public Categorie(String nom, String description, String url_image ) {
+        this.nom = nom;
+        this.description = description;
+        this.url_image = url_image;
+    }
     public Categorie(String nom, String description, String url_image, int createdBy) {
         this.nom = nom;
         this.description = description;
