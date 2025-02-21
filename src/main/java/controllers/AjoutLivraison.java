@@ -1,38 +1,36 @@
 package controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import utils.MyDatabase; // Assure-toi d'avoir une classe pour la connexion DB
+import utils.MyDatabase;
 
 public class AjoutLivraison {
 
     @FXML
     private TextField commandeIdField;
-
     @FXML
     private TextField factureIdField;
-
     @FXML
     private TextField zoneIdField;
-
     @FXML
     private TextField createdByField;
-
     @FXML
     private Button btnAjouter;
-
     @FXML
     private Button btnAnnuler;
 
     private Connection connection;
 
     public AjoutLivraison() {
-        // Initialisation de la connexion à la base de données
         connection = MyDatabase.getInstance().getConnection();
     }
 
@@ -64,16 +62,38 @@ public class AjoutLivraison {
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
                 System.out.println("Livraison ajoutée avec succès !");
-                fermerFenetre();
+                goToGestionLivraisons();
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Erreur lors de l'ajout de la livraison.");
         }
     }
 
+    @FXML
+    void goToGestionLivraisons() {
+        try {
+            Stage stage = (Stage) commandeIdField.getScene().getWindow(); // Get reference to the login window's stage
+            stage.setTitle("Gestion Livraisons");
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionLivraison.fxml"));
+            Parent p = loader.load();
+            Scene scene = new Scene(p);
+
+            stage.setScene(scene);
+
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle navigation failure
+        }
+
+    }
+
     private void fermerFenetre() {
-        Stage stage = (Stage) btnAnnuler.getScene().getWindow();
-        stage.close();
+
+        goToGestionLivraisons();
+
     }
 }
