@@ -95,7 +95,7 @@
                   </ImageView>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="anCoverageArea" layoutX="2.0" layoutY="287.0" prefHeight="45.0" prefWidth="285.0" style="-fx-cursor: hand;" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect">
+            <AnchorPane fx:id="anCoverageArea" layoutX="2.0" layoutY="287.0" prefHeight="45.0" prefWidth="285.0" style="-fx-cursor: hand;" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect" onMouseClicked="#navigateToZones">
                <children>
                   <Text fill="#398c3e" layoutX="69.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Coverage areas" wrappingWidth="212.07421875">
                      <font>
