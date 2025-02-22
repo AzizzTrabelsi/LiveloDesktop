@@ -13,6 +13,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.User;
+import models.role_user;
+import models.type_vehicule;
 import services.CrudUser;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -166,9 +168,17 @@ public class GestionUtilisateurs implements Initializable {
         TextField cinField = new TextField(user.getCin());
         TextField adresseField = new TextField(user.getAdresse());
         TextField emailField = new TextField(user.getEmail());
-        TextField roleField = new TextField(user.getRole().name());
 
-        TextField transportField = new TextField(user.getType_vehicule() != null ? user.getType_vehicule().toString() : "");
+        ComboBox<String> roleComboBox = new ComboBox<>();
+        roleComboBox.getItems().addAll( "partner", "delivery_person", "client");
+        roleComboBox.setValue(user.getRole().toString());
+
+        // Remplir la ComboBox des types de véhicule manuellement
+        ComboBox<String> transportComboBox = new ComboBox<>();
+        transportComboBox.getItems().addAll("e_bike", "e_scooter", "Bike");
+        if (user.getType_vehicule() != null) {
+            transportComboBox.setValue(user.getType_vehicule().toString());
+        }
 
         grid.add(new Label("Prénom:"), 0, 0);
         grid.add(prenomField, 1, 0);
@@ -181,33 +191,32 @@ public class GestionUtilisateurs implements Initializable {
         grid.add(new Label("Email:"), 0, 4);
         grid.add(emailField, 1, 4);
         grid.add(new Label("Rôle:"), 0, 5);
-        grid.add(roleField, 1, 5);
+        grid.add(roleComboBox, 1, 5);
         grid.add(new Label("Transport:"), 0, 6);
-        grid.add(transportField, 1, 6);
+        grid.add(transportComboBox, 1, 6);
 
         dialog.getDialogPane().setContent(grid);
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
-                // Mettre à jour les valeurs de l'utilisateur
                 user.setPrenom(prenomField.getText());
                 user.setNom(nomField.getText());
                 user.setCin(cinField.getText());
                 user.setAdresse(adresseField.getText());
                 user.setEmail(emailField.getText());
-                user.setRole(User.role.valueOf(roleField.getText()));
 
-                // Vérifier si le champ transport est vide
-                if (transportField.getText().isEmpty()) {
+                // Convertir le rôle sélectionné en enum
+                user.setRole(role_user.valueOf(roleComboBox.getValue()));
+
+                // Vérifier si le champ transport est vide avant d'affecter
+                if (transportComboBox.getValue() == null || transportComboBox.getValue().isEmpty()) {
                     user.setType_vehicule(null);
                 } else {
-                    user.setType_vehicule(User.type_vehicule.valueOf(transportField.getText()));
+                    user.setType_vehicule(type_vehicule.valueOf(transportComboBox.getValue()));
                 }
 
                 // Mettre à jour l'utilisateur dans la base de données
                 su.update(user);
-
-                // Rafraîchir la liste des utilisateurs dans l'interface
                 loadUsers();
 
                 return user;
@@ -217,6 +226,8 @@ public class GestionUtilisateurs implements Initializable {
 
         dialog.showAndWait();
     }
+
+
 
 
 

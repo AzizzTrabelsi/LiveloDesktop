@@ -87,6 +87,20 @@ public class HomeAdmin {
         }
     }
     @FXML
+    private void NavigateToCommandes() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/commandeAdmin.fxml"));
+            Scene GestionUtilisateursScene = new Scene(loader.load());
+
+            Stage stage = (Stage) anOrdersMain.getScene().getWindow();
+            stage.setScene(GestionUtilisateursScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading SignUp.fxml.");
+        }
+    }
+    @FXML
     public void normalEffect(javafx.scene.input.MouseEvent event) {
         ((AnchorPane) event.getSource()).setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
 

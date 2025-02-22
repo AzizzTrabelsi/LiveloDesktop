@@ -12,11 +12,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import models.Commande;
+import models.*;
 import services.CrudCommande;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -84,7 +86,23 @@ public class CommandeAdmin implements Initializable {
     private VBox vListCommande;
 
 
+    @FXML
+    private TextField tfArrival;
 
+    @FXML
+    private TextField tfCreatedBy;
+
+    @FXML
+    private TextField tfDeparture;
+
+    @FXML
+    private ComboBox<String> CbStatus;
+
+    @FXML
+    private TextField tfType;
+
+    @FXML
+    private Button btnAdd;
 
 
     @FXML
@@ -93,8 +111,20 @@ public class CommandeAdmin implements Initializable {
     }
 
     @FXML
-    void navigateToHome(MouseEvent event) {
+    private void navigateToHome(MouseEvent event) {
+        try {
+            // Load the SignUp.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homeAdmin.fxml"));
+            Scene signUpScene = new Scene(loader.load());
 
+            // Get the current stage and set the new scene
+            Stage stage = (Stage) imLogo.getScene().getWindow();
+            stage.setScene(signUpScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading SignUp.fxml.");
+        }
     }
 
 
@@ -102,6 +132,11 @@ public class CommandeAdmin implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        CbStatus.getItems().addAll(
+                statutlCommande.Shipping.toString(),
+                statutlCommande.Processing.toString(),
+                statutlCommande.Delivered.toString()
+        );
         // Afficher tous les utilisateurs au démarrage
         Show(null);
 
@@ -356,31 +391,7 @@ public class CommandeAdmin implements Initializable {
 
             commandeRow.getChildren().addAll(lblDeparture,lblArrival,lblType,lblCreation,lblStatus,lblCreatedBy);
 
-            Button deleteButton = new Button("Delete");
-            deleteButton.setOnAction(event -> {
-                javafx.scene.control.Alert confirmationAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
-                confirmationAlert.setTitle("Delete Confirmation");
-                confirmationAlert.setHeaderText("Do you want to delete this command ?");
-                confirmationAlert.setContentText("There's no going back.");
 
-                ButtonType yesButton = new ButtonType("Yes");
-                ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-                confirmationAlert.getButtonTypes().setAll(yesButton, noButton);
-
-                confirmationAlert.showAndWait().ifPresent(confirmationResponse -> {
-                    if (confirmationResponse == yesButton) {
-                        // Effectuer la suppression
-                        su.delete(commande.getId_Commande());
-                        System.out.println("Commande supprimé.");
-                        loadCommandes();
-                    } else {
-                        System.out.println("Suppression annulée.");
-                    }
-                });
-            });
-
-            commandeRow.getChildren().add(deleteButton);
 
             commandeRow.setOnMouseClicked(event -> showCommandeDetailsPopup(commande));
 
@@ -472,7 +483,8 @@ public class CommandeAdmin implements Initializable {
     }
 
 
-
+    @FXML
+    private DatePicker DpCreationDate;
 
     @FXML
     private void navigateToHome() {
@@ -517,4 +529,81 @@ public class CommandeAdmin implements Initializable {
             System.out.println("Error loading SignUp.fxml.");
         }
     }
-}
+
+    @FXML
+    void AddCommande(ActionEvent event) {
+        try {
+            // Récupération des valeurs du formulaire
+            String departure = tfDeparture.getText();
+            String arrival = tfArrival.getText();
+            String selectedStatus = CbStatus.getValue(); // Value from ComboBox
+            String type = tfType.getText();
+            String createdBy = tfCreatedBy.getText();
+            LocalDate creationDate = DpCreationDate.getValue();
+
+            if (departure.isEmpty() || arrival.isEmpty() || selectedStatus == null || type.isEmpty() || createdBy.isEmpty() || creationDate == null) {
+                showErrorAlert("All fields are required.");
+                return;
+            }
+
+            // Convert LocalDate to Timestamp
+            Timestamp creationTimestamp = Timestamp.valueOf(creationDate.atStartOfDay());
+
+            // Convert CreatedBy to int
+            int createdByInt;
+            try {
+                createdByInt = Integer.parseInt(createdBy);
+            } catch (NumberFormatException e) {
+                showErrorAlert("Created By must be a valid number.");
+                return;
+            }
+
+            // Convert String status to Enum statutlCommande
+            statutlCommande statut;
+            switch (selectedStatus) {
+                case "Shipping":
+                    statut = statutlCommande.Shipping;
+                    break;
+                case "Delivered":
+                    statut = statutlCommande.Delivered;
+                    break;
+                case "Processing":
+                    statut = statutlCommande.Processing;
+                    break;
+                default:
+                    showErrorAlert("Invalid status selected.");
+                    return;
+            }
+
+            // Create Commande object
+            Commande commande = new Commande(departure, arrival, type, creationTimestamp, statut, createdByInt);
+
+            // Add to database
+            su.add(commande);
+
+            showSuccessAlert("Commande has been created successfully.");
+            loadCommandes();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showErrorAlert("Oops, couldn't create the Commande.");
+        }
+
+    }
+
+    private void showErrorAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showSuccessAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    } }
+

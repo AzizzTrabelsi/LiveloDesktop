@@ -10,7 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static models.User.role;
+import  models.User.*;
 
 public class CrudUser implements IServiceCrud<User> {
     Connection conn= MyDatabase.getInstance().getConnection();
@@ -73,23 +73,25 @@ public class CrudUser implements IServiceCrud<User> {
                 String roleString = rs.getString("role"); // Ne peut pas être null
                 String typeVehiculeString = rs.getString("type_vehicule");
 
-                System.out.println("9bal: " + roleString);
-                System.out.println("9bal " + typeVehiculeString);
+              /*  System.out.println("9bal: " + roleString);
+                System.out.println("9bal " + typeVehiculeString);*/
 
-                // Convert role and type_vehicule
                 role_user role = role_user.valueOf(roleString);
-                System.out.println("aaaaaaaaaaaa " + role);
+               // System.out.println("aaaaaaaaaaaa " + role);
+
 
                 type_vehicule typeVehicule = null;
                 if (typeVehiculeString != null) {
                     try {
                         typeVehicule = type_vehicule.valueOf(typeVehiculeString);
-                        System.out.println("nuullllll " + typeVehicule);
+                        System.out.println("TY RAKZ AAD " + typeVehicule);
                     } catch (IllegalArgumentException e) {
                         System.err.println("Valeur inconnue pour type_vehicule: " + typeVehiculeString);
                     }
                 }
-                System.out.println("aaaaaaaaaaaaaaaa " + typeVehicule);
+
+                /*System.out.println("aaaaaaaaaaaaaaaa " + typeVehicule);
+                System.out.println("harabi sidi"+ typeVehicule.getClass().getTypeName());*/
 
                 boolean verified = rs.getBoolean("verified");
                 String adresse = rs.getString("adresse");
@@ -99,21 +101,17 @@ public class CrudUser implements IServiceCrud<User> {
                 String cin = rs.getString("cin");
 
                 User user = new User(id, nom, prenom, role, verified, adresse, typeVehicule, email, password, num_tel, cin);
-                System.out.println("ahaw l user : " + user);
+                //System.out.println("ahaw l user : " + user);
 
                 users.add(user);
+                //System.out.println("fi khater fedi esem7"+users);
             }
-
-            System.out.println("l9eleb " + users);
-            System.out.println("Nombre d'utilisateurs récupérés : " + users.size());
-
-            // Debug final output
-            for (User u : users) {
-                System.out.println("Final Role: " + u.getRole());
-                System.out.println("Final Type Vehicule: " + u.getType_vehicule());
-                System.out.println(u);
+            for (User user : users) {
+                System.out.println("fokna aad "+user.getType_vehicule());
             }
-
+            /* System.out.println("HAYA BIHI"+users.get(1));
+            System.out.println("mlkhr " + users);
+            System.out.println("Nombre d'utilisateurs récupérés : " + users.size());*/
         } catch (SQLException e) {
             e.printStackTrace();
         }
