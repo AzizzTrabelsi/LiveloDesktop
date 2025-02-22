@@ -16,6 +16,9 @@ public class HomeAdmin {
     private AnchorPane anDeliveryPMain;
 
     @FXML
+    private AnchorPane anCoverageArea;
+
+    @FXML
     private AnchorPane anListUsersMain;
 
     @FXML
@@ -95,5 +98,21 @@ public class HomeAdmin {
     public void hoverEffect(javafx.scene.input.MouseEvent event) {
         ((AnchorPane) event.getSource()).setStyle("-fx-background-color: lightgrey; -fx-cursor: hand;");
 
+    }
+    @FXML
+    private void navigateToZones() {
+        try {
+            // Load the SignUp.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionZoneAdmin.fxml"));
+            Scene signUpScene = new Scene(loader.load());
+
+            // Get the current stage and set the new scene
+            Stage stage = (Stage) anCoverageArea.getScene().getWindow();
+            stage.setScene(signUpScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading SignUp.fxml.");
+        }
     }
 }
