@@ -7,7 +7,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class HomeAdmin {
@@ -38,7 +37,8 @@ public class HomeAdmin {
 
     @FXML
     private AnchorPane anUsers;
-
+    @FXML
+    private AnchorPane anCategories;
     @FXML
     private AnchorPane anVerifyUserMain;
 
@@ -89,12 +89,27 @@ public class HomeAdmin {
             System.out.println("Error loading SignUp.fxml.");
         }
     }
+    @FXML
+
+    private void NavigateToGestionCategorie() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/avoir.fxml"));
+            Scene GestionCategorieScene = new Scene(loader.load());
+
+            Stage stage = (Stage) anCategories.getScene().getWindow();
+            stage.setScene(GestionCategorieScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading gestionategorie.fxml.");
+        }
+    }
 
     public void normalEffect(javafx.scene.input.MouseEvent event) {
         ((AnchorPane) event.getSource()).setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
 
     }
-
+    @FXML
     public void hoverEffect(javafx.scene.input.MouseEvent event) {
         ((AnchorPane) event.getSource()).setStyle("-fx-background-color: lightgrey; -fx-cursor: hand;");
 

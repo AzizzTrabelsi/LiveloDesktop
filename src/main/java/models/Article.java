@@ -14,7 +14,7 @@ public class Article {
     private int idArticle, createdBy, quantite, nbViews;
     private String urlImage, nom, description;
     private float prix;
-    private models.statut_article statut;
+    public static models.statut_article statut;
     private Date createdAt;
 
     private List<Commande> commandes=new ArrayList<Commande>();
@@ -51,6 +51,11 @@ public class Article {
         this.statut = statut;
         this.createdAt = createdAt;
         this.nbViews = nbViews;
+    }
+    // Constructeur avec moins de paramètres (par exemple sans 'nbViews')
+    public Article(String urlImage, Categorie categorie, String nom, float prix,
+                   String description, int createdBy, int quantite, statut_article statut, Date createdAt) {
+        this(urlImage, categorie, nom, prix, description, createdBy, quantite, statut, createdAt, 0); // 0 par défaut pour nbViews
     }
 
     public int getIdArticle() {

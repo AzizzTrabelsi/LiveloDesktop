@@ -12,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import models.Role;
 import models.User;
 import services.CrudUser;
 import javafx.scene.control.TextField;
@@ -81,7 +82,9 @@ public class GestionUtilisateurs implements Initializable {
             lblVerified.setMinWidth(80);
             lblVerified.setMaxWidth(80);
 
-            Label lblTransport = new Label(user.getType_vehicule().toString());
+            // Vérification si type_vehicule est null et assignation d'une valeur par défaut
+            String transport = (user.getType_vehicule() != null) ? user.getType_vehicule().toString() : "Aucun transport";
+            Label lblTransport = new Label(transport);
             lblTransport.setMinWidth(80);
             lblTransport.setMaxWidth(80);
 
@@ -92,6 +95,7 @@ public class GestionUtilisateurs implements Initializable {
             vListUsers.getChildren().add(userRow);
         }
     }
+
 
     @FXML
     private void showUserDetailsPopup(User user) {
@@ -107,10 +111,11 @@ public class GestionUtilisateurs implements Initializable {
                 "Vérifié : " + user.isVerified() + "\n" +
                 "Transport : " + user.getType_vehicule());
 
+
         ButtonType updateButton = new ButtonType("Mettre à jour");
         ButtonType deleteButton = new ButtonType("Supprimer");
 
-        alert.getButtonTypes().setAll(updateButton, deleteButton);
+        alert.getButtonTypes().setAll(updateButton, deleteButton, ButtonType.CLOSE);
 
         alert.showAndWait().ifPresent(response -> {
             if (response == updateButton) {
@@ -207,6 +212,7 @@ public class GestionUtilisateurs implements Initializable {
         dialog.showAndWait();
     }
 
+
     @FXML
     public void loadUsers() {
         System.out.println("Chargement des utilisateurs...");
@@ -223,49 +229,48 @@ public class GestionUtilisateurs implements Initializable {
         Label lblHeaderPrenom = new Label("First Name");
         lblHeaderPrenom.setMinWidth(80);
         lblHeaderPrenom.setMaxWidth(80);
-        lblHeaderPrenom.setStyle("-fx-text-fill: black;"); // Changer la couleur du texte en blanc
+        lblHeaderPrenom.setStyle("-fx-text-fill: black;");
 
         Label lblHeaderNom = new Label("Last name");
         lblHeaderNom.setMinWidth(80);
         lblHeaderNom.setMaxWidth(80);
-        lblHeaderNom.setStyle("-fx-text-fill: black;"); // Changer la couleur du texte en blanc
+        lblHeaderNom.setStyle("-fx-text-fill: black;");
 
         Label lblHeaderCin = new Label("CIN");
         lblHeaderCin.setMinWidth(80);
         lblHeaderCin.setMaxWidth(80);
-        lblHeaderCin.setStyle("-fx-text-fill: black;"); // Changer la couleur du texte en blanc
+        lblHeaderCin.setStyle("-fx-text-fill: black;");
 
         Label lblHeaderAdress = new Label("Address");
         lblHeaderAdress.setMinWidth(80);
         lblHeaderAdress.setMaxWidth(80);
-        lblHeaderAdress.setStyle("-fx-text-fill: black;"); // Changer la couleur du texte en blanc
+        lblHeaderAdress.setStyle("-fx-text-fill: black;");
 
         Label lblHeaderEmail = new Label("Email");
         lblHeaderEmail.setMinWidth(130);
         lblHeaderEmail.setMaxWidth(130);
-        lblHeaderEmail.setStyle("-fx-text-fill: black;"); // Changer la couleur du texte en blanc
+        lblHeaderEmail.setStyle("-fx-text-fill: black;");
 
         Label lblHeaderRole = new Label("Role");
         lblHeaderRole.setMinWidth(105);
         lblHeaderRole.setMaxWidth(105);
-        lblHeaderRole.setStyle("-fx-text-fill: black;"); // Changer la couleur du texte en blanc
+        lblHeaderRole.setStyle("-fx-text-fill: black;");
 
         Label lblHeaderVerified = new Label("Verified");
         lblHeaderVerified.setMinWidth(80);
         lblHeaderVerified.setMaxWidth(80);
-        lblHeaderVerified.setStyle("-fx-text-fill: black;"); // Changer la couleur du texte en blanc
+        lblHeaderVerified.setStyle("-fx-text-fill: black;");
 
         Label lblHeaderTransport = new Label("Transport");
         lblHeaderTransport.setMinWidth(80);
         lblHeaderTransport.setMaxWidth(80);
-        lblHeaderTransport.setStyle("-fx-text-fill: black;"); // Changer la couleur du texte en blanc
+        lblHeaderTransport.setStyle("-fx-text-fill: black;");
 
         headerRow.getChildren().addAll(lblHeaderPrenom, lblHeaderNom, lblHeaderCin, lblHeaderAdress, lblHeaderEmail, lblHeaderRole, lblHeaderVerified, lblHeaderTransport);
 
         vListUsers.getChildren().add(headerRow);
 
         List<User> usersList = su.getAll();
-
 
         for (User user : usersList) {
             HBox userRow = new HBox(4);
@@ -300,7 +305,9 @@ public class GestionUtilisateurs implements Initializable {
             lblVerified.setMinWidth(80);
             lblVerified.setMaxWidth(80);
 
-            Label lblTransport = new Label(user.getType_vehicule().toString());
+            // Gestion du transport avec vérification si type_vehicule est null
+            String transport = (user.getType_vehicule() != null) ? user.getType_vehicule().toString() : "Aucun transport";
+            Label lblTransport = new Label(transport);
             lblTransport.setMinWidth(80);
             lblTransport.setMaxWidth(80);
 
@@ -337,6 +344,8 @@ public class GestionUtilisateurs implements Initializable {
             vListUsers.getChildren().add(userRow);
         }
     }
+
+
 
     @FXML
     private void searchUsers(String criteria) {
@@ -478,7 +487,22 @@ public class GestionUtilisateurs implements Initializable {
 
     @FXML
     private HBox hbHedha;
+    @FXML
+    private void navigateAdminCommand() {
+        try {
+            // Load the SignUp.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homeAdmin.fxml"));
+            Scene signUpScene = new Scene(loader.load());
 
+            // Get the current stage and set the new scene
+            //Stage stage = (Stage) BtnSignUp.getScene().getWindow();
+            //stage.setScene(signUpScene);
+            //stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("homeAdmin.fxml.");
+        }
+    }
     @FXML
     private void navigateToHome() {
         try {
