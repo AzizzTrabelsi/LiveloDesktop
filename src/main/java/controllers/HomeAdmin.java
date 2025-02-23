@@ -90,7 +90,20 @@ public class HomeAdmin {
         }
     }
     @FXML
+    private void NavigateToPendingUsers() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionUsersVerification.fxml"));
+            Scene GestionUtilisateursScene = new Scene(loader.load());
 
+            Stage stage = (Stage) anPendingUsers.getScene().getWindow();
+            stage.setScene(GestionUtilisateursScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading SignUp.fxml.");
+        }
+    }
+    @FXML
     private void NavigateToGestionCategorie() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/avoir.fxml"));
@@ -103,16 +116,6 @@ public class HomeAdmin {
             e.printStackTrace();
             System.out.println("Error loading gestionategorie.fxml.");
         }
-    }
-
-    public void normalEffect(javafx.scene.input.MouseEvent event) {
-        ((AnchorPane) event.getSource()).setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
-
-    }
-    @FXML
-    public void hoverEffect(javafx.scene.input.MouseEvent event) {
-        ((AnchorPane) event.getSource()).setStyle("-fx-background-color: lightgrey; -fx-cursor: hand;");
-
     }
     @FXML
     private void navigateToZones() {
@@ -146,4 +149,15 @@ public class HomeAdmin {
             System.out.println("Error loading SignUp.fxml.");
         }
     }
+    @FXML
+    public void normalEffect(javafx.scene.input.MouseEvent event) {
+        ((AnchorPane) event.getSource()).setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
+
+    }
+    @FXML
+    public void hoverEffect(javafx.scene.input.MouseEvent event) {
+        ((AnchorPane) event.getSource()).setStyle("-fx-background-color: lightgrey; -fx-cursor: hand;");
+
+    }
+
 }
