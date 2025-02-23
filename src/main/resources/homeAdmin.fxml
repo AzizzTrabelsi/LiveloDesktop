@@ -11,7 +11,7 @@
    <left>
       <AnchorPane prefHeight="599.0" prefWidth="250.0" style="-fx-background-color: #dbefe1;" BorderPane.alignment="CENTER">
          <children>
-            <AnchorPane fx:id="anPendingUsers" layoutX="-1.0" layoutY="35.0" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect" prefHeight="45.0" prefWidth="286.0" style="-fx-cursor: hand;">
+            <AnchorPane fx:id="anPendingUsers" layoutX="-1.0" layoutY="35.0" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect" prefHeight="45.0" prefWidth="286.0" style="-fx-cursor: hand;" onMouseClicked="#NavigateToPendingUsers">
                <children>
                   <Text fill="#398c3e" layoutX="64.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pending users">
                      <font>
