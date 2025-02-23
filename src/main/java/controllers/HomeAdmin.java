@@ -130,4 +130,20 @@ public class HomeAdmin {
             System.out.println("Error loading SignUp.fxml.");
         }
     }
+    @FXML
+    private void navigateToCommandes() {
+        try {
+            // Load the SignUp.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/commandeAdmin.fxml"));
+            Scene signUpScene = new Scene(loader.load());
+
+            // Get the current stage and set the new scene
+            Stage stage = (Stage) anOrder.getScene().getWindow();
+            stage.setScene(signUpScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading SignUp.fxml.");
+        }
+    }
 }

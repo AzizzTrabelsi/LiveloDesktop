@@ -11,7 +11,7 @@
    <left>
       <AnchorPane prefHeight="599.0" prefWidth="250.0" style="-fx-background-color: #dbefe1;" BorderPane.alignment="CENTER">
          <children>
-            <AnchorPane fx:id="anPendingUsers" layoutX="-1.0" layoutY="35.0" prefHeight="45.0" prefWidth="286.0" style="-fx-cursor: hand;" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect">
+            <AnchorPane fx:id="anPendingUsers" layoutX="-1.0" layoutY="35.0" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect" prefHeight="45.0" prefWidth="286.0" style="-fx-cursor: hand;">
                <children>
                   <Text fill="#398c3e" layoutX="64.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pending users">
                      <font>
@@ -25,7 +25,7 @@
                   </ImageView>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="anUsers" layoutX="-1.0" layoutY="84.0" prefHeight="46.0" prefWidth="285.0" style="-fx-cursor: hand;" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect" onMouseClicked="#NavigateToGestionUsers">
+            <AnchorPane fx:id="anUsers" layoutX="-1.0" layoutY="84.0" onMouseClicked="#NavigateToGestionUsers" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect" prefHeight="46.0" prefWidth="285.0" style="-fx-cursor: hand;">
                <children>
                   <Text fill="#398c3e" layoutX="67.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Users">
                      <font>
@@ -39,7 +39,7 @@
                   </ImageView>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="anRiders" layoutY="138.0" prefHeight="45.0" prefWidth="287.0" style="-fx-cursor: hand;" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect">
+            <AnchorPane fx:id="anRiders" layoutY="138.0" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect" prefHeight="45.0" prefWidth="287.0" style="-fx-cursor: hand;">
                <children>
                   <Text fill="#398c3e" layoutX="67.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Riders performance" wrappingWidth="212.07421875">
                      <font>
@@ -53,7 +53,7 @@
                   </ImageView>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="anOrder" layoutY="186.0" prefHeight="45.0" prefWidth="287.0" style="-fx-cursor: hand;" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect">
+            <AnchorPane fx:id="anOrder" layoutY="186.0" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect" prefHeight="45.0" prefWidth="287.0" style="-fx-cursor: hand;" onMouseClicked="#navigateToCommandes">
                <children>
                   <Text fill="#398c3e" layoutX="69.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Orders report" wrappingWidth="212.07421875">
                      <font>
@@ -67,7 +67,7 @@
                   </ImageView>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="anLogout" layoutX="1.0" layoutY="563.0" prefHeight="45.0" prefWidth="250.0" style="-fx-cursor: hand;" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect" onMouseClicked="#logout">
+            <AnchorPane fx:id="anLogout" layoutX="1.0" layoutY="563.0" onMouseClicked="#logout" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect" prefHeight="45.0" prefWidth="250.0" style="-fx-cursor: hand;">
                <children>
                   <Text fill="#398c3e" layoutX="69.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Logout" wrappingWidth="212.07421875">
                      <font>
@@ -81,7 +81,7 @@
                   </ImageView>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="anCategories" layoutX="1.0" layoutY="236.0"  prefHeight="45.0" prefWidth="286.0" style="-fx-cursor: hand;" onMouseEntered="#hoverEffect"  onMouseExited="#normalEffect" onMouseClicked="#NavigateToGestionCategorie">
+            <AnchorPane fx:id="anCategories" layoutX="1.0" layoutY="236.0" onMouseClicked="#NavigateToGestionCategorie" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect" prefHeight="45.0" prefWidth="286.0" style="-fx-cursor: hand;">
             <children>
                   <Text fill="#398c3e" layoutX="69.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Categories" wrappingWidth="212.07421875">
                      <font>
@@ -95,7 +95,7 @@
                   </ImageView>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="anCoverageArea" layoutX="2.0" layoutY="287.0" prefHeight="45.0" prefWidth="285.0" style="-fx-cursor: hand;" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect" onMouseClicked="#navigateToZones">
+            <AnchorPane fx:id="anCoverageArea" layoutX="2.0" layoutY="287.0" onMouseClicked="#navigateToZones" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect" prefHeight="45.0" prefWidth="285.0" style="-fx-cursor: hand;">
                <children>
                   <Text fill="#398c3e" layoutX="69.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Coverage areas" wrappingWidth="212.07421875">
                      <font>
@@ -120,12 +120,12 @@
                   <Image url="@image/logo_final-removebg-preview.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="29.0" fitWidth="21.0" layoutX="1053.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="29.0" fitWidth="21.0" layoutX="1053.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
                <image>
                   <Image url="@image/setting-removebg-preview.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="29.0" fitWidth="21.0" layoutX="1014.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="29.0" fitWidth="21.0" layoutX="1014.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
                <image>
                   <Image url="@image/notification-bell.png" />
                </image>
@@ -136,7 +136,7 @@
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f8f8f8; -fx-border-width: 0;" BorderPane.alignment="CENTER">
          <children>
-            <AnchorPane fx:id="anVerifyUserMain" layoutX="64.0" layoutY="218.0" prefHeight="134.0" prefWidth="201.0" style="-fx-background-color: white; -fx-border-color: #398c3e; -fx-border-radius: 10px;">
+            <AnchorPane fx:id="anVerifyUserMain" layoutX="64.0" layoutY="218.0" prefHeight="134.0" prefWidth="201.0" style="-fx-background-color: white; -fx-border-color: #398c3e; -fx-border-radius: 10px; -fx-cursor: hand;">
                <children>
                   <ImageView fitHeight="52.0" fitWidth="48.0" layoutX="84.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -149,7 +149,7 @@
                      </font>
                   </Text>
                </children></AnchorPane>
-            <AnchorPane fx:id="anDeliveryPMain" layoutX="64.0" layoutY="385.0" prefHeight="143.0" prefWidth="201.0" style="-fx-background-color: white; -fx-border-color: #398c3e; -fx-border-radius: 10px;">
+            <AnchorPane fx:id="anDeliveryPMain" layoutX="64.0" layoutY="385.0" prefHeight="143.0" prefWidth="201.0" style="-fx-background-color: white; -fx-border-color: #398c3e; -fx-border-radius: 10px; -fx-cursor: hand;">
                <children>
                   <ImageView fitHeight="52.0" fitWidth="48.0" layoutX="81.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -163,7 +163,7 @@
                   </Text>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="anListUsersMain" layoutX="304.0" layoutY="217.0" prefHeight="143.0" prefWidth="201.0" style="-fx-background-color: white; -fx-border-color: #398c3e; -fx-border-radius: 10px;">
+            <AnchorPane fx:id="anListUsersMain" layoutX="304.0" layoutY="217.0" prefHeight="143.0" prefWidth="201.0" style="-fx-background-color: white; -fx-border-color: #398c3e; -fx-border-radius: 10px; -fx-cursor: hand;">
                <children>
                   <ImageView fitHeight="52.0" fitWidth="48.0" layoutX="77.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -177,7 +177,7 @@
                   </Text>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="anOrdersMain" layoutX="303.0" layoutY="385.0" prefHeight="143.0" prefWidth="201.0" style="-fx-background-color: white; -fx-border-color: #398c3e; -fx-border-radius: 10px;">
+            <AnchorPane fx:id="anOrdersMain" layoutX="303.0" layoutY="385.0" prefHeight="143.0" prefWidth="201.0" style="-fx-background-color: white; -fx-border-color: #398c3e; -fx-border-radius: 10px; -fx-cursor: hand;">
                <children>
                   <ImageView fitHeight="52.0" fitWidth="48.0" layoutX="74.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -201,7 +201,7 @@
                   <Font name="Bodoni MT" size="22.0" />
                </font>
             </Text>
-            <AnchorPane fx:id="anListCategoriesMain" layoutX="530.0" layoutY="216.0" prefHeight="143.0" prefWidth="201.0" style="-fx-background-color: white; -fx-border-color: #398c3e; -fx-border-radius: 10px;">
+            <AnchorPane fx:id="anListCategoriesMain" layoutX="530.0" layoutY="216.0" prefHeight="143.0" prefWidth="201.0" style="-fx-background-color: white; -fx-border-color: #398c3e; -fx-border-radius: 10px; -fx-cursor: hand;">
                <children>
                   <ImageView fitHeight="52.0" fitWidth="48.0" layoutX="77.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -215,7 +215,7 @@
                   </Text>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="anZoneMain" layoutX="531.0" layoutY="386.0" prefHeight="143.0" prefWidth="201.0" style="-fx-background-color: white; -fx-border-color: #398c3e; -fx-border-radius: 10px;">
+            <AnchorPane fx:id="anZoneMain" layoutX="531.0" layoutY="386.0" prefHeight="143.0" prefWidth="201.0" style="-fx-background-color: white; -fx-border-color: #398c3e; -fx-border-radius: 10px; -fx-cursor: hand;">
                <children>
                   <ImageView fitHeight="52.0" fitWidth="48.0" layoutX="74.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                      <image>
