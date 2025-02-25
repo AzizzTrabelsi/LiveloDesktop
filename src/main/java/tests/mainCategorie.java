@@ -16,6 +16,7 @@ public class mainCategorie {
         CrudCategorie crudCategorie = new CrudCategorie();
         //crudCategorie.delete(10);
         crudCategorie.add(nouvelleCategorie);
+        crudCategorie.delete(10);
         crudCategorie.getAll();
 
 
@@ -27,7 +28,6 @@ public class mainCategorie {
 
 
 
-        crudCategorie.search("amine");
-
+        crudCategorie.search("amine");*/
     }
 }

@@ -21,14 +21,14 @@ public class mainCommande {
                 51
         );
         CrudCommande crudCommande = new CrudCommande();
-       /* crudCommande.delete(13);
+        crudCommande.delete(13);
         System.out.println(crudCommande.getAll());
 
         commande.setAdresse_arr("kelibia");
         commande.setCreated_by(19);
-        crudCommande.update(commande);*/
-        //crudCommande.getById(5);
-        //crudCommande.search("E-Bile");
+        crudCommande.update(commande);
+        crudCommande.getById(11);
+        crudCommande.search("E-Bike");
         CrudCategorie crudCategorie = new CrudCategorie();
 
 

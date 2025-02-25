@@ -23,6 +23,10 @@ public class Trajet {
         this.dureeEstimee = dureeEstimee;
         this.etatTrajet = etatTrajet;
     }
+    public Trajet(int idTrajet) {
+        this.idTrajet = idTrajet;
+    }
+
 
     public int getIdTrajet() {
         return idTrajet;
