@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Categorie {
+
+
+
+
     private int id_categorie;
     private String nom;
     private String description;
@@ -20,6 +24,10 @@ public class Categorie {
         this.url_image = url_image;
         this.createdBy = createdBy;
     }
+    public Categorie(int id_categorie) {
+        this.id_categorie = id_categorie;
+    }
+
     public Categorie(int id_categorie, String nom) {
         this.id_categorie = id_categorie;
         this.nom = nom;
@@ -30,6 +38,12 @@ public class Categorie {
         this.description = description;
         this.url_image = url_image;
     }
+    // Constructeur qui prend un nom et une description
+    public Categorie(String nom, String description ) {
+        this.nom = nom;
+        this.description = description;
+    }
+
     public Categorie(String nom, String description, String url_image, int createdBy) {
         this.nom = nom;
         this.description = description;
