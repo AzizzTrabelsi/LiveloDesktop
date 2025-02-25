@@ -14,7 +14,7 @@ public class mainArticle {
         CrudCategorie crudCategorie = new CrudCategorie();
 
 
-        Categorie categorie = crudCategorie.getById(7);
+        Categorie categorie = crudCategorie.getById(25);
 
         if (categorie == null) {
             System.out.println("Aucune catégorie trouvée avec cet ID.");
@@ -42,8 +42,8 @@ public class mainArticle {
 
 
 
-        // crudArticle.add(article);
-         crudArticle.delete(8);
+        crudArticle.add(article);
+         //crudArticle.delete(8);
 
         // Mise à jour de l'article
          article.setPrix(99.99f);
@@ -56,7 +56,7 @@ public class mainArticle {
         crudArticle.getAll();
 
         // Récupération d'un article spécifique par ID
-        crudArticle.getById(18);
+        //crudArticle.getById(20);
 
         // Recherche d'articles par nom
         System.out.println("Recherche d'articles avec le critère 'Casque Bluetooth' :");
