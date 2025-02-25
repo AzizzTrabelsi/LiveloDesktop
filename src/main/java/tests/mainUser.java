@@ -21,8 +21,8 @@ public class mainUser {
         );
         CrudUser crudUser = new CrudUser();
         //crudUser.delete(19);
-        /*crudUser.add(user);
-        crudUser.getAll();*/
+        /*crudUser.add(user);*/
+        crudUser.getAll();
 
         /*user.setAdresse("Sousse");
         user.setEmail("tasnim.sousse@esprit.tn");
@@ -30,9 +30,9 @@ public class mainUser {
         crudUser.getAll();*/
         //crudUser.getById(1);
 
-       Authentification authentification = new Authentification();
+       /*Authentification authentification = new Authentification();
         String token = authentification.login("48455027", "123456");
 
-        crudUser.search("48455027");
+        crudUser.search("48455027");*/
     }
 }

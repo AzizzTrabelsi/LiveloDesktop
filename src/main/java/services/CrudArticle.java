@@ -14,6 +14,41 @@ import java.util.List;
 public class CrudArticle implements IServiceCrud<Article> {
     Connection conn = MyDatabase.getInstance().getConnection();
 
+    public static CrudArticle instance;
+    public static CrudArticle getInstance() {
+        if (instance == null) {
+            instance = new CrudArticle();
+        }
+        return instance;
+    }
+
+    public static void StaticAdd(Article article)
+    {
+        getInstance().add(article);
+    }
+
+    public List<Article> getArticlesByCategorie(int categorieId) {
+        List<Article> articles = new ArrayList<>();
+        String query = "SELECT * FROM article WHERE id_categorie = ?";
+
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setInt(1, categorieId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Article article = new Article();
+                article.setIdArticle(resultSet.getInt("id"));
+                article.setNom(resultSet.getString("nom"));
+                article.setPrix(resultSet.getFloat("prix"));
+                article.setDescription(resultSet.getString("description"));
+                articles.add(article);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return articles;
+    }
+
 
     @Override
     public void add(Article article) {
@@ -58,7 +93,7 @@ public class CrudArticle implements IServiceCrud<Article> {
 
           try (PreparedStatement statement = conn.prepareStatement(qry, Statement.RETURN_GENERATED_KEYS)){
 
-            statement.setInt(1, idCategorie);
+            statement.setInt(0, idCategorie);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Article article = new Article();

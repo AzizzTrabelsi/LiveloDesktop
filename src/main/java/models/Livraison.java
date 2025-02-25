@@ -22,9 +22,10 @@ public class Livraison {
         this.factureId = factureId;
         this.zoneId = zoneId;
     }
-    public Livraison(int idLivraison, Date dateLivraison, String adresse) {
+    public Livraison(int idLivraison, Date dateLivraison, int adresse) {
         this.idLivraison = idLivraison;
         this.createdAt = dateLivraison;
+        this.zoneId= adresse;
 
     }
 
