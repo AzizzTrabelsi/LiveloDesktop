@@ -19,10 +19,10 @@ public class mainUser {
                 "123456",
                 "28740885",
                 "55455027"
-        );
+        );*/
         CrudUser crudUser = new CrudUser();
-
-        // Test d'authentification
+        crudUser.search("11111111");
+        /*
        Authentification authentification = new Authentification();
        String token = authentification.login("11111111", "admin123");
 
@@ -44,9 +44,10 @@ public class mainUser {
         } else {
             System.out.println("Code de réinitialisation invalide ou utilisateur non trouvé.");
         }*/
-        Dotenv dotenv = Dotenv.load();
+        /*Dotenv dotenv = Dotenv.load();
         String dbUrl = dotenv.get("SECRET_KEY_SENDGRID");
-        System.out.println("SECRET_KEY_SENDGRID: " + dbUrl);
+        System.out.println("SECRET_KEY_SENDGRID: " + dbUrl);*/
+
 
     }
 

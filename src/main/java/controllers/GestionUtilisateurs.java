@@ -449,7 +449,7 @@ public class GestionUtilisateurs implements Initializable {
             lblVerified.setMinWidth(80);
             lblVerified.setMaxWidth(80);
 
-            Label lblTransport = new Label(user.getType_vehicule().toString());
+            Label lblTransport = new Label(user.getType_vehicule() != null ? user.getType_vehicule().toString() : "No transport");
             lblTransport.setMinWidth(80);
             lblTransport.setMaxWidth(80);
 
