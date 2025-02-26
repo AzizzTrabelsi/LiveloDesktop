@@ -271,9 +271,10 @@
                   <TextField fx:id="anTrajets" layoutX="274.0" layoutY="137.0" prefHeight="33.0" prefWidth="159.0" promptText="Les Trajets" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
                   <TextField fx:id="anLongitude" layoutX="483.0" layoutY="37.0" prefHeight="28.0" prefWidth="134.0" promptText="Longitude" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
                   <TextField fx:id="anLivraisonN" layoutX="476.0" layoutY="90.0" prefHeight="28.0" prefWidth="139.0" promptText="Livraison N **" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
-                  <Button fx:id="AddButton" layoutX="653.0" layoutY="141.0" mnemonicParsing="false" onMouseClicked="" prefHeight="26.0" prefWidth="79.0" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 2px; -fx-border-radius: 10px;" text="ADD" />
+                  <Button fx:id="AddButton" layoutX="653.0" layoutY="141.0" mnemonicParsing="false" onMouseClicked="#AddZone" prefHeight="26.0" prefWidth="79.0" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 2px; -fx-border-radius: 10px;" text="ADD" />
                </children>
             </AnchorPane>
-            </children></AnchorPane>
+            </children>
+        </AnchorPane>
     </center>
 </BorderPane>

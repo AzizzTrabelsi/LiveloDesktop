@@ -7,6 +7,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import net.minidev.json.JSONObject;
 import services.Authentification;
@@ -23,6 +25,12 @@ public class SignIn {
 
     @FXML
     private TextField tfCIN;
+
+    @FXML
+    private ImageView imView;
+
+    @FXML
+    private Text txtForgotPassword;
 
     @FXML
     private PasswordField tfPassword;
@@ -149,6 +157,25 @@ public class SignIn {
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error loading homeAdmin.fxml.");
+        }
+    }
+    @FXML
+    private void ouvrirResetPasswordPoupup() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/PopupResetPassword.fxml"));
+            Parent root = loader.load();
+
+            // Récupération du contrôleur de la popup
+            PopupResetPassword controller = loader.getController();
+            // Passer la référence du Stage de SignIn à la popup
+            controller.setSignInStage((Stage) txtForgotPassword.getScene().getWindow());
+
+            Stage stage = new Stage();
+            stage.setTitle("Reset password");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

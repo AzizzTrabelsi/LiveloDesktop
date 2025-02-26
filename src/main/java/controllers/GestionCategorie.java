@@ -21,6 +21,7 @@ import services.CrudCategorie;
 import services.CrudUser;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import tests.MainUserInterface;
 
 import java.io.IOException;
 import java.net.URL;
@@ -64,9 +65,9 @@ public class GestionCategorie implements Initializable  {
             lbdescrip.setMinWidth(80);
             lbdescrip.setMaxWidth(80);
 
-            Label lblimg = new Label(category.getUrl_image());
-            lblimg.setMinWidth(80); // Définit la largeur de l'image
-            lblimg.setMaxWidth(80);// Définit la hauteur de l'image
+            //Label lblimg = new Label(category.getUrl_image());
+           // lblimg.setMinWidth(80); // Définit la largeur de l'image
+           // lblimg.setMaxWidth(80);// Définit la hauteur de l'image
 
 
 
@@ -79,6 +80,9 @@ public class GestionCategorie implements Initializable  {
     }
     @FXML
     private void showCategoryDetailsPopup(Categorie categorie) {
+
+        GestionArticle.CategoryID = categorie.getId_categorie();
+        System.out.println("categorie ID : " + GestionArticle.CategoryID);
         System.out.println("categorie sélectionné : " + categorie.getNom() + " " + categorie.getDescription());
 
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
@@ -87,6 +91,13 @@ public class GestionCategorie implements Initializable  {
                 "Nom : " + categorie.getNom() + "\n" +
                 "Description : " + categorie.getDescription() + "\n" +
                 "Url image : " + categorie.getUrl_image());
+
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+
+        // Handle the X button click
+        stage.setOnCloseRequest(event -> {
+           stage.close();
+        });
 
 
         ButtonType updateButton = new ButtonType("Mettre à jour");
@@ -122,10 +133,10 @@ public class GestionCategorie implements Initializable  {
                     }
                 });
             } else if (response == viewArticlesButton) {
-                // Charger la page des articles en passant l'ID de la catégorie
-                GestionArticle articleController = new GestionArticle();
-                articleController.showArticlesForCategory(categorie.getId_categorie());
+                // TODO: Display the articles page given a category ID
+                MainUserInterface.switchScene(MainUserInterface.GetPrimaryStage(),"/GestionArticle.fxml");
             }
+
         });
 
 
@@ -150,14 +161,14 @@ public class GestionCategorie implements Initializable  {
 
         TextField nomField = new TextField(categorie.getNom());
         TextField descField = new TextField(categorie.getDescription());
-        TextField imgField = new TextField(categorie.getUrl_image());
+        //TextField imgField = new TextField(categorie.getUrl_image());
 
         grid.add(new Label("Nom:"), 0, 0);
         grid.add(nomField, 1, 0);
         grid.add(new Label("Description:"), 0, 1);
         grid.add(descField, 1, 1);
-        grid.add(new Label("url image:"), 0, 2);
-        grid.add(imgField, 1, 2);
+       // grid.add(new Label("url image:"), 0, 2);
+        //grid.add(imgField, 1, 2);
 
 
         dialog.getDialogPane().setContent(grid);
@@ -167,7 +178,7 @@ public class GestionCategorie implements Initializable  {
                 // Update the user object with the new values
                 categorie.setNom(nomField.getText());
                 categorie.setDescription(descField.getText());
-                categorie.setUrl_image(imgField.getText());
+               // categorie.setUrl_image(imgField.getText());
 
 
                 // Save the updated user to the database
@@ -203,13 +214,13 @@ public class GestionCategorie implements Initializable  {
         Label lblHeaderDesc = new Label("Description");
         lblHeaderDesc.setMinWidth(300);
         lblHeaderDesc.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
-        Label lblHeaderImg = new Label("url image");
-        lblHeaderImg.setMinWidth(300);
-        lblHeaderImg.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+       // Label lblHeaderImg = new Label("url image");
+       // lblHeaderImg.setMinWidth(300);
+        //lblHeaderImg.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
 
 
 
-        headerRow.getChildren().addAll(lblHeaderNom, lblHeaderDesc, lblHeaderImg);
+        headerRow.getChildren().addAll(lblHeaderNom, lblHeaderDesc);
         vListUsers.getChildren().add(headerRow);
 
         // Récupération des catégories
@@ -226,34 +237,34 @@ public class GestionCategorie implements Initializable  {
 
             Label lblDesc = new Label(categorie.getDescription());
             lblDesc.setMinWidth(300);
-            Label lblimg = new Label(categorie.getUrl_image());
-            lblimg.setMinWidth(300);
-            catRow.getChildren().addAll(lblNom, lblDesc, lblimg);
-            Button deleteButton = new Button("Supprimer");
-            deleteButton.setOnAction(event -> {
-                javafx.scene.control.Alert confirmationAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
-                confirmationAlert.setTitle("Confirmation de la suppression");
-                confirmationAlert.setHeaderText("Êtes-vous sûr de vouloir supprimer cette categorie ?");
-                confirmationAlert.setContentText("Cette action est irréversible.");
-
-                ButtonType yesButton = new ButtonType("Oui");
-                ButtonType noButton = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-                confirmationAlert.getButtonTypes().setAll(yesButton, noButton);
-
-                confirmationAlert.showAndWait().ifPresent(confirmationResponse -> {
-                    if (confirmationResponse == yesButton) {
-                        // Effectuer la suppression
-                        su.delete(categorie.getId_categorie());
-                        System.out.println("categorie supprimé.");
-                        loadCategory();
-                    } else {
-                        System.out.println("Suppression annulée.");
-                    }
-                });
-            });
-
-            catRow.getChildren().add(deleteButton);
+           // Label lblimg = new Label(categorie.getUrl_image());
+            //lblimg.setMinWidth(300);
+            catRow.getChildren().addAll(lblNom, lblDesc);
+           // Button deleteButton = new Button("Supprimer");
+//            deleteButton.setOnAction(event -> {
+//                javafx.scene.control.Alert confirmationAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+//                confirmationAlert.setTitle("Confirmation de la suppression");
+//                confirmationAlert.setHeaderText("Êtes-vous sûr de vouloir supprimer cette categorie ?");
+//                confirmationAlert.setContentText("Cette action est irréversible.");
+//
+//                ButtonType yesButton = new ButtonType("Oui");
+//                ButtonType noButton = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
+//
+//                confirmationAlert.getButtonTypes().setAll(yesButton, noButton);
+//
+//                confirmationAlert.showAndWait().ifPresent(confirmationResponse -> {
+//                    if (confirmationResponse == yesButton) {
+//                        // Effectuer la suppression
+//                        su.delete(categorie.getId_categorie());
+//                        System.out.println("categorie supprimé.");
+//                        loadCategory();
+//                    } else {
+//                        System.out.println("Suppression annulée.");
+//                    }
+//                });
+//            });
+//
+//            catRow.getChildren().add(deleteButton);
 
             catRow.setOnMouseClicked(event -> showCategoryDetailsPopup(categorie));
 
@@ -337,8 +348,8 @@ public class GestionCategorie implements Initializable  {
         nameField.setPromptText("Nom de la catégorie");
         TextArea descriptionField = new TextArea();
         descriptionField.setPromptText("Description de la catégorie");
-        TextField imageUrlField = new TextField();
-        imageUrlField.setPromptText("URL de l'image");
+//        TextField imageUrlField = new TextField();
+//        imageUrlField.setPromptText("URL de l'image");
 
         // Créer un bouton pour enregistrer la catégorie
         Button saveButton = new Button("Enregistrer");
@@ -347,12 +358,12 @@ public class GestionCategorie implements Initializable  {
         saveButton.setOnAction(event -> {
             String name = nameField.getText();
             String description = descriptionField.getText();
-            String imageUrl = imageUrlField.getText();
+            //String imageUrl = imageUrlField.getText();
 
             // Vérifier si les champs ne sont pas vides
-            if (!name.isEmpty() && !description.isEmpty() && !imageUrl.isEmpty()) {
+            if (!name.isEmpty() && !description.isEmpty()/* && !imageUrl.isEmpty()*/) {
                 // Créer une nouvelle catégorie
-                Categorie newCategory = new Categorie(name, description, imageUrl); // Assurez-vous que votre constructeur est correct
+                Categorie newCategory = new Categorie(name, description); // Assurez-vous que votre constructeur est correct
 
                 // Ajouter la catégorie à la base de données ou au service
                 su.add(newCategory);  // Ajoutez la catégorie à votre service de gestion des catégories
@@ -370,7 +381,7 @@ public class GestionCategorie implements Initializable  {
         });
 
         // Ajouter les champs et le bouton au layout de la popup
-        popupLayout.getChildren().addAll(nameField, descriptionField, imageUrlField, saveButton);
+        popupLayout.getChildren().addAll(nameField, descriptionField, saveButton);
 
         // Créer la scène et ajouter le layout
         Scene popupScene = new Scene(popupLayout, 300, 250);

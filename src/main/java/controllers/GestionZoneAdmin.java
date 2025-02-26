@@ -628,7 +628,7 @@ public class GestionZoneAdmin implements Initializable{
     @FXML
     private void logout() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/SignIn.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
             Scene signInScene = new Scene(loader.load());
 
             Stage stage = (Stage) anLogout.getScene().getWindow();
@@ -636,7 +636,7 @@ public class GestionZoneAdmin implements Initializable{
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors du chargement de SignIn.fxml.");
+            System.out.println("Erreur lors du chargement de login.fxml.");
         }
     }
 

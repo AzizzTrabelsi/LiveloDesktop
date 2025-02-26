@@ -14,7 +14,7 @@ public class mainArticle {
         CrudCategorie crudCategorie = new CrudCategorie();
 
 
-        Categorie categorie = crudCategorie.getById(25);
+        Categorie categorie = crudCategorie.getById(27);
 
         if (categorie == null) {
             System.out.println("Aucune catégorie trouvée avec cet ID.");
@@ -26,9 +26,9 @@ public class mainArticle {
                0,
                "https://example.com/image.jpg",
                 categorie,
-               "Casque Bluetooth",
+               "CABLE USB ",
                120.99f,
-                "Casque sans fil avec réduction de bruit",
+                " 2mt",
                 50,
                 10,
                 statut_article.on_stock,
