@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -13,26 +14,79 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.User;
-import models.role_user;
-import models.type_vehicule;
-import services.CrudUser;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
+import services.UsersVerification;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class GestionUtilisateurs implements Initializable {
+public class GestionUsersVerification implements Initializable {
 
-    private CrudUser su = new CrudUser();
+    @FXML
+    private AnchorPane anCategories;
+
+    @FXML
+    private AnchorPane anCoverageArea;
+
+    @FXML
+    private AnchorPane anLogout;
+
+    @FXML
+    private AnchorPane anOrder;
+
+    @FXML
+    private AnchorPane anPendingUsers;
+
+    @FXML
+    private AnchorPane anRiders;
+
+    @FXML
+    private TextField anSearch;
+
+    @FXML
+    private AnchorPane anUsers;
+
+    @FXML
+    private HBox hbHedha;
+
+    @FXML
+    private HBox headerhb;
+
+    @FXML
+    private ImageView imLogo;
+
+    @FXML
+    private Label lblAdress;
+
+    @FXML
+    private Label lblCin;
+
+    @FXML
+    private Label lblEmail;
+
+    @FXML
+    private Label lblNom;
+
+    @FXML
+    private Label lblPrenom;
+
+    @FXML
+    private Label lblRole;
+
+    @FXML
+    private Label lblTransport;
+
+    @FXML
+    private VBox vListUsers;
+
+
+    private UsersVerification uv = new UsersVerification();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Afficher tous les utilisateurs au démarrage
         Show(null);
 
-        // Ajouter un écouteur sur le champ de recherche
         anSearch.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty()) {
                 // Si le champ de recherche est vide, afficher tous les utilisateurs
@@ -47,8 +101,7 @@ public class GestionUtilisateurs implements Initializable {
     @FXML
     void Show(ActionEvent showEvent) {
         hbHedha.getChildren().clear();
-
-        List<User> usersList = su.getAll();
+        List<User> usersList = uv.getUnverifiedUsers();
 
         for (User user : usersList) {
             HBox userRow = new HBox(4);
@@ -79,159 +132,56 @@ public class GestionUtilisateurs implements Initializable {
             lblRole.setMinWidth(105);
             lblRole.setMaxWidth(105);
 
-            Label lblVerified = new Label(String.valueOf(user.isVerified() ? "Yes" : "No"));
-            lblVerified.setMinWidth(80);
-            lblVerified.setMaxWidth(80);
-
             String transport = (user.getType_vehicule() != null) ? user.getType_vehicule().toString() : "No transport";
             Label lblTransport = new Label(transport);
             lblTransport.setMinWidth(80);
             lblTransport.setMaxWidth(80);
 
-            userRow.getChildren().addAll(lblPrenom, lblNom, lblCin, lblAdress, lblEmail, lblRole, lblVerified, lblTransport);
+            Button acceptButton = new Button("✅");
+            acceptButton.setStyle("-fx-background-color: transparent; -fx-border-color: green; -fx-border-radius: 10; -fx-border-width: 2;");
+            acceptButton.setOnAction(event -> {
+                showConfirmationDialog("Accept", "Are you sure you want to give access to this user: "+user.getNom()+" ?", () -> {
+                    uv.acceptUser(user.getId());
+                    loadUsers();
+                });
+            });
 
-            userRow.setOnMouseClicked(event -> showUserDetailsPopup(user));
+            Button refuseButton = new Button("❌");
+            refuseButton.setStyle("-fx-background-color: transparent; -fx-border-color: red; -fx-border-radius: 10; -fx-border-width: 2;");
+            refuseButton.setOnAction(event -> {
+                showConfirmationDialog("Refuse", "Are you sure you want to delete this user:  "+user.getNom()+" ?", () -> {
+                    uv.refuseUser(user.getId());
+                    loadUsers();
+                    });
+            });
 
+            userRow.getChildren().addAll(lblPrenom, lblNom, lblCin, lblAdress, lblEmail, lblRole, lblTransport, acceptButton, refuseButton);
             vListUsers.getChildren().add(userRow);
         }
     }
 
 
-    @FXML
-    private void showUserDetailsPopup(User user) {
-        System.out.println("Utilisateur sélectionné : " + user.getPrenom() + " " + user.getNom());
+    private void showConfirmationDialog(String title, String message, Runnable onConfirm) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
 
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-        alert.setTitle("Détails de l'utilisateur");
-        alert.setHeaderText("Informations sur " + user.getPrenom() + " " + user.getNom());
-        alert.setContentText("CIN : " + user.getCin() + "\n" +
-                "Adresse : " + user.getAdresse() + "\n" +
-                "Email : " + user.getEmail() + "\n" +
-                "Rôle : " + user.getRole().name() + "\n" +
-                "Vérifié : " + user.isVerified() + "\n" +
-                "Transport : " + user.getType_vehicule());
+        ButtonType buttonYes = new ButtonType("Yes");
+        ButtonType buttonCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-
-        ButtonType updateButton = new ButtonType("Mettre à jour");
-        ButtonType deleteButton = new ButtonType("Supprimer");
-
-        alert.getButtonTypes().setAll(updateButton, deleteButton, ButtonType.CLOSE);
-
+        alert.getButtonTypes().setAll(buttonYes, buttonCancel);
         alert.showAndWait().ifPresent(response -> {
-            if (response == updateButton) {
-                showUpdatePopup(user);
-                System.out.println("Mettre à jour les informations de l'utilisateur.");
-            } else if (response == deleteButton) {
-                // Afficher une pop-up de confirmation pour la suppression
-                javafx.scene.control.Alert confirmationAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
-                confirmationAlert.setTitle("Confirmation de la suppression");
-                confirmationAlert.setHeaderText("Êtes-vous sûr de vouloir supprimer cet utilisateur ?");
-                confirmationAlert.setContentText("Cette action est irréversible.");
-
-                // Ajouter les boutons de confirmation
-                ButtonType yesButton = new ButtonType("Oui");
-                ButtonType noButton = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-                confirmationAlert.getButtonTypes().setAll(yesButton, noButton);
-
-                confirmationAlert.showAndWait().ifPresent(confirmationResponse -> {
-                    if (confirmationResponse == yesButton) {
-                        // Effectuer la suppression
-                        su.delete(user.getId());
-                        System.out.println("Utilisateur supprimé.");
-                        loadUsers();
-                    } else {
-                        System.out.println("Suppression annulée.");
-                    }
-                });
+            if (response == buttonYes) {
+                onConfirm.run();
             }
         });
     }
-
-    @FXML
-    private void showUpdatePopup(User user) {
-        Dialog<User> dialog = new Dialog<>();
-        dialog.setTitle("Mettre à jour l'utilisateur");
-        dialog.setHeaderText("Modifier les informations de l'utilisateur");
-
-        ButtonType saveButtonType = new ButtonType("Enregistrer", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
-        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, cancelButtonType);
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-
-        TextField prenomField = new TextField(user.getPrenom());
-        TextField nomField = new TextField(user.getNom());
-        TextField cinField = new TextField(user.getCin());
-        TextField adresseField = new TextField(user.getAdresse());
-        TextField emailField = new TextField(user.getEmail());
-
-        ComboBox<String> roleComboBox = new ComboBox<>();
-        roleComboBox.getItems().addAll( "partner", "delivery_person", "client");
-        roleComboBox.setValue(user.getRole().toString());
-
-        // Remplir la ComboBox des types de véhicule manuellement
-        ComboBox<String> transportComboBox = new ComboBox<>();
-        transportComboBox.getItems().addAll("e_bike", "e_scooter", "Bike");
-        if (user.getType_vehicule() != null) {
-            transportComboBox.setValue(user.getType_vehicule().toString());
-        }
-
-        grid.add(new Label("Prénom:"), 0, 0);
-        grid.add(prenomField, 1, 0);
-        grid.add(new Label("Nom:"), 0, 1);
-        grid.add(nomField, 1, 1);
-        grid.add(new Label("CIN:"), 0, 2);
-        grid.add(cinField, 1, 2);
-        grid.add(new Label("Adresse:"), 0, 3);
-        grid.add(adresseField, 1, 3);
-        grid.add(new Label("Email:"), 0, 4);
-        grid.add(emailField, 1, 4);
-        grid.add(new Label("Rôle:"), 0, 5);
-        grid.add(roleComboBox, 1, 5);
-        grid.add(new Label("Transport:"), 0, 6);
-        grid.add(transportComboBox, 1, 6);
-
-        dialog.getDialogPane().setContent(grid);
-
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == saveButtonType) {
-                user.setPrenom(prenomField.getText());
-                user.setNom(nomField.getText());
-                user.setCin(cinField.getText());
-                user.setAdresse(adresseField.getText());
-                user.setEmail(emailField.getText());
-
-                // Convertir le rôle sélectionné en enum
-                user.setRole(role_user.valueOf(roleComboBox.getValue()));
-
-                // Vérifier si le champ transport est vide avant d'affecter
-                if (transportComboBox.getValue() == null || transportComboBox.getValue().isEmpty()) {
-                    user.setType_vehicule(null);
-                } else {
-                    user.setType_vehicule(type_vehicule.valueOf(transportComboBox.getValue()));
-                }
-
-                // Mettre à jour l'utilisateur dans la base de données
-                su.update(user);
-                loadUsers();
-
-                return user;
-            }
-            return null;
-        });
-
-        dialog.showAndWait();
-    }
-
 
     @FXML
     public void loadUsers() {
         System.out.println("Chargement des utilisateurs...");
 
-        // Nettoyer la liste actuelle des utilisateurs
         vListUsers.getChildren().clear();
 
         HBox headerRow = new HBox(4);
@@ -270,21 +220,16 @@ public class GestionUtilisateurs implements Initializable {
         lblHeaderRole.setMaxWidth(105);
         lblHeaderRole.setStyle("-fx-text-fill: black;");
 
-        Label lblHeaderVerified = new Label("Verified");
-        lblHeaderVerified.setMinWidth(80);
-        lblHeaderVerified.setMaxWidth(80);
-        lblHeaderVerified.setStyle("-fx-text-fill: black;");
-
         Label lblHeaderTransport = new Label("Transport");
         lblHeaderTransport.setMinWidth(80);
         lblHeaderTransport.setMaxWidth(80);
         lblHeaderTransport.setStyle("-fx-text-fill: black;");
 
-        headerRow.getChildren().addAll(lblHeaderPrenom, lblHeaderNom, lblHeaderCin, lblHeaderAdress, lblHeaderEmail, lblHeaderRole, lblHeaderVerified, lblHeaderTransport);
+        headerRow.getChildren().addAll(lblHeaderPrenom, lblHeaderNom, lblHeaderCin, lblHeaderAdress, lblHeaderEmail, lblHeaderRole,  lblHeaderTransport);
 
         vListUsers.getChildren().add(headerRow);
 
-        List<User> usersList = su.getAll();
+        List<User> usersList = uv.getUnverifiedUsers();
 
         for (User user : usersList) {
             HBox userRow = new HBox(4);
@@ -315,46 +260,32 @@ public class GestionUtilisateurs implements Initializable {
             lblRole.setMinWidth(105);
             lblRole.setMaxWidth(105);
 
-            Label lblVerified = new Label(String.valueOf(user.isVerified() ? "Yes" : "No"));
-            lblVerified.setMinWidth(80);
-            lblVerified.setMaxWidth(80);
-
-            // Gestion du transport avec vérification si type_vehicule est null
-            String transport = (user.getType_vehicule() != null) ? user.getType_vehicule().toString() : "Aucun transport";
+            String transport = (user.getType_vehicule() != null) ? user.getType_vehicule().toString() : "No transport";
             Label lblTransport = new Label(transport);
             lblTransport.setMinWidth(80);
             lblTransport.setMaxWidth(80);
 
-            userRow.getChildren().addAll(lblPrenom, lblNom, lblCin, lblAdress, lblEmail, lblRole, lblVerified, lblTransport);
-
-            Button deleteButton = new Button("Supprimer");
-            deleteButton.setOnAction(event -> {
-                javafx.scene.control.Alert confirmationAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
-                confirmationAlert.setTitle("Confirmation de la suppression");
-                confirmationAlert.setHeaderText("Êtes-vous sûr de vouloir supprimer cet utilisateur ?");
-                confirmationAlert.setContentText("Cette action est irréversible.");
-
-                ButtonType yesButton = new ButtonType("Oui");
-                ButtonType noButton = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-                confirmationAlert.getButtonTypes().setAll(yesButton, noButton);
-
-                confirmationAlert.showAndWait().ifPresent(confirmationResponse -> {
-                    if (confirmationResponse == yesButton) {
-                        // Effectuer la suppression
-                        su.delete(user.getId());
-                        System.out.println("Utilisateur supprimé.");
-                        loadUsers();
-                    } else {
-                        System.out.println("Suppression annulée.");
-                    }
+            // Create Accept Button
+            Button acceptButton = new Button("V");
+            acceptButton.setStyle("-fx-background-color: transparent; -fx-border-color: green; -fx-border-radius: 10; -fx-border-width: 2;");
+            acceptButton.setOnAction(event -> {
+                showConfirmationDialog("Accepter", "Voulez-vous vraiment accepter cet utilisateur ?", () -> {
+                    uv.acceptUser(user.getId());
+                    loadUsers();
                 });
             });
 
-            userRow.getChildren().add(deleteButton);
+            // Create Refuse Button
+            Button refuseButton = new Button("X");
+            refuseButton.setStyle("-fx-background-color: transparent; -fx-border-color: red; -fx-border-radius: 10; -fx-border-width: 2;");
+            refuseButton.setOnAction(event -> {
+                showConfirmationDialog("Refuser", "Voulez-vous vraiment refuser cet utilisateur ?", () -> {
+                    uv.refuseUser(user.getId());
+                    loadUsers();
+                });
+            });
 
-            userRow.setOnMouseClicked(event -> showUserDetailsPopup(user));
-
+            userRow.getChildren().addAll(lblPrenom, lblNom, lblCin, lblAdress, lblEmail, lblRole, lblTransport, acceptButton, refuseButton);
             vListUsers.getChildren().add(userRow);
         }
     }
@@ -400,26 +331,20 @@ public class GestionUtilisateurs implements Initializable {
         lblHeaderRole.setMaxWidth(105);
         lblHeaderRole.setStyle("-fx-text-fill: black;");
 
-        Label lblHeaderVerified = new Label("Verified");
-        lblHeaderVerified.setMinWidth(80);
-        lblHeaderVerified.setMaxWidth(80);
-        lblHeaderVerified.setStyle("-fx-text-fill: black;");
-
         Label lblHeaderTransport = new Label("Transport");
         lblHeaderTransport.setMinWidth(80);
         lblHeaderTransport.setMaxWidth(80);
         lblHeaderTransport.setStyle("-fx-text-fill: black;");
 
-        headerRow.getChildren().addAll(lblHeaderPrenom, lblHeaderNom, lblHeaderCin, lblHeaderAdress, lblHeaderEmail, lblHeaderRole, lblHeaderVerified, lblHeaderTransport);
+        headerRow.getChildren().addAll(lblHeaderPrenom, lblHeaderNom, lblHeaderCin, lblHeaderAdress, lblHeaderEmail, lblHeaderRole,  lblHeaderTransport);
         vListUsers.getChildren().add(headerRow);
 
-        List<User> usersList = su.search(criteria);
+        List<User> usersList = uv.search(criteria);
 
         for (User user : usersList) {
             HBox userRow = new HBox(4);
             userRow.setPrefHeight(32.0);
             userRow.setPrefWidth(765.0);
-            userRow.setStyle("-fx-padding: 10px;");
 
             Label lblPrenom = new Label(user.getPrenom());
             lblPrenom.setMinWidth(80);
@@ -441,63 +366,40 @@ public class GestionUtilisateurs implements Initializable {
             lblEmail.setMinWidth(130);
             lblEmail.setMaxWidth(130);
 
-            Label lblRole = new Label(user.getRole().toString());
+            Label lblRole = new Label(user.getRole().name());
             lblRole.setMinWidth(105);
             lblRole.setMaxWidth(105);
 
-            Label lblVerified = new Label(user.isVerified() ? "Yes" : "No");
-            lblVerified.setMinWidth(80);
-            lblVerified.setMaxWidth(80);
-
-            Label lblTransport = new Label(user.getType_vehicule().toString());
+            String transport = (user.getType_vehicule() != null) ? user.getType_vehicule().toString() : "No transport";
+            Label lblTransport = new Label(transport);
             lblTransport.setMinWidth(80);
             lblTransport.setMaxWidth(80);
 
-            userRow.getChildren().addAll(lblPrenom, lblNom, lblCin, lblAdress, lblEmail, lblRole, lblVerified, lblTransport);
+            // Create Accept Button
+            Button acceptButton = new Button("V");
+            acceptButton.setStyle("-fx-background-color: transparent; -fx-border-color: green; -fx-border-radius: 10; -fx-border-width: 2;");
+            acceptButton.setOnAction(event -> {
+                showConfirmationDialog("Accepter", "Voulez-vous vraiment accepter cet utilisateur ?", () -> {
+                    uv.acceptUser(user.getId());
+                    loadUsers();
+                });
+            });
 
+            // Create Refuse Button
+            Button refuseButton = new Button("X");
+            refuseButton.setStyle("-fx-background-color: transparent; -fx-border-color: red; -fx-border-radius: 10; -fx-border-width: 2;");
+            refuseButton.setOnAction(event -> {
+                showConfirmationDialog("Refuser", "Voulez-vous vraiment refuser cet utilisateur ?", () -> {
+                    uv.refuseUser(user.getId());
+                    loadUsers();
+                });
+            });
+
+            userRow.getChildren().addAll(lblPrenom, lblNom, lblCin, lblAdress, lblEmail, lblRole, lblTransport, acceptButton, refuseButton);
             vListUsers.getChildren().add(userRow);
         }
     }
 
-    @FXML
-    private HBox headerhb;
-
-    @FXML
-    private HBox hbActions;
-
-    @FXML
-    private AnchorPane anCategories;
-
-    @FXML
-    private AnchorPane anCoverageArea;
-
-    @FXML
-    private AnchorPane anLogout;
-
-    @FXML
-    private AnchorPane anOrder;
-
-    @FXML
-    private AnchorPane anPendingUsers;
-
-    @FXML
-    private AnchorPane anRiders;
-
-    @FXML
-    private TextField anSearch;
-
-    @FXML
-    private AnchorPane anUsers;
-
-    @FXML
-    private ImageView imLogo;
-
-    @FXML
-    private VBox vListUsers;
-
-    @FXML
-    private HBox hbHedha;
-    
     @FXML
     private void navigateToHome() {
         try {
@@ -514,14 +416,13 @@ public class GestionUtilisateurs implements Initializable {
             System.out.println("Error loading SignUp.fxml.");
         }
     }
-
     @FXML
-    private void NavigateToPendingUsers() {
+    private void NavigateToGestionUsers() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionUsersVerification.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionUtilisateurs.fxml"));
             Scene GestionUtilisateursScene = new Scene(loader.load());
 
-            Stage stage = (Stage) anPendingUsers.getScene().getWindow();
+            Stage stage = (Stage) anLogout.getScene().getWindow();
             stage.setScene(GestionUtilisateursScene);
             stage.show();
         } catch (IOException e) {
@@ -602,4 +503,5 @@ public class GestionUtilisateurs implements Initializable {
             System.out.println("Error loading SignUp.fxml.");
         }
     }
+
 }

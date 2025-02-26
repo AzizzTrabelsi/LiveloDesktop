@@ -31,7 +31,7 @@ import tests.MainUserInterface;
 import java.io.IOException;
 import java.net.URL;
 
-public class GestionArticle implements Initializable {
+public class adminArt implements Initializable {
 
     private CrudArticle su = new CrudArticle();
     public static int CategoryID;
@@ -732,7 +732,7 @@ public class GestionArticle implements Initializable {
         createdAtPicker.setPromptText("Date de création");
 
         //TextField categoryIdField = new TextField();
-       // categoryIdField.setPromptText("ID de la catégorie");
+        // categoryIdField.setPromptText("ID de la catégorie");
 
         // Save button
         Button saveButton = new Button("Enregistrer");

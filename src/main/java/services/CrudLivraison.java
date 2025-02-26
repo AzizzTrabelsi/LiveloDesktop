@@ -1,3 +1,4 @@
+
 package services;
 
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CrudLivraison implements IServiceCrud<Livraison> {
-        Connection conn = MyDatabase.getInstance().getConnection();
+    Connection conn = MyDatabase.getInstance().getConnection();
 
     @Override
     public void add(Livraison liv) {
@@ -246,6 +247,3 @@ public class CrudLivraison implements IServiceCrud<Livraison> {
     }
 
 }
-
-
-

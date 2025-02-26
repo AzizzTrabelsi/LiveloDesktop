@@ -19,9 +19,9 @@ public class MainAvis {
         }
 
         // Création d'un nouvel avis sans spécifier d'ID
-        Avis nouvelAvis = new Avis(
-                50,                          // ID de l'utilisateur (createdBy)
-                livraison,                   // Livraison associée
+        Avis nouvelAvis = new Avis(50,
+                56,                          // ID de l'utilisateur (createdBy)
+                 livraison,                   // Livraison associée
                 new Date(),                  // Date de création de l'avis
                 "Très satisfait de la livraison, tout était parfait !"  // Description de l'avis
         );
