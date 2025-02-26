@@ -106,7 +106,7 @@ public class HomeAdmin {
     @FXML
     private void NavigateToGestionCategorie() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/avoir.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/adminCat.fxml"));
             Scene GestionCategorieScene = new Scene(loader.load());
 
             Stage stage = (Stage) anCategories.getScene().getWindow();

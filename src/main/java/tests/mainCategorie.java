@@ -28,6 +28,6 @@ public class mainCategorie {
 
 
 
-        crudCategorie.search("amine");*/
+        crudCategorie.search("amine");
     }
 }
