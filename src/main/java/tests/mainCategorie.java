@@ -4,7 +4,15 @@ import models.Categorie;
 import services.CrudCategorie;
 
 public class mainCategorie {
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
+
+
+        /*Categorie nouvelleCategorie = new Categorie(
+                "lemino",
+                "description delemino",
+                "C:/projetpidev/LiveloDesktop/src/main/resources/image/bin.png",
+                "img1.jpg",
+                53
 
         Categorie nouvelleCategorie = new Categorie(
                 "categ 3",
@@ -12,6 +20,7 @@ public class mainCategorie {
                 "C:/projetpidev/LiveloDesktop/src/main/resources/image/bin.png",
 
                 50
+
         );
 
         CrudCategorie crudCategorie = new CrudCategorie();
@@ -31,6 +40,8 @@ public class mainCategorie {
 
 
 
+
         crudCategorie.search("amine");*/
+
 }
 

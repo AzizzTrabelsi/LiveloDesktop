@@ -1,17 +1,66 @@
 package services;
 
+import controllers.MarketClient;
 import models.*;
 import utils.MyDatabase;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CrudCommande implements interfaces.IServiceCrud<Commande> {
     Connection conn= MyDatabase.getInstance().getConnection();
-
+    private CrudArticle crudArticle=new CrudArticle();
     @Override
     public void add(Commande commande) {
+        String qry = "INSERT INTO `commande`(`adresse_dep`, `adresse_arr`, `type_livraison`, `horaire`, `statut`, `created_by`) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try {
+            conn.setAutoCommit(false); // Démarre la transaction
+
+            // Préparer la requête avec récupération de l'ID généré
+            PreparedStatement pstm = conn.prepareStatement(qry, Statement.RETURN_GENERATED_KEYS);
+            pstm.setString(1, commande.getAdresse_dep());
+            pstm.setString(2, commande.getAdresse_arr());
+            pstm.setString(3, commande.getType_livraison());
+            pstm.setTimestamp(4, commande.getHoraire());
+            pstm.setString(5, commande.getStatut().toString());
+            pstm.setInt(6, commande.getCreated_by());
+
+            // Exécuter l'insertion
+            pstm.executeUpdate();
+
+            // Récupérer l'ID généré
+            ResultSet generatedKeys = pstm.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int commandeId = generatedKeys.getInt(1);
+                commande.setId_Commande(commandeId);
+                System.out.println("Commande créée avec ID: " + commandeId);
+
+                // Stocker l'ID de la commande dans `MarketClient`
+                MarketClient.setCommandeId(commandeId);
+            }
+
+            conn.commit();
+        } catch (SQLException e) {
+            try {
+                conn.rollback();
+            } catch (SQLException rollbackEx) {
+                System.out.println("Rollback échoué: " + rollbackEx.getMessage());
+            }
+            System.out.println("SQL Exception: " + e.getMessage());
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                System.out.println("Échec du reset auto-commit: " + e.getMessage());
+            }
+        }
+    }
+
+    /*public void add(Commande commande) {
         String qry = "INSERT INTO `commande`(`adresse_dep`, `adresse_arr`, `type_livraison`, `horaire`, `statut`, `created_by`) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
@@ -74,7 +123,8 @@ public class CrudCommande implements interfaces.IServiceCrud<Commande> {
             }
         }
     }
-        /*//create Qry SQL
+        /*
+        //create Qry SQL
         //execute Qry
         String qry ="INSERT INTO `commande`(`adresse_dep`, `adresse_arr`, `type_livraison`,`horaire`,`statut`,`created_by`) VALUES (?,?,?,?,?,?)";
         try {
@@ -109,7 +159,6 @@ public class CrudCommande implements interfaces.IServiceCrud<Commande> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }*/
-
     @Override
     public List<Commande> getAll() {
         //create Qry sql
@@ -249,4 +298,80 @@ public class CrudCommande implements interfaces.IServiceCrud<Commande> {
 
         return commandes;
     }
+
+    public void ajouterarticleCommande(int id_commande,Article article,int quantity) {
+        String Qry = "INSERT INTO `articlecommande`(`idArticle`, `idCommande`,`quantity`) VALUES (?, ?,?)";
+        PreparedStatement Pstm = null;
+        try {
+            Pstm = conn.prepareStatement(Qry);
+            Pstm.setInt(1, article.getIdArticle()); // Utiliser l'ID de l'article
+            Pstm.setInt(2, id_commande); // Utiliser l'ID de la commande
+            Pstm.setInt(3, quantity); //
+            Pstm.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        }
+    public List<Article> getlisteArticleCommande(int id_commande) {
+        List<Article> articles = new ArrayList<>();
+        Set<Integer> idArticlesSet = new HashSet<>(); // Utilisation d'un Set pour éviter les doublons
+
+        String Qry = "SELECT idArticle FROM articlecommande WHERE idCommande = ?";
+        try (PreparedStatement pstm = conn.prepareStatement(Qry)) {
+            pstm.setInt(1, id_commande);
+            ResultSet rs = pstm.executeQuery();
+
+            while (rs.next()) {
+                idArticlesSet.add(rs.getInt("idArticle")); // Ajoute les ID uniques
+            }
+
+            for (int idArticle : idArticlesSet) {
+                Article article = crudArticle.getById(idArticle);
+                if (article != null) {
+                    articles.add(article);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de la récupération des articles de la commande", e);
+        }
+
+        return articles;
+    }
+    public int getQuantiteArticleCommande(int idCommande, int idArticle) {
+        int quantite = 0;
+        String query = "SELECT quantity FROM articlecommande WHERE idCommande = ? AND idArticle = ?";
+
+        try (
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, idCommande);
+            stmt.setInt(2, idArticle);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    quantite = rs.getInt("quantity");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return quantite;
+    }
+    public void supprimerArticleCommande(int idcommande,Article article)
+    {
+        String qry = "DELETE FROM `articlecommande` WHERE `idCommande`=? AND `idArticle`=?";
+        try (PreparedStatement statement = conn.prepareStatement(qry)) {
+            statement.setInt(1, idcommande);
+            statement.setInt(2, article.getIdArticle());
+            // Exécuter la requête
+            statement.executeUpdate();
+            System.out.println("Article deleted successfully.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
