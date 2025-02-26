@@ -89,58 +89,26 @@ public class GestionCategorie implements Initializable  {
         alert.setTitle("Détails de la categorie ");
         alert.setContentText( "id categorie : " + categorie.getId_categorie() + "\n" +
                 "Nom : " + categorie.getNom() + "\n" +
-                "Description : " + categorie.getDescription() + "\n" +
-                "Url image : " + categorie.getUrl_image());
+                "Description : " + categorie.getDescription());
 
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
 
         // Handle the X button click
         stage.setOnCloseRequest(event -> {
-           stage.close();
+            stage.close();
         });
 
-
-        ButtonType updateButton = new ButtonType("Mettre à jour");
-        ButtonType deleteButton = new ButtonType("Supprimer");
         ButtonType viewArticlesButton = new ButtonType("Voir les articles");
-        alert.getButtonTypes().setAll(updateButton, deleteButton, viewArticlesButton);
+        alert.getButtonTypes().setAll(viewArticlesButton);
 
         alert.showAndWait().ifPresent(response -> {
-            if (response == updateButton) {
-                showUpdatePopup(categorie);
-                System.out.println("Mettre à jour les informations de la catégorie.");
-            } else if (response == deleteButton) {
-                // Afficher une pop-up de confirmation pour la suppression
-                javafx.scene.control.Alert confirmationAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
-                confirmationAlert.setTitle("Confirmation de la suppression");
-                confirmationAlert.setHeaderText("Êtes-vous sûr de vouloir supprimer cette catégorie ?");
-                confirmationAlert.setContentText("Cette action est irréversible.");
-
-                // Ajouter les boutons de confirmation
-                ButtonType yesButton = new ButtonType("Oui");
-                ButtonType noButton = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-                confirmationAlert.getButtonTypes().setAll(yesButton, noButton);
-
-                confirmationAlert.showAndWait().ifPresent(confirmationResponse -> {
-                    if (confirmationResponse == yesButton) {
-                        // Effectuer la suppression
-                        su.delete(categorie.getId_categorie());
-                        System.out.println("Catégorie supprimée.");
-                        loadCategory();
-                    } else {
-                        System.out.println("Suppression annulée.");
-                    }
-                });
-            } else if (response == viewArticlesButton) {
+            if (response == viewArticlesButton) {
                 // TODO: Display the articles page given a category ID
                 MainUserInterface.switchScene(MainUserInterface.GetPrimaryStage(),"/GestionArticle.fxml");
             }
-
         });
-
-
     }
+
 
 
     @FXML
@@ -448,6 +416,22 @@ public class GestionCategorie implements Initializable  {
 
             // Get the current stage and set the new scene
             Stage stage = (Stage) imLogo.getScene().getWindow();
+            stage.setScene(signUpScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading SignUp.fxml.");
+        }
+    }
+    @FXML
+    void NavigateToGestionCategorie(MouseEvent event) {
+        try {
+            // Load the SignUp.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionCategorie.fxml"));
+            Scene signUpScene = new Scene(loader.load());
+
+            // Get the current stage and set the new scene
+            Stage stage = (Stage) anCategories.getScene().getWindow();
             stage.setScene(signUpScene);
             stage.show();
         } catch (IOException e) {

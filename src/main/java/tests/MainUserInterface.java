@@ -28,8 +28,8 @@ public class MainUserInterface extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-   
-
+ feature/nouhaa
+        instance =this;
         FXMLLoader loader= new FXMLLoader(getClass().getResource("/MarketClient.fxml"));
 
         try {

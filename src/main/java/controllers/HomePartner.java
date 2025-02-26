@@ -57,6 +57,22 @@ public class HomePartner {
         }
     }
     @FXML
+    private void navigateToGestionCat() {
+        try {
+            // Load the SignUp.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionCategorie.fxml"));
+            Scene signUpScene = new Scene(loader.load());
+
+            // Get the current stage and set the new scene
+            Stage stage = (Stage) anArticleMain.getScene().getWindow();
+            stage.setScene(signUpScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading SignUp.fxml.");
+        }
+    }
+    @FXML
     private void logout() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/SignIn.fxml"));
