@@ -268,6 +268,7 @@ public class CrudUser implements IServiceCrud<User> {
     public List<User> search(String criteria) {
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM `user` WHERE `cin` LIKE ?";
+
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             String searchTerm = "%" + criteria + "%";
             stmt.setString(1, searchTerm);
@@ -278,7 +279,6 @@ public class CrudUser implements IServiceCrud<User> {
                 String nom = rs.getString("nom");
                 String prenom = rs.getString("prenom");
                 String roleString = rs.getString("role");
-                String typeVehiculeString = rs.getString("type_vehicule"); // Peut être NULL
                 boolean verified = rs.getBoolean("verified");
                 String adresse = rs.getString("adresse");
                 String email = rs.getString("email");
@@ -289,14 +289,14 @@ public class CrudUser implements IServiceCrud<User> {
                 // Convertir roleString en enum
                 role_user role = role_user.valueOf(roleString);
 
-                // Gérer le cas où typeVehiculeString est NULL ou invalide
+                // Gérer le cas où type_vehicule est NULL
                 type_vehicule typeVehicule = null;
+                String typeVehiculeString = rs.getString("type_vehicule");
                 if (typeVehiculeString != null && !typeVehiculeString.trim().isEmpty()) {
                     try {
                         typeVehicule = type_vehicule.valueOf(typeVehiculeString);
                     } catch (IllegalArgumentException e) {
                         System.err.println("Valeur inconnue pour type_vehicule: " + typeVehiculeString);
-                        typeVehicule = null; // Gérer une valeur invalide si elle est présente dans la BD
                     }
                 }
 
@@ -321,7 +321,7 @@ public class CrudUser implements IServiceCrud<User> {
                 System.out.println("Role: " + user.getRole());
                 System.out.println("Vérifié: " + user.isVerified());
                 System.out.println("Adresse: " + user.getAdresse());
-                System.out.println("Type de véhicule: " + user.getType_vehicule());
+                System.out.println("Type de véhicule: " + (user.getType_vehicule() != null ? user.getType_vehicule() : "Aucun"));
                 System.out.println("Email: " + user.getEmail());
                 System.out.println("Numéro de téléphone: " + user.getNum_tel());
                 System.out.println("CIN: " + user.getCin());

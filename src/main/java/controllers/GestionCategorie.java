@@ -103,38 +103,10 @@ public class GestionCategorie implements Initializable  {
         alert.getButtonTypes().setAll(viewArticlesButton);
 
         alert.showAndWait().ifPresent(response -> {
-            if (response == updateButton) {
-                showUpdatePopup(categorie);
-                System.out.println("Mettre à jour les informations de la catégorie.");
-            } else if (response == deleteButton) {
-                // Afficher une pop-up de confirmation pour la suppression
-                javafx.scene.control.Alert confirmationAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
-                confirmationAlert.setTitle("Confirmation de la suppression");
-                confirmationAlert.setHeaderText("Êtes-vous sûr de vouloir supprimer cette catégorie ?");
-                confirmationAlert.setContentText("Cette action est irréversible.");
-
-                // Ajouter les boutons de confirmation
-                ButtonType yesButton = new ButtonType("Oui");
-                ButtonType noButton = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-                confirmationAlert.getButtonTypes().setAll(yesButton, noButton);
-
-                confirmationAlert.showAndWait().ifPresent(confirmationResponse -> {
-                    if (confirmationResponse == yesButton) {
-                        // Effectuer la suppression
-                        su.delete(categorie.getId_categorie());
-                        System.out.println("Catégorie supprimée.");
-                        loadCategory();
-                    } else {
-                        System.out.println("Suppression annulée.");
-                    }
-                });
-            } else if (response == viewArticlesButton) {
-
+            if (response == viewArticlesButton) {
                 // TODO: Display the articles page given a category ID
                 MainUserInterface.switchScene(MainUserInterface.GetPrimaryStage(),"/GestionArticle.fxml");
             }
-
         });
     }
 
