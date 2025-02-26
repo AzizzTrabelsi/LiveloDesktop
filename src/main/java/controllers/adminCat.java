@@ -1,4 +1,27 @@
 package controllers;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import models.Categorie;
+import services.CrudCategorie;
+import tests.MainUserInterface;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
 import javafx.scene.Node;
 import java.util.Optional;
 import javafx.scene.control.Alert.AlertType;
@@ -27,7 +50,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.List;
-public class GestionCategorie implements Initializable  {
+
+
+public class adminCat implements Initializable {
     private CrudCategorie su = new CrudCategorie();
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -66,8 +91,8 @@ public class GestionCategorie implements Initializable  {
             lbdescrip.setMaxWidth(80);
 
             //Label lblimg = new Label(category.getUrl_image());
-           // lblimg.setMinWidth(80); // Définit la largeur de l'image
-           // lblimg.setMaxWidth(80);// Définit la hauteur de l'image
+            // lblimg.setMinWidth(80); // Définit la largeur de l'image
+            // lblimg.setMaxWidth(80);// Définit la hauteur de l'image
 
 
 
@@ -89,14 +114,14 @@ public class GestionCategorie implements Initializable  {
         alert.setTitle("Détails de la categorie ");
         alert.setContentText( "id categorie : " + categorie.getId_categorie() + "\n" +
                 "Nom : " + categorie.getNom() + "\n" +
-                "Description : " + categorie.getDescription() + "\n" +
-                "Url image : " + categorie.getUrl_image());
+                "Description : " + categorie.getDescription()) ;
+
 
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
 
         // Handle the X button click
         stage.setOnCloseRequest(event -> {
-           stage.close();
+            stage.close();
         });
 
 
@@ -134,7 +159,7 @@ public class GestionCategorie implements Initializable  {
                 });
             } else if (response == viewArticlesButton) {
                 // TODO: Display the articles page given a category ID
-                MainUserInterface.switchScene(MainUserInterface.GetPrimaryStage(),"/GestionArticle.fxml");
+                MainUserInterface.switchScene(MainUserInterface.GetPrimaryStage(),"/adminArt.fxml");
             }
 
         });
@@ -167,7 +192,7 @@ public class GestionCategorie implements Initializable  {
         grid.add(nomField, 1, 0);
         grid.add(new Label("Description:"), 0, 1);
         grid.add(descField, 1, 1);
-       // grid.add(new Label("url image:"), 0, 2);
+        // grid.add(new Label("url image:"), 0, 2);
         //grid.add(imgField, 1, 2);
 
 
@@ -178,7 +203,7 @@ public class GestionCategorie implements Initializable  {
                 // Update the user object with the new values
                 categorie.setNom(nomField.getText());
                 categorie.setDescription(descField.getText());
-               // categorie.setUrl_image(imgField.getText());
+                // categorie.setUrl_image(imgField.getText());
 
 
                 // Save the updated user to the database
@@ -214,8 +239,8 @@ public class GestionCategorie implements Initializable  {
         Label lblHeaderDesc = new Label("Description");
         lblHeaderDesc.setMinWidth(300);
         lblHeaderDesc.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
-       // Label lblHeaderImg = new Label("url image");
-       // lblHeaderImg.setMinWidth(300);
+        // Label lblHeaderImg = new Label("url image");
+        // lblHeaderImg.setMinWidth(300);
         //lblHeaderImg.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
 
 
@@ -237,10 +262,10 @@ public class GestionCategorie implements Initializable  {
 
             Label lblDesc = new Label(categorie.getDescription());
             lblDesc.setMinWidth(300);
-           // Label lblimg = new Label(categorie.getUrl_image());
+            // Label lblimg = new Label(categorie.getUrl_image());
             //lblimg.setMinWidth(300);
             catRow.getChildren().addAll(lblNom, lblDesc);
-           // Button deleteButton = new Button("Supprimer");
+            // Button deleteButton = new Button("Supprimer");
 //            deleteButton.setOnAction(event -> {
 //                javafx.scene.control.Alert confirmationAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
 //                confirmationAlert.setTitle("Confirmation de la suppression");
@@ -375,7 +400,7 @@ public class GestionCategorie implements Initializable  {
                 loadCategory();
             } else {
                 // Si des champs sont vides, afficher un message d'erreur
-                Alert alert = new Alert(AlertType.ERROR, "Veuillez remplir tous les champs.");
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Veuillez remplir tous les champs.");
                 alert.showAndWait();
             }
         });

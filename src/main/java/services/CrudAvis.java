@@ -2,19 +2,25 @@ package services;
 
 import interfaces.IServiceCrud;
 import models.Avis;
+import models.User;
+import utils.Constants;
 import utils.MyDatabase;
 import models.Livraison;
+
+import javax.mail.MessagingException;
 import java.sql.*;
-import java.sql.*;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CrudAvis implements IServiceCrud<Avis> {
+    CrudUser crudUser = new CrudUser();
     Connection conn = MyDatabase.getInstance().getConnection();
-
+    private String emailAdmin = "ziedfilali272001@gmail.com";
     @Override
     public void add(Avis avis) {
-        String qry = "INSERT INTO `avis` (`created_by`, `created_at`, `description`, `livraisonId`) VALUES (?, ?, ?, ?)";
+        String qry = "INSERT INTO avis (created_by, created_at, description, livraisonId) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement statement = conn.prepareStatement(qry, Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, avis.getCreatedBy());
@@ -34,15 +40,21 @@ public class CrudAvis implements IServiceCrud<Avis> {
                     if (generatedKeys.next()) {
                         int generatedId = generatedKeys.getInt(1);
                         avis.setIdAvis(generatedId);
+                        User user =crudUser.getById(avis.getCreatedBy());
+                        MailService.send(emailAdmin, Constants.mailTemplate1+new java.util.Date() +Constants.mailTemplate2+user.getPrenom()+" "+user.getNom()+Constants.mailTemplate3, "New Delivery Review Submitted – Action Required");
+
                         System.out.println("Avis ajouté avec succès avec l'ID : " + generatedId);
                     }
                 }
             }
+
+        } catch (MessagingException e) {
+            System.out.println(e.getMessage() + "----mail in otp service throw an messaging exception");
+            e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
 
     @Override
     public List<Avis> getAll() {
@@ -60,18 +72,25 @@ public class CrudAvis implements IServiceCrud<Avis> {
                 Date createdAt = resultSet.getDate("created_at");
                 String description = resultSet.getString("description");
                 int livraisonId = resultSet.getInt("livraisonId");
+                //System.out.println(livraisonId);
+                //Livraison l = crudLivraison.getById(livraisonId);
 
                 // Création de l'objet Avis
                 Avis avis = new Avis(idAvis, createdBy, null, createdAt, description);
 
                 // Récupération de la livraison associée si présente
                 if (livraisonId > 0) {
+                    System.out.println(livraisonId);
+                    System.out.println("----------------------------------------------------");
                     Livraison livraison = getLivraisonById(livraisonId);
+                    System.out.println("----------------------------------------------------");
+
                     avis.setLivraison(livraison);
                 }
 
                 avisList.add(avis);
                 System.out.println("Avis ID: " + idAvis + " | Created By: " + createdBy + " | Description: " + description);
+                System.out.println(avis);
             }
 
             System.out.println("Nombre d'avis récupérés: " + avisList.size());
@@ -88,16 +107,16 @@ public class CrudAvis implements IServiceCrud<Avis> {
 
     private Livraison getLivraisonById(int idLivraison) {
         Livraison livraison = null;
-        String query = "SELECT * FROM livraison WHERE id_livraison = ?";
+        String query = "SELECT * FROM livraison WHERE idLivraison = ?";
 
         try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setInt(1, idLivraison);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     // Création de l'objet Livraison
-                    int id = resultSet.getInt("id_livraison");
-                    Date dateLivraison = resultSet.getDate("date_livraison");
-                    String adresse = resultSet.getString("adresse");
+                    int id = resultSet.getInt("idLivraison");
+                    Date dateLivraison = resultSet.getDate("created_at");
+                    int adresse = resultSet.getInt("zoneId");
                     livraison = new Livraison(id, dateLivraison, adresse);
                 }
             }
@@ -108,9 +127,8 @@ public class CrudAvis implements IServiceCrud<Avis> {
         return livraison;
     }
 
-
     public Avis getById(int id) {
-        String query = "SELECT * FROM `avis` WHERE `idAvis` = ?";
+        String query = "SELECT * FROM avis WHERE idAvis = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, id);
@@ -122,11 +140,12 @@ public class CrudAvis implements IServiceCrud<Avis> {
                 int createdBy = rs.getInt("created_by");
                 Date createdAt = rs.getDate("created_at");
                 int livraisonId = rs.getInt("livraisonId");
+
                 Livraison livraison = null;
 
                 // Récupérer la livraison associée
                 if (livraisonId > 0) {
-                    String livraisonQuery = "SELECT * FROM `livraison` WHERE `livraisonId` = ?";
+                    String livraisonQuery = "SELECT * FROM livraison WHERE livraisonId = ?";
                     try (PreparedStatement livraisonStmt = conn.prepareStatement(livraisonQuery)) {
                         livraisonStmt.setInt(1, livraisonId);
                         ResultSet livraisonRs = livraisonStmt.executeQuery();
@@ -158,12 +177,10 @@ public class CrudAvis implements IServiceCrud<Avis> {
         return null;
     }
 
-
-
     @Override
     public void update(Avis avis) {
         // Requête SQL pour mettre à jour un avis
-        String qry = "UPDATE `avis` SET `created_by` = ?, `created_at` = ?, `description` = ?, `livraisonId` = ? WHERE `idAvis` = ?";
+        String qry = "UPDATE avis SET created_by = ?, created_at = ?, description = ?, livraisonId = ? WHERE idAvis = ?";
 
         try (PreparedStatement statement = conn.prepareStatement(qry)) {
             // Assignation des valeurs dans le PreparedStatement
@@ -193,11 +210,9 @@ public class CrudAvis implements IServiceCrud<Avis> {
         }
     }
 
-
-
     @Override
     public void delete(int id) {
-        String qry = "DELETE FROM `avis` WHERE `idAvis` = " + id;
+        String qry = "DELETE FROM avis WHERE idAvis = " + id;
         try (PreparedStatement statement = conn.prepareStatement(qry)) {
             statement.executeUpdate();
             System.out.println("Avis deleted successfully.");
@@ -206,13 +221,9 @@ public class CrudAvis implements IServiceCrud<Avis> {
         }
     }
 
-
-
-
-
     public List<Avis> search(String criteria) {
         List<Avis> avisList = new ArrayList<>();
-        String query = "SELECT * FROM `avis` WHERE `description` LIKE ?";
+        String query = "SELECT * FROM avis WHERE description LIKE ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             String searchTerm = "%" + criteria + "%";
@@ -229,7 +240,7 @@ public class CrudAvis implements IServiceCrud<Avis> {
 
                 // Récupérer la livraison associée
                 if (livraisonId > 0) {
-                    String livraisonQuery = "SELECT * FROM `livraison` WHERE `livraisonId` = ?";
+                    String livraisonQuery = "SELECT * FROM livraison WHERE livraisonId = ?";
                     try (PreparedStatement livraisonStmt = conn.prepareStatement(livraisonQuery)) {
                         livraisonStmt.setInt(1, livraisonId);
                         ResultSet livraisonRs = livraisonStmt.executeQuery();
@@ -273,11 +284,69 @@ public class CrudAvis implements IServiceCrud<Avis> {
         return avisList;
     }
 
+    public List<Avis> searchByDate(java.util.Date criteria) {
+        List<Avis> avisList = new ArrayList<>();
+        String query = "SELECT * FROM avis WHERE created_at LIKE ?";
 
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String searchTerm = sdf.format(criteria) + "%";
 
+            System.out.println(criteria);
+            stmt.setString(1, searchTerm);
 
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int idAvis = rs.getInt("idAvis");
+                String description = rs.getString("description");
+                int createdBy = rs.getInt("created_by");
+                Date createdAt = rs.getDate("created_at");
+                int livraisonId = rs.getInt("livraisonId");
+                Livraison livraison = null;
 
+                // Récupérer la livraison associée
+                if (livraisonId > 0) {
+                    String livraisonQuery = "SELECT * FROM livraison WHERE idLivraison = ?";
+                    try (PreparedStatement livraisonStmt = conn.prepareStatement(livraisonQuery)) {
+                        livraisonStmt.setInt(1, livraisonId);
+                        ResultSet livraisonRs = livraisonStmt.executeQuery();
+                        if (livraisonRs.next()) {
+                            int commandeId = livraisonRs.getInt("commandeId");
+                            int createdByLivraison = livraisonRs.getInt("created_by");
+                            Date createdAtLivraison = livraisonRs.getDate("created_at");
+                            int factureId = livraisonRs.getInt("factureId");
+                            int zoneId = livraisonRs.getInt("zoneId");
+                            // Créer l'objet Livraison
+                            livraison = new Livraison(livraisonId, commandeId, createdByLivraison, createdAtLivraison, factureId, zoneId);
+                        }
+                    } catch (SQLException e) {
+                        System.out.println("Erreur lors de la récupération de la livraison : " + e.getMessage());
+                    }
+                }
 
+                // Créer l'objet Avis avec la livraison récupérée
+                Avis avis = new Avis(idAvis, createdBy, livraison, createdAt, description);
+                avisList.add(avis);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
+        if (avisList.isEmpty()) {
+            System.out.println("Aucun avis trouvé pour le critère : " + criteria);
+        } else {
+            System.out.println("Nombre d'avis trouvés : " + avisList.size());
+            for (Avis avis : avisList) {
+                System.out.println("Avis trouvé : ");
+                System.out.println("ID: " + avis.getIdAvis());
+                System.out.println("Description: " + avis.getDescription());
+                System.out.println("Créé par (ID utilisateur): " + avis.getCreatedBy());
+                System.out.println("Date de création: " + avis.getCreatedAt());
+                System.out.println("Livraison associée: " + (avis.getLivraison() != null ? "ID: " + avis.getLivraison().getIdLivraison() : "Non définie"));
+                System.out.println();
+            }
+        }
 
+        return avisList;
+    }
 }

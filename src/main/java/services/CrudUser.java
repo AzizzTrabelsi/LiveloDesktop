@@ -80,21 +80,18 @@ public class CrudUser implements IServiceCrud<User> {
                 String num_tel = rs.getString("num_tel");
                 String cin = rs.getString("cin");
 
-                // Convertir roleString en enum
                 role_user role = role_user.valueOf(roleString);
 
-                // Gérer le cas où typeVehiculeString est NULL
                 type_vehicule typeVehicule = null;
                 if (typeVehiculeString != null && !typeVehiculeString.trim().isEmpty()) {
                     try {
                         typeVehicule = type_vehicule.valueOf(typeVehiculeString);
                     } catch (IllegalArgumentException e) {
                         System.err.println("Valeur inconnue pour type_vehicule: " + typeVehiculeString);
-                        typeVehicule = null; // Gérer une valeur invalide si elle est présente dans la BD
+                        typeVehicule = null;
                     }
                 }
 
-                // Créer l'objet User
                 User user = new User(id, nom, prenom, role, verified, adresse,
                         typeVehicule, email, password, num_tel, cin);
 

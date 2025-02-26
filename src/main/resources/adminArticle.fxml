@@ -13,7 +13,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="678.0" prefWidth="1102.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.GestionArticle">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="678.0" prefWidth="1102.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.adminArt">
     <left>
         <AnchorPane prefHeight="610.0" prefWidth="255.0" style="-fx-background-color: #dbefe1;" BorderPane.alignment="CENTER">
             <children>
@@ -176,31 +176,31 @@
                                                                 <Font name="Bodoni MT" size="14.0" />
                                                             </font>
                                                         </Label>
-                                          <Label alignment="TOP_LEFT" layoutX="220.0" layoutY="10.0" prefHeight="18.0" prefWidth="62.0" text="prix ">
-                                             <font>
-                                                <Font name="Bodoni MT" size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label alignment="TOP_LEFT" layoutX="282.0" layoutY="10.0" prefHeight="18.0" prefWidth="94.0" text="description">
-                                             <font>
-                                                <Font name="Bodoni MT" size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label alignment="TOP_LEFT" layoutX="344.0" layoutY="10.0" prefHeight="18.0" prefWidth="94.0" text="statut">
-                                             <font>
-                                                <Font name="Bodoni MT" size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label alignment="TOP_LEFT" layoutX="439.0" layoutY="10.0" prefHeight="18.0" prefWidth="59.0" text="quantite">
-                                             <font>
-                                                <Font name="Bodoni MT" size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label alignment="TOP_LEFT" layoutX="533.0" layoutY="10.0" prefHeight="18.0" prefWidth="90.0" text="created at ">
-                                             <font>
-                                                <Font name="Bodoni MT" size="14.0" />
-                                             </font>
-                                          </Label>
+                                                        <Label alignment="TOP_LEFT" layoutX="220.0" layoutY="10.0" prefHeight="18.0" prefWidth="62.0" text="prix ">
+                                                            <font>
+                                                                <Font name="Bodoni MT" size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <Label alignment="TOP_LEFT" layoutX="282.0" layoutY="10.0" prefHeight="18.0" prefWidth="94.0" text="description">
+                                                            <font>
+                                                                <Font name="Bodoni MT" size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <Label alignment="TOP_LEFT" layoutX="344.0" layoutY="10.0" prefHeight="18.0" prefWidth="94.0" text="statut">
+                                                            <font>
+                                                                <Font name="Bodoni MT" size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <Label alignment="TOP_LEFT" layoutX="439.0" layoutY="10.0" prefHeight="18.0" prefWidth="59.0" text="quantite">
+                                                            <font>
+                                                                <Font name="Bodoni MT" size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <Label alignment="TOP_LEFT" layoutX="533.0" layoutY="10.0" prefHeight="18.0" prefWidth="90.0" text="created at ">
+                                                            <font>
+                                                                <Font name="Bodoni MT" size="14.0" />
+                                                            </font>
+                                                        </Label>
 
                                                     </children>
                                                 </HBox>
@@ -221,31 +221,31 @@
                                                                 <Font name="Bodoni MT" size="14.0" />
                                                             </font>
                                                         </Label>
-                                          <Label fx:id="idprix" alignment="TOP_LEFT" layoutX="196.0" layoutY="10.0" prefHeight="18.0" prefWidth="70.0" text="prix">
-                                             <font>
-                                                <Font name="Bodoni MT" size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="iddesc" alignment="TOP_LEFT" layoutX="267.0" layoutY="10.0" prefHeight="18.0" prefWidth="91.0" text="description">
-                                             <font>
-                                                <Font name="Bodoni MT" size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="idquant" alignment="TOP_LEFT" layoutX="337.0" layoutY="10.0" prefHeight="18.0" prefWidth="96.0" text="quantite">
-                                             <font>
-                                                <Font name="Bodoni MT" size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="idstatut" alignment="TOP_LEFT" layoutX="428.0" layoutY="10.0" prefHeight="18.0" prefWidth="74.0" text="statu">
-                                             <font>
-                                                <Font name="Bodoni MT" size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="idcreated" alignment="TOP_LEFT" layoutX="524.0" layoutY="10.0" prefHeight="18.0" prefWidth="82.0" text="createdat">
-                                             <font>
-                                                <Font name="Bodoni MT" size="14.0" />
-                                             </font>
-                                          </Label>
+                                                        <Label fx:id="idprix" alignment="TOP_LEFT" layoutX="196.0" layoutY="10.0" prefHeight="18.0" prefWidth="70.0" text="prix">
+                                                            <font>
+                                                                <Font name="Bodoni MT" size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <Label fx:id="iddesc" alignment="TOP_LEFT" layoutX="267.0" layoutY="10.0" prefHeight="18.0" prefWidth="91.0" text="description">
+                                                            <font>
+                                                                <Font name="Bodoni MT" size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <Label fx:id="idquant" alignment="TOP_LEFT" layoutX="337.0" layoutY="10.0" prefHeight="18.0" prefWidth="96.0" text="quantite">
+                                                            <font>
+                                                                <Font name="Bodoni MT" size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <Label fx:id="idstatut" alignment="TOP_LEFT" layoutX="428.0" layoutY="10.0" prefHeight="18.0" prefWidth="74.0" text="statu">
+                                                            <font>
+                                                                <Font name="Bodoni MT" size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <Label fx:id="idcreated" alignment="TOP_LEFT" layoutX="524.0" layoutY="10.0" prefHeight="18.0" prefWidth="82.0" text="createdat">
+                                                            <font>
+                                                                <Font name="Bodoni MT" size="14.0" />
+                                                            </font>
+                                                        </Label>
                                                     </children>
                                                     <VBox.margin>
                                                         <Insets />

@@ -7,8 +7,9 @@ public class User {
     private int id;
     private String nom, prenom, adresse, email, num_tel, cin, password;
     private boolean verified;
-    public static role_user role;
-    public static type_vehicule type_vehicule;
+    public  role_user role;
+    public  type_vehicule type_vehicule;
+
 
     public User() {}
 
@@ -51,6 +52,7 @@ public class User {
         this.role = role;
         this.type_vehicule = type_vehicule;
     }
+
 
 
     public int getId() {
@@ -141,6 +143,7 @@ public class User {
         this.type_vehicule = type_vehicule;
     }
 
+
     @Override
     public String toString() {
         return "User{" +
@@ -155,6 +158,6 @@ public class User {
                 ", verified=" + verified +
                 ", role=" + role +
                 ", type_vehicule=" + type_vehicule +
-                "}";
+                '}';
     }
 }
