@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
@@ -14,7 +13,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="678.0" prefWidth="1102.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.GestionZoneAdmin">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="678.0" prefWidth="1102.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AfficherTrajets">
     <left>
         <AnchorPane prefHeight="610.0" prefWidth="255.0" style="-fx-background-color: #dbefe1;" BorderPane.alignment="CENTER">
             <children>
@@ -143,92 +142,92 @@
     <center>
         <AnchorPane prefHeight="610.0" prefWidth="815.0" style="-fx-background-color: #f8f8f8; -fx-border-width: 0;" BorderPane.alignment="CENTER">
             <children>
-                <TextField fx:id="anSearch" layoutX="22.0" layoutY="13.0" prefHeight="41.0" prefWidth="749.0" promptText="search by name of zone" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
+                <TextField fx:id="anSearch" layoutX="22.0" layoutY="13.0" prefHeight="41.0" prefWidth="749.0" promptText="search by state" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
                 <ImageView fitHeight="31.0" fitWidth="22.0" layoutX="742.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@image/search (1).png" />
                     </image>
                 </ImageView>
-                <HBox layoutX="14.0" layoutY="76.0" prefHeight="350.0" prefWidth="760.0">
+                <HBox layoutX="21.0" layoutY="66.0" prefHeight="532.0" prefWidth="753.0">
                     <children>
-                        <ScrollPane prefHeight="504.0" prefWidth="758.0" styleClass="transparennt">
+                        <ScrollPane prefHeight="551.0" prefWidth="760.0" styleClass="transparennt">
                             <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="360.0" prefWidth="770.0">
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="509.0" prefWidth="791.0">
                                     <children>
-                                        <VBox fx:id="vListZones" layoutX="1.0" prefHeight="360.0" prefWidth="790.0">
+                                        <VBox fx:id="vListTrajets" layoutX="9.0" layoutY="8.0" prefHeight="487.0" prefWidth="745.0">
                                             <children>
                                                 <HBox fx:id="headerhb" prefHeight="28.0" prefWidth="765.0" style="-fx-background-color: #398c3e;">
                                                     <children>
-                                                        <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Name">
+                                                        <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Start">
                                                             <font>
                                                                 <Font name="Bodoni MT" size="14.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Latitude">
+                                                        <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Finish">
                                                             <font>
                                                                 <Font name="Bodoni MT" size="14.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="69.0" text="Longitude">
+                                                        <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="69.0" text="Order">
                                                             <font>
                                                                 <Font name="Bodoni MT" size="14.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Rayon">
+                                                        <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Delivery">
                                                             <font>
                                                                 <Font name="Bodoni MT" size="14.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="119.0" text="User">
+                                                        <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="119.0" text="Distance">
                                                             <font>
                                                                 <Font name="Bodoni MT" size="14.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="71.0" text="Livraison">
+                                                        <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="71.0" text="Duration">
                                                             <font>
                                                                 <Font name="Bodoni MT" size="14.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Max">
+                                                        <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="State of journey">
                                                             <font>
                                                                 <Font name="Bodoni MT" size="14.0" />
                                                             </font>
                                                         </Label>
                                                     </children>
                                                 </HBox>
-                                                <HBox fx:id="hbHedha" prefHeight="32.0" prefWidth="765.0">
+                                                <HBox fx:id="hbHedha" prefHeight="32.0" prefWidth="731.0">
                                                     <children>
-                                                        <Label fx:id="lblname" alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Name">
+                                                        <Label fx:id="lblPtDepart" alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Start">
                                                             <font>
                                                                 <Font name="Bodoni MT" size="14.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label fx:id="lbllatitude" alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Latitude">
+                                                        <Label fx:id="LblPtArrive" alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Finish">
                                                             <font>
                                                                 <Font name="Bodoni MT" size="14.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label fx:id="lbllongitude" alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Longitude">
+                                                        <Label fx:id="LblCommande" alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Order">
                                                             <font>
                                                                 <Font name="Bodoni MT" size="14.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label fx:id="lblrayon" alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Rayon">
+                                                        <Label fx:id="lblLivraison" alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Delivery">
                                                             <font>
                                                                 <Font name="Bodoni MT" size="14.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label fx:id="lbluser" alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="User">
+                                                        <Label fx:id="LblDistance" alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Distance">
                                                             <font>
                                                                 <Font name="Bodoni MT" size="14.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label fx:id="lbllivraison" alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Livraison">
+                                                        <Label fx:id="LblDuree" alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Duration">
                                                             <font>
                                                                 <Font name="Bodoni MT" size="14.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label fx:id="lblmax" alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="Max">
+                                                        <Label fx:id="LblEtat" alignment="TOP_LEFT" prefHeight="17.0" prefWidth="102.0" text="State of journey">
                                                             <font>
                                                                 <Font name="Bodoni MT" size="14.0" />
                                                             </font>
@@ -246,23 +245,6 @@
                         </ScrollPane>
                     </children>
                 </HBox>
-            <AnchorPane layoutX="14.0" layoutY="426.0" prefHeight="183.0" prefWidth="767.0" style="-fx-border-color: #398c3e; -fx-border-radius: 50 px;">
-               <children>
-                  <TextField fx:id="anName" layoutX="64.0" layoutY="34.0" promptText="Name" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
-                  <Text fill="#369438" layoutX="16.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add a new area!" wrappingWidth="200.0">
-                     <font>
-                        <Font name="Arial Black" size="20.0" />
-                     </font>
-                  </Text>
-                  <TextField fx:id="anLatitude" layoutX="269.0" layoutY="38.0" promptText="Latitude" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
-                  <TextField fx:id="AnUserN" layoutX="274.0" layoutY="90.0" prefHeight="28.0" prefWidth="155.0" promptText="User N **" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
-                  <TextField fx:id="anRayon" layoutX="62.0" layoutY="92.0" prefHeight="28.0" prefWidth="152.0" promptText="Rayon" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
-                  <TextField fx:id="anMax" layoutX="57.0" layoutY="137.0" prefHeight="34.0" prefWidth="156.0" promptText="Maximum" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
-                  <TextField fx:id="anLongitude" layoutX="483.0" layoutY="37.0" prefHeight="28.0" prefWidth="134.0" promptText="Longitude" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
-                  <TextField fx:id="anLivraisonN" layoutX="476.0" layoutY="90.0" prefHeight="28.0" prefWidth="139.0" promptText="Livraison N **" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
-                  <Button fx:id="AddButton" layoutX="653.0" layoutY="141.0" mnemonicParsing="false" onAction="#AddZone" prefHeight="26.0" prefWidth="79.0" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 2px; -fx-border-radius: 10px;" text="ADD" />
-               </children>
-            </AnchorPane>
             </children></AnchorPane>
     </center>
 </BorderPane>

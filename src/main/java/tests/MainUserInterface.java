@@ -29,6 +29,7 @@ public class MainUserInterface extends Application {
     public void start(Stage primaryStage) {
 
    
+
         FXMLLoader loader= new FXMLLoader(getClass().getResource("/MarketClient.fxml"));
 
         try {
