@@ -1,7 +1,9 @@
 package controllers;
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,32 +11,35 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.Article;
+import models.Categorie;
 
 
+import models.statut_article;
 import services.CrudArticle;
-import services.CrudUser;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import tests.MainUserInterface;
+
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
 
 public class GestionArticle implements Initializable {
 
     private CrudArticle su = new CrudArticle();
+    public static int CategoryID;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Afficher tous les utilisateurs au démarrage
-        Show(null);
+        ShowByCategorie(null);
 
         // Ajouter un écouteur sur le champ de recherche
         anSearch.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -54,6 +59,81 @@ public class GestionArticle implements Initializable {
 
         // Récupérer tous les articles
         List<Article> articleList = su.getAll();
+        //List<Article> articleList = su.getArticlesByCategoryId(CategoryID);
+
+        // Parcours de la liste des articles
+        for (Article article : articleList) {
+            HBox artRow = new HBox(4);
+            artRow.setPrefHeight(32.0);
+            artRow.setPrefWidth(765.0);
+
+            // Label pour l'ID de la catégorie (associée à l'article)
+            Label lblIdCategorie = new Label(String.valueOf(article.getCategorie().getId_categorie()));
+            lblIdCategorie.setMinWidth(80);
+            lblIdCategorie.setMaxWidth(80);
+
+            // Label pour l'URL de l'image de l'article
+            Label lblurlimg = new Label(article.getUrlImage());
+            lblurlimg.setMinWidth(80);
+            lblurlimg.setMaxWidth(80);
+
+            // Label pour le nom de l'article
+            Label lblNom = new Label(article.getNom());
+            lblNom.setMinWidth(80);
+            lblNom.setMaxWidth(80);
+
+            // Label pour le prix de l'article
+            Label lblPrix = new Label(String.valueOf(article.getPrix()));  // Correction
+            lblPrix.setMinWidth(80);
+            lblPrix.setMaxWidth(80);
+
+            // Label pour la description de l'article
+            Label lblDesc = new Label(article.getDescription());
+            lblDesc.setMinWidth(130);
+            lblDesc.setMaxWidth(130);
+
+            // Label pour le statut de l'article
+            Label lblStatu = new Label(article.getStatut().name());
+            lblStatu.setMinWidth(105);
+            lblStatu.setMaxWidth(105);
+
+            // Label pour la quantité de l'article
+            Label lblQuant = new Label(String.valueOf(article.getQuantite()));  // Correction
+            lblQuant.setMinWidth(80);
+            lblQuant.setMaxWidth(80);
+
+            // Label pour la date de création de l'article
+            Label lblcreatedat = new Label(article.getCreatedAt().toString());
+            lblcreatedat.setMinWidth(80);
+            lblcreatedat.setMaxWidth(80);
+
+            // Ajouter tous les labels dans le HBox (ligne)
+            artRow.getChildren().addAll(lblIdCategorie, lblurlimg, lblNom, lblPrix, lblDesc, lblStatu, lblQuant, lblcreatedat);
+
+            // Ajouter un événement au clic sur la ligne pour afficher les détails de l'article
+            artRow.setOnMouseClicked(event -> showArticleDetailsPopup(article));
+
+            // Ajouter cette ligne à la vue principale (vListUsers)
+            vListUsers.getChildren().add(artRow);
+        }
+    }
+
+    @FXML
+    void ShowByCategorie(ActionEvent showEvent) {
+        hbHedha.getChildren().clear();  // Clear existing content
+
+        // Récupérer tous les articles
+        List<Article> articleList = su.getAll();
+        List<Article> Temp = new ArrayList<>();
+        //List<Article> articleList = su.getArticlesByCategoryId(CategoryID);
+        for (Article article : articleList) {
+            if(article.getCategorie().getId_categorie() == CategoryID) {
+                //articleList.remove(article);
+                Temp.add(article);
+            }
+        }
+
+        articleList = Temp;
 
         // Parcours de la liste des articles
         for (Article article : articleList) {
@@ -295,7 +375,18 @@ public class GestionArticle implements Initializable {
 
         vListUsers.getChildren().add(headerRow);
 
+        //List<Article> articleList = su.getAll();
         List<Article> articleList = su.getAll();
+        List<Article> Temp = new ArrayList<>();
+        //List<Article> articleList = su.getArticlesByCategoryId(CategoryID);
+        for (Article article : articleList) {
+            if(article.getCategorie().getId_categorie() == CategoryID) {
+                //articleList.remove(article);
+                Temp.add(article);
+            }
+        }
+
+        articleList = Temp;
 
 
         for (Article article : articleList) {
@@ -577,6 +668,132 @@ public class GestionArticle implements Initializable {
 
     }
 
+    @FXML
+    public void handleAddArticleClick(javafx.scene.input.MouseEvent event) {
+        openAddArticlePopup();
+    }
+
+    @FXML
+    private void openAddArticlePopup() {
+        // Create a new pop-up window (Stage)
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Ajouter un article");
+
+        // Create a layout (VBox)
+        VBox popupLayout = new VBox(10);
+        popupLayout.setPadding(new Insets(10));
+
+        // Input fields
+        TextField nameField = new TextField();
+        nameField.setPromptText("Nom de l'article");
+
+        TextField priceField = new TextField();
+        priceField.setPromptText("Prix");
+
+        TextArea descriptionField = new TextArea();
+        descriptionField.setPromptText("Description");
+
+        TextField imageUrlField = new TextField();
+        imageUrlField.setPromptText("Chemin de l'image");
+        imageUrlField.setEditable(false); // Prevent manual text input
+
+        Button browseButton = new Button("Parcourir...");
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(100);
+        imageView.setFitHeight(100);
+        imageView.setPreserveRatio(true);
+
+        browseButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
+            );
+            File selectedFile = fileChooser.showOpenDialog(MainUserInterface.GetPrimaryStage());
+
+            if (selectedFile != null) {
+                imageUrlField.setText(selectedFile.getAbsolutePath());
+                Image image = new Image(selectedFile.toURI().toString());
+                imageView.setImage(image);
+            }
+        });
+
+
+        TextField createdByField = new TextField();
+        createdByField.setPromptText("Créé par (ID utilisateur)");
+
+        TextField quantityField = new TextField();
+        quantityField.setPromptText("Quantité");
+
+        ChoiceBox<String> statusChoiceBox = new ChoiceBox<>();
+        statusChoiceBox.getItems().addAll("Disponible", "En rupture de stock");
+        statusChoiceBox.setValue("Disponible");
+
+        DatePicker createdAtPicker = new DatePicker();
+        createdAtPicker.setPromptText("Date de création");
+
+        //TextField categoryIdField = new TextField();
+       // categoryIdField.setPromptText("ID de la catégorie");
+
+        // Save button
+        Button saveButton = new Button("Enregistrer");
+
+        // Handle save button click
+        saveButton.setOnAction(event -> {
+            try {
+                String name = nameField.getText();
+                String description = descriptionField.getText();
+                String imageUrl = imageUrlField.getText();
+                String status = statusChoiceBox.getValue();
+                java.sql.Date createdAt = createdAtPicker.getValue() != null ? java.sql.Date.valueOf(createdAtPicker.getValue()) : null;
+
+                int createdBy = Integer.parseInt(createdByField.getText());
+                int quantity = Integer.parseInt(quantityField.getText());
+                float price = Float.parseFloat(priceField.getText());
+                int categoryId = CategoryID;
+                System.out.println(categoryId + " Displayed ");
+
+                // Check for empty fields
+                if (name.isEmpty() || description.isEmpty() || imageUrl.isEmpty() || createdAt == null) {
+                    throw new IllegalArgumentException("Veuillez remplir tous les champs obligatoires.");
+                }
+
+                statut_article statusenum = statut_article.out_of_stock;
+                if(Objects.equals(status, "on_stock")) statusenum = statut_article.on_stock;
+                // Create new Article object
+                Article newArticle = new Article(imageUrl, new Categorie(categoryId), name, price, description, createdBy, quantity, statusenum, createdAt, 0);
+
+                // Add article to database
+                CrudArticle.StaticAdd(newArticle);
+
+                // Close pop-up
+                popupStage.close();
+
+                // Refresh articles list (optional)
+                loadArticle();
+
+            } catch (NumberFormatException e) {
+                showAlert("Erreur", "Veuillez entrer des valeurs valides pour les champs numériques.");
+            } catch (IllegalArgumentException e) {
+                showAlert("Champs obligatoires", e.getMessage());
+            }
+        });
+
+        // Add components to layout
+        popupLayout.getChildren().addAll(nameField, priceField, descriptionField, imageUrlField,browseButton, createdByField, quantityField, statusChoiceBox, createdAtPicker, saveButton);
+
+        // Create scene and set stage
+        Scene popupScene = new Scene(popupLayout, 400, 500);
+        popupStage.setScene(popupScene);
+        popupStage.show();
+
+    }
+    // Helper method to show an alert
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
     @FXML
     private void logout() {
         try {

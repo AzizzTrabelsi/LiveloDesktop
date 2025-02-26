@@ -12,8 +12,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import models.Role;
 import models.User;
+import models.role_user;
+import models.type_vehicule;
 import services.CrudUser;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -82,8 +83,7 @@ public class GestionUtilisateurs implements Initializable {
             lblVerified.setMinWidth(80);
             lblVerified.setMaxWidth(80);
 
-            // Vérification si type_vehicule est null et assignation d'une valeur par défaut
-            String transport = (user.getType_vehicule() != null) ? user.getType_vehicule().toString() : "Aucun transport";
+            String transport = (user.getType_vehicule() != null) ? user.getType_vehicule().toString() : "No transport";
             Label lblTransport = new Label(transport);
             lblTransport.setMinWidth(80);
             lblTransport.setMaxWidth(80);
@@ -167,8 +167,17 @@ public class GestionUtilisateurs implements Initializable {
         TextField cinField = new TextField(user.getCin());
         TextField adresseField = new TextField(user.getAdresse());
         TextField emailField = new TextField(user.getEmail());
-        TextField roleField = new TextField(user.getRole().name());
-        TextField transportField = new TextField(user.getType_vehicule().toString());
+
+        ComboBox<String> roleComboBox = new ComboBox<>();
+        roleComboBox.getItems().addAll( "partner", "delivery_person", "client");
+        roleComboBox.setValue(user.getRole().toString());
+
+        // Remplir la ComboBox des types de véhicule manuellement
+        ComboBox<String> transportComboBox = new ComboBox<>();
+        transportComboBox.getItems().addAll("e_bike", "e_scooter", "Bike");
+        if (user.getType_vehicule() != null) {
+            transportComboBox.setValue(user.getType_vehicule().toString());
+        }
 
         grid.add(new Label("Prénom:"), 0, 0);
         grid.add(prenomField, 1, 0);
@@ -181,28 +190,33 @@ public class GestionUtilisateurs implements Initializable {
         grid.add(new Label("Email:"), 0, 4);
         grid.add(emailField, 1, 4);
         grid.add(new Label("Rôle:"), 0, 5);
-        grid.add(roleField, 1, 5);
+        grid.add(roleComboBox, 1, 5);
         grid.add(new Label("Transport:"), 0, 6);
-        grid.add(transportField, 1, 6);
+        grid.add(transportComboBox, 1, 6);
 
         dialog.getDialogPane().setContent(grid);
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
-                // Update the user object with the new values
                 user.setPrenom(prenomField.getText());
                 user.setNom(nomField.getText());
                 user.setCin(cinField.getText());
                 user.setAdresse(adresseField.getText());
                 user.setEmail(emailField.getText());
-                user.setRole(User.role.valueOf(roleField.getText()));
-                user.setType_vehicule(User.type_vehicule.valueOf(transportField.getText()));
 
-                // Save the updated user to the database
+                // Convertir le rôle sélectionné en enum
+                user.setRole(role_user.valueOf(roleComboBox.getValue()));
+
+                // Vérifier si le champ transport est vide avant d'affecter
+                if (transportComboBox.getValue() == null || transportComboBox.getValue().isEmpty()) {
+                    user.setType_vehicule(null);
+                } else {
+                    user.setType_vehicule(type_vehicule.valueOf(transportComboBox.getValue()));
+                }
+
+                // Mettre à jour l'utilisateur dans la base de données
                 su.update(user);
-
-                // Refresh the user list in the UI
-                loadUsers(); // Call loadUsers to refresh the list
+                loadUsers();
 
                 return user;
             }
@@ -345,8 +359,6 @@ public class GestionUtilisateurs implements Initializable {
         }
     }
 
-
-
     @FXML
     private void searchUsers(String criteria) {
         System.out.println("Recherche des utilisateurs pour le critère : " + criteria);
@@ -447,8 +459,6 @@ public class GestionUtilisateurs implements Initializable {
         }
     }
 
-
-
     @FXML
     private HBox headerhb;
 
@@ -487,22 +497,7 @@ public class GestionUtilisateurs implements Initializable {
 
     @FXML
     private HBox hbHedha;
-    @FXML
-    private void navigateAdminCommand() {
-        try {
-            // Load the SignUp.fxml file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homeAdmin.fxml"));
-            Scene signUpScene = new Scene(loader.load());
-
-            // Get the current stage and set the new scene
-            //Stage stage = (Stage) BtnSignUp.getScene().getWindow();
-            //stage.setScene(signUpScene);
-            //stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("homeAdmin.fxml.");
-        }
-    }
+    
     @FXML
     private void navigateToHome() {
         try {
@@ -512,6 +507,67 @@ public class GestionUtilisateurs implements Initializable {
 
             // Get the current stage and set the new scene
             Stage stage = (Stage) imLogo.getScene().getWindow();
+            stage.setScene(signUpScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading SignUp.fxml.");
+        }
+    }
+
+    @FXML
+    private void NavigateToPendingUsers() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionUsersVerification.fxml"));
+            Scene GestionUtilisateursScene = new Scene(loader.load());
+
+            Stage stage = (Stage) anPendingUsers.getScene().getWindow();
+            stage.setScene(GestionUtilisateursScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading SignUp.fxml.");
+        }
+    }
+    @FXML
+    private void NavigateToGestionCategorie() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/avoir.fxml"));
+            Scene GestionCategorieScene = new Scene(loader.load());
+
+            Stage stage = (Stage) anCategories.getScene().getWindow();
+            stage.setScene(GestionCategorieScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading gestionategorie.fxml.");
+        }
+    }
+    @FXML
+    private void navigateToZones() {
+        try {
+            // Load the SignUp.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionZoneAdmin.fxml"));
+            Scene signUpScene = new Scene(loader.load());
+
+            // Get the current stage and set the new scene
+            Stage stage = (Stage) anCoverageArea.getScene().getWindow();
+            stage.setScene(signUpScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading SignUp.fxml.");
+        }
+    }
+    @FXML
+    private void navigateToCommandes() {
+        try {
+            // Load the SignUp.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/commandeAdmin.fxml"));
+            Scene signUpScene = new Scene(loader.load());
+
+            // Get the current stage and set the new scene
+            Stage stage = (Stage) anOrder.getScene().getWindow();
             stage.setScene(signUpScene);
             stage.show();
         } catch (IOException e) {

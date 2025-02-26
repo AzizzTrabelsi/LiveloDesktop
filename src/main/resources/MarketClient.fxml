@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="678.0" prefWidth="1102.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MarketClient">
+    <top>
+        <AnchorPane prefHeight="68.0" prefWidth="1102.0" style="-fx-background-color: #dbefe1;" BorderPane.alignment="CENTER">
+            <children>
+                <ImageView fx:id="imLogo" fitHeight="55.0" fitWidth="93.0" layoutX="100.0" layoutY="9.0" onMouseClicked="#navigateToHome" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
+                    <image>
+                        <Image url="@image/logo_final-removebg-preview.png" />
+                    </image>
+                </ImageView>
+                <Label fx:id="messageConfirmation" layoutX="185.0" layoutY="25.0" style="-fx-text-fill: green; -fx-font-size: 14px; -fx-font-weight: bold; -fx-opacity: 0;" text="Ajouté au panier !" />
+                <ImageView fitHeight="26.0" fitWidth="28.0" layoutX="1053.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@image/setting-removebg-preview.png" />
+                    </image>
+                </ImageView>
+                <ImageView fitHeight="26.0" fitWidth="34.0" layoutX="1014.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@image/notification-bell.png" />
+                    </image>
+                </ImageView>
+                <TextField fx:id="anSearch" layoutX="373.0" layoutY="14.0" prefHeight="42.0" prefWidth="373.0" promptText="Search by name" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
+                <ImageView fitHeight="31.0" fitWidth="22.0" layoutX="725.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@image/search (1).png" />
+                    </image>
+                </ImageView>
+            <ImageView fitHeight="36.0" fitWidth="45.0" layoutX="958.0" layoutY="16.0" onMouseClicked="#ouvrirValidationCommande" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@image/shopping-cart.png" />
+               </image>
+            </ImageView>
+            </children>
+        </AnchorPane>
+    </top>
+    <center>
+        <AnchorPane prefHeight="610.0" prefWidth="815.0" style="-fx-background-color: #dbefe1; -fx-border-width: 0;" BorderPane.alignment="CENTER">
+            <children>
+                <HBox fx:id="articleLayout" layoutX="-2.0" layoutY="-3.0" prefHeight="617.0" prefWidth="1107.0" style="-fx-background-color: #dbefe1;" stylesheets="@styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <children>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="618.0" prefWidth="1111.0" style="-fx-background-color: #dbefe1#dbefe1;" HBox.hgrow="ALWAYS">
+                     <content>
+                        <FlowPane fx:id="grid" hgap="20.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #dbefe1;" vgap="20.0" />
+                     </content>
+                        </ScrollPane>
+                    </children>
+                </HBox>
+            </children>
+        </AnchorPane>
+    </center>
+</BorderPane>
