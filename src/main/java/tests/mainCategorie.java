@@ -6,13 +6,12 @@ import services.CrudCategorie;
 public class mainCategorie {
     public static void main(String[] args) {
 
-        Categorie nouvelleCategorie = new Categorie(
+        /*Categorie nouvelleCategorie = new Categorie(
                 "lemino",
                 "description delemino",
                 "C:/projetpidev/LiveloDesktop/src/main/resources/image/bin.png",
-                50
                 "img1.jpg",
-                51
+                53
         );
 
         CrudCategorie crudCategorie = new CrudCategorie();
@@ -29,6 +28,6 @@ public class mainCategorie {
 
 
 
-        crudCategorie.search("amine");
+        crudCategorie.search("amine");*/
     }
 }
