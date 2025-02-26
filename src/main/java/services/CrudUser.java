@@ -1,5 +1,12 @@
 package services;
 
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 import interfaces.IServiceCrud;
 import models.User;
 import models.role_user;
@@ -7,9 +14,12 @@ import models.type_vehicule;
 import utils.MyDatabase;
 import org.mindrot.jbcrypt.BCrypt;
 
+import io.github.cdimascio.dotenv.Dotenv;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CrudUser implements IServiceCrud<User> {
@@ -22,20 +32,16 @@ public class CrudUser implements IServiceCrud<User> {
         try (PreparedStatement statement = conn.prepareStatement(qry, Statement.RETURN_GENERATED_KEYS)) {
             String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
 
-            System.out.println("Mot de passe original : " + user.getPassword());
-            System.out.println("Mot de passe hashé : " + hashedPassword);
-
             statement.setString(1, user.getNom());
             statement.setString(2, user.getPrenom());
             statement.setString(3, user.getRole().toString());
             statement.setInt(4, user.isVerified() ? 1 : 0);
             statement.setString(5, user.getAdresse());
 
-            // Vérifier si `type_vehicule` est null
             if (user.getType_vehicule() != null) {
                 statement.setString(6, user.getType_vehicule().toString());
             } else {
-                statement.setNull(6, Types.VARCHAR);  // Insérer NULL dans la colonne si non spécifié
+                statement.setNull(6, Types.VARCHAR);
             }
 
             statement.setString(7, user.getEmail());
@@ -50,6 +56,8 @@ public class CrudUser implements IServiceCrud<User> {
                         int generatedId = generatedKeys.getInt(1);
                         user.setId(generatedId);
                         System.out.println("User ajouté avec ID: " + generatedId);
+
+                        notifyAdmins(user);
                     }
                 }
             }
@@ -57,6 +65,60 @@ public class CrudUser implements IServiceCrud<User> {
             e.printStackTrace();
         }
     }
+
+    private void notifyAdmins(User newUser) {
+       List<String> adminEmails = getAdminEmails();
+
+        Email from = new Email("tasnimbenhassine1@gmail.com");
+        String subject = "New User Waiting for Access";
+        StringBuilder content = new StringBuilder("A new user has registered:\n\n");
+        content.append("Nom: ").append(newUser.getNom()).append("\n");
+        content.append("Prenom: ").append(newUser.getPrenom()).append("\n");
+        content.append("Email: ").append(newUser.getEmail()).append("\n");
+        content.append("CIN: ").append(newUser.getCin()).append("\n");
+
+
+        for (String adminEmail : adminEmails) {
+            Email to = new Email(adminEmail);
+            Content emailContent = new Content("text/plain", content.toString());
+            Mail mail = new Mail(from, subject, to, emailContent);
+            Dotenv dotenv = Dotenv.load();
+            String key = dotenv.get("SECRET_KEY_SENDGRID");
+            SendGrid sg = new SendGrid(key);
+            Request request = new Request();
+            try {
+                request.setMethod(Method.POST);
+                request.setEndpoint("mail/send");
+                request.setBody(mail.build());
+                Response response = sg.api(request);
+                System.out.println(response.getStatusCode());
+                System.out.println(response.getBody());
+                System.out.println(response.getHeaders());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+
+    private List<String> getAdminEmails() {
+        List<String> adminEmails = new ArrayList<>();
+        String qry = "SELECT email FROM user WHERE role = 'admin'";
+
+        try (PreparedStatement statement = conn.prepareStatement(qry);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                String email = resultSet.getString("email");
+                adminEmails.add(email);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return adminEmails;
+    }
+
 
 
     @Override
@@ -122,18 +184,24 @@ public class CrudUser implements IServiceCrud<User> {
             if (user.getPassword() != null && !user.getPassword().isEmpty()) {
                 hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
             } else {
-
                 System.out.println("Mot de passe vide, mise à jour de l'utilisateur sans changer le mot de passe.");
                 hashedPassword = user.getPassword();
             }
 
-            // Remplacer les valeurs dans la requête
+            // Set parameters for the prepared statement
             statement.setString(1, user.getNom());
             statement.setString(2, user.getPrenom());
             statement.setString(3, user.getRole().toString());
             statement.setInt(4, user.isVerified() ? 1 : 0);
             statement.setString(5, user.getAdresse());
-            statement.setString(6, user.getType_vehicule().toString());
+
+            // Handle type_vehicule similarly to the add method
+            if (user.getType_vehicule() != null) {
+                statement.setString(6, user.getType_vehicule().toString());
+            } else {
+                statement.setNull(6, Types.VARCHAR);
+            }
+
             statement.setString(7, user.getEmail());
             statement.setString(8, hashedPassword);
             statement.setString(9, user.getNum_tel());
@@ -150,6 +218,7 @@ public class CrudUser implements IServiceCrud<User> {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public void delete(int id) {

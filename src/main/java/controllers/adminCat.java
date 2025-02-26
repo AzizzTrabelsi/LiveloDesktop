@@ -1,4 +1,28 @@
 package controllers;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import models.Categorie;
+import services.CrudCategorie;
+import tests.MainUserInterface;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+
 import javafx.scene.Node;
 import java.util.Optional;
 import javafx.scene.control.Alert.AlertType;
@@ -27,6 +51,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.List;
+
 public class adminCat implements Initializable  {
     private CrudCategorie su = new CrudCategorie();
     @Override
@@ -89,6 +114,7 @@ public class adminCat implements Initializable  {
         alert.setTitle("Détails de la categorie ");
         alert.setContentText( "id categorie : " + categorie.getId_categorie() + "\n" +
                 "Nom : " + categorie.getNom() + "\n" +
+
                 "Description : " + categorie.getDescription());
 
 
@@ -134,6 +160,7 @@ public class adminCat implements Initializable  {
                 });
             } else if (response == viewArticlesButton) {
                 // TODO: Display the articles page given a category ID
+
                MainUserInterface.switchScene(MainUserInterface.GetPrimaryStage(),"/adminArt.fxml");
             }
 
@@ -375,6 +402,7 @@ public class adminCat implements Initializable  {
                 loadCategory();
             } else {
                 // Si des champs sont vides, afficher un message d'erreur
+
                 Alert alert = new Alert(AlertType.ERROR, "Veuillez remplir tous les champs.");
                 alert.showAndWait();
             }
@@ -455,6 +483,7 @@ public class adminCat implements Initializable  {
             System.out.println("Error loading SignUp.fxml.");
         }
     }
+
     @FXML
     private void NavigateToPendingUsers() {
         try {

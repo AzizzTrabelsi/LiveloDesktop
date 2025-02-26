@@ -422,7 +422,7 @@ public class GestionUsersVerification implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionUtilisateurs.fxml"));
             Scene GestionUtilisateursScene = new Scene(loader.load());
 
-            Stage stage = (Stage) anLogout.getScene().getWindow();
+            Stage stage = (Stage) anUsers.getScene().getWindow();
             stage.setScene(GestionUtilisateursScene);
             stage.show();
         } catch (IOException e) {
@@ -492,7 +492,7 @@ public class GestionUsersVerification implements Initializable {
     @FXML
     private void logout() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/SignIn.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
             Scene SignInScene = new Scene(loader.load());
 
             Stage stage = (Stage) anLogout.getScene().getWindow();

@@ -17,7 +17,8 @@
     <left>
         <AnchorPane prefHeight="610.0" prefWidth="255.0" style="-fx-background-color: #dbefe1;" BorderPane.alignment="CENTER">
             <children>
-                <AnchorPane fx:id="anPendingUsers" layoutX="-1.0" layoutY="35.0" onMouseClicked="#NavigateToPendingUsers" prefHeight="45.0" prefWidth="250.0" style="-fx-cursor: hand;">
+                <AnchorPane fx:id="anPendingUsers" layoutX="-1.0" layoutY="35.0" prefHeight="45.0" prefWidth="250.0" style="-fx-cursor: hand;" onMouseClicked="#NavigateToPendingUsers" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect">
+
                     <children>
                         <Text fill="#398c3e" layoutX="64.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pending users">
                             <font>
@@ -31,7 +32,7 @@
                         </ImageView>
                     </children>
                 </AnchorPane>
-                <AnchorPane fx:id="anUsers" layoutX="-1.0" layoutY="84.0" prefHeight="45.0" prefWidth="286.0" style="-fx-cursor: hand; -fx-background-color: #398c3e; -fx-border-radius: 0;">
+                <AnchorPane fx:id="anUsers" layoutX="-1.0" layoutY="84.0" prefHeight="45.0" prefWidth="286.0" style="-fx-cursor: hand; -fx-background-color: #398c3e; -fx-border-radius: 0;" >
                     <children>
                         <Text layoutX="67.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Users">
                             <font>
@@ -45,7 +46,7 @@
                         </ImageView>
                     </children>
                 </AnchorPane>
-                <AnchorPane fx:id="anRiders" layoutY="138.0" prefHeight="45.0" prefWidth="250.0" style="-fx-cursor: hand;">
+                <AnchorPane fx:id="anRiders" layoutY="138.0" prefHeight="45.0" prefWidth="250.0" style="-fx-cursor: hand;" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect">
                     <children>
                         <Text fill="#398c3e" layoutX="67.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Riders performance" wrappingWidth="212.07421875">
                             <font>
@@ -59,7 +60,8 @@
                         </ImageView>
                     </children>
                 </AnchorPane>
-                <AnchorPane fx:id="anOrder" layoutY="186.0" onMouseClicked="#navigateToCommandes" prefHeight="45.0" prefWidth="250.0" style="-fx-cursor: hand;">
+                <AnchorPane fx:id="anOrder" layoutY="186.0" prefHeight="45.0" prefWidth="250.0" style="-fx-cursor: hand;" onMouseClicked="#navigateToCommandes" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect">
+
                     <children>
                         <Text fill="#398c3e" layoutX="69.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Orders report" wrappingWidth="212.07421875">
                             <font>
@@ -87,7 +89,8 @@
                         </ImageView>
                     </children>
                 </AnchorPane>
-                <AnchorPane fx:id="anCategories" layoutX="1.0" layoutY="236.0" onMouseClicked="#NavigateToGestionCategorie" prefHeight="45.0" prefWidth="250.0" style="-fx-cursor: hand;">
+                <AnchorPane fx:id="anCategories" layoutX="1.0" layoutY="236.0" prefHeight="45.0" prefWidth="250.0" style="-fx-cursor: hand;" onMouseClicked="#NavigateToGestionCategorie" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect">
+          
                     <children>
                         <Text fill="#398c3e" layoutX="69.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Categories" wrappingWidth="212.07421875">
                             <font>
@@ -101,7 +104,8 @@
                         </ImageView>
                     </children>
                 </AnchorPane>
-                <AnchorPane fx:id="anCoverageArea" layoutX="2.0" layoutY="287.0" onMouseClicked="#navigateToZones" prefHeight="45.0" prefWidth="250.0" style="-fx-cursor: hand;">
+                <AnchorPane fx:id="anCoverageArea" layoutX="2.0" layoutY="287.0" prefHeight="45.0" prefWidth="250.0" style="-fx-cursor: hand;" onMouseClicked="#navigateToZones" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect">
+
                     <children>
                         <Text fill="#398c3e" layoutX="69.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Coverage areas" wrappingWidth="212.07421875">
                             <font>
