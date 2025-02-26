@@ -13,7 +13,7 @@
             <children>
                 <AnchorPane fx:id="anArticles" layoutY="53.0" onMouseEntered="#hoverEffect" onMouseExited="#normalEffect" prefHeight="45.0" prefWidth="287.0" style="-fx-cursor: hand;">
                     <children>
-                        <Text fill="#398c3e" layoutX="67.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Manage articles" wrappingWidth="212.07421875">
+                        <Text fill="#398c3e" layoutX="67.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Categories" wrappingWidth="212.07421875">
                             <font>
                                 <Font name="Bodoni MT" size="20.0" />
                             </font>
@@ -75,14 +75,14 @@
     <center>
         <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f8f8f8; -fx-border-width: 0;" BorderPane.alignment="CENTER">
             <children>
-                <AnchorPane fx:id="anArticleMain" layoutX="64.0" layoutY="320.0" prefHeight="143.0" prefWidth="305.0" style="-fx-background-color: white; -fx-border-color: #398c3e; -fx-border-radius: 10px; -fx-cursor: hand;">
+                <AnchorPane fx:id="anArticleMain" layoutX="64.0" layoutY="320.0" onMouseClicked="#navigateToGestionCat" prefHeight="143.0" prefWidth="305.0" style="-fx-background-color: white; -fx-border-color: #398c3e; -fx-border-radius: 10px; -fx-cursor: hand;">
                     <children>
                         <ImageView fitHeight="52.0" fitWidth="48.0" layoutX="135.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="@image/approve.png" />
                             </image>
                         </ImageView>
-                        <Text layoutX="59.0" layoutY="93.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Manage articles" textAlignment="CENTER" wrappingWidth="199.7158203125">
+                        <Text layoutX="59.0" layoutY="93.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View categories" textAlignment="CENTER" wrappingWidth="199.7158203125">
                             <font>
                                 <Font name="Bodoni MT" size="23.0" />
                             </font>

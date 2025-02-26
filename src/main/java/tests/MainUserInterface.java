@@ -30,6 +30,7 @@ public class MainUserInterface extends Application {
 
         instance=this;
         FXMLLoader loader= new FXMLLoader(getClass().getResource("/login.fxml"));
+
         try {
             Parent root =loader.load();
             Scene scene = new Scene(root);

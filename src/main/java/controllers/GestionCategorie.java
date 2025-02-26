@@ -89,21 +89,18 @@ public class GestionCategorie implements Initializable  {
         alert.setTitle("Détails de la categorie ");
         alert.setContentText( "id categorie : " + categorie.getId_categorie() + "\n" +
                 "Nom : " + categorie.getNom() + "\n" +
-                "Description : " + categorie.getDescription() + "\n" +
-                "Url image : " + categorie.getUrl_image());
+                "Description : " + categorie.getDescription());
 
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
 
+
         // Handle the X button click
         stage.setOnCloseRequest(event -> {
-           stage.close();
+            stage.close();
         });
 
-
-        ButtonType updateButton = new ButtonType("Mettre à jour");
-        ButtonType deleteButton = new ButtonType("Supprimer");
         ButtonType viewArticlesButton = new ButtonType("Voir les articles");
-        alert.getButtonTypes().setAll(updateButton, deleteButton, viewArticlesButton);
+        alert.getButtonTypes().setAll(viewArticlesButton);
 
         alert.showAndWait().ifPresent(response -> {
             if (response == updateButton) {
@@ -133,14 +130,14 @@ public class GestionCategorie implements Initializable  {
                     }
                 });
             } else if (response == viewArticlesButton) {
+
                 // TODO: Display the articles page given a category ID
                 MainUserInterface.switchScene(MainUserInterface.GetPrimaryStage(),"/GestionArticle.fxml");
             }
 
         });
-
-
     }
+
 
 
     @FXML
@@ -448,6 +445,22 @@ public class GestionCategorie implements Initializable  {
 
             // Get the current stage and set the new scene
             Stage stage = (Stage) imLogo.getScene().getWindow();
+            stage.setScene(signUpScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading SignUp.fxml.");
+        }
+    }
+    @FXML
+    void NavigateToGestionCategorie(MouseEvent event) {
+        try {
+            // Load the SignUp.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionCategorie.fxml"));
+            Scene signUpScene = new Scene(loader.load());
+
+            // Get the current stage and set the new scene
+            Stage stage = (Stage) anCategories.getScene().getWindow();
             stage.setScene(signUpScene);
             stage.show();
         } catch (IOException e) {

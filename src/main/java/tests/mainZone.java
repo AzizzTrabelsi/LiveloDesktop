@@ -16,6 +16,7 @@ public class mainZone {
         CrudTrajet crudTrajet = new CrudTrajet();
 
         Zone zone = new Zone("Zone Test", 36.8065, 10.1815, 5.0f, 50, 0, 10);
+
         crudZone.add(zone);
 
         List<Zone> zones = crudZone.getAll();

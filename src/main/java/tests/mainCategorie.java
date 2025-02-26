@@ -23,6 +23,7 @@ public class mainCategorie {
 
         );
 
+
         CrudCategorie crudCategorie = new CrudCategorie();
         //crudCategorie.delete(10);
         crudCategorie.add(nouvelleCategorie);
@@ -40,9 +41,12 @@ public class mainCategorie {
 
 
 
+   
 
         crudCategorie.search("amine");*/
+
     }
+
 
 }
 
