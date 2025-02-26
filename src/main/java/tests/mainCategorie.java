@@ -25,6 +25,7 @@ public class mainCategorie {
         //nouvelleCategorie.setDescription("06");
         //crudCategorie.update(nouvelleCategorie);
         crudCategorie.getAll();
+
        // crudCategorie.getById(8);
 
 
