@@ -20,5 +20,4 @@ public interface IServiceCrud<T> {
 
     List<T> search(String criteria);
 
-
 }

@@ -18,8 +18,8 @@ public class CrudZone implements IServiceCrud<Zone> {
 
         try (PreparedStatement statement = conn.prepareStatement(qry, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, zone.getNom());
-            statement.setDouble(2, zone.getLatitudeCentre());
-            statement.setDouble(3, zone.getLongitudeCentre());
+            statement.setFloat(2, zone.getLatitudeCentre());
+            statement.setFloat(3, zone.getLongitudeCentre());
             statement.setFloat(4, zone.getRayon());
             statement.setInt(5, zone.getIdUser());
             statement.setObject(6, zone.getIdLivraison() != 0 ? zone.getIdLivraison() : null, Types.INTEGER);
@@ -137,8 +137,8 @@ public class CrudZone implements IServiceCrud<Zone> {
     private Zone mapResultSetToZone(ResultSet rs) throws SQLException {
         Zone zone = new Zone(
                 rs.getString("nom"),
-                rs.getDouble("latitude_centre"),
-                rs.getDouble("longitude_centre"),
+                rs.getFloat("latitude_centre"),
+                rs.getFloat("longitude_centre"),
                 rs.getFloat("rayon"),
                 rs.getInt("id_user"),
                 rs.getInt("id_livraison"),
@@ -148,7 +148,7 @@ public class CrudZone implements IServiceCrud<Zone> {
         return zone;
     }
 
-    private List<Trajet> getTrajetsByZoneId(int idZone) {
+    public List<Trajet> getTrajetsByZoneId(int idZone) {
         List<Trajet> trajets = new ArrayList<>();
         String query = "SELECT * FROM trajet WHERE idZone = ?";
 
