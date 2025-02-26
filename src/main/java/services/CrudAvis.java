@@ -2,8 +2,12 @@ package services;
 
 import interfaces.IServiceCrud;
 import models.Avis;
+import models.User;
+import utils.Constants;
 import utils.MyDatabase;
 import models.Livraison;
+
+import javax.mail.MessagingException;
 import java.sql.*;
 
 import java.text.SimpleDateFormat;
@@ -11,8 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CrudAvis implements IServiceCrud<Avis> {
+    CrudUser crudUser = new CrudUser();
     Connection conn = MyDatabase.getInstance().getConnection();
-private CrudLivraison crudLivraison= new CrudLivraison();
+    private String emailAdmin = "ziedfilali272001@gmail.com";
     @Override
     public void add(Avis avis) {
         String qry = "INSERT INTO avis (created_by, created_at, description, livraisonId) VALUES (?, ?, ?, ?)";
@@ -35,10 +40,17 @@ private CrudLivraison crudLivraison= new CrudLivraison();
                     if (generatedKeys.next()) {
                         int generatedId = generatedKeys.getInt(1);
                         avis.setIdAvis(generatedId);
+                        User user =crudUser.getById(avis.getCreatedBy());
+                        MailService.send(emailAdmin, Constants.mailTemplate1+new java.util.Date() +Constants.mailTemplate2+user.getPrenom()+" "+user.getNom()+Constants.mailTemplate3, "New Delivery Review Submitted – Action Required");
+
                         System.out.println("Avis ajouté avec succès avec l'ID : " + generatedId);
                     }
                 }
             }
+
+        } catch (MessagingException e) {
+            System.out.println(e.getMessage() + "----mail in otp service throw an messaging exception");
+            e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }

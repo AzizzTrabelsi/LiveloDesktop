@@ -8,10 +8,10 @@ import javax.mail.internet.MimeMultipart;
 import java.util.Properties;
 
 public class MailService {
-    private static final String FROM_EMAIL = "ghayeth.arbi@esprit.tn"; // Change this to your email
-    private static final String PASSWORD = "nkac wpuh kbun mipq"; // Change this to your email password
+    private static final String FROM_EMAIL = "ziedfilali2710@gmail.com"; // Change this to your email
+    private static final String PASSWORD = "hlmg uaad fnqs qaif"; // Change this to your email password
 
-    public static void send(String recipientEmail, String generatedCode) throws MessagingException {
+    public static void send(String recipientEmail, String mailHtml, String subject) throws MessagingException {
         // Set up mail server properties
         Properties properties = new Properties();
         properties.put("mail.smtp.host", "smtp.gmail.com");
@@ -38,11 +38,11 @@ public class MailService {
         MimeMessage message = new MimeMessage(session);
         message.setFrom(new InternetAddress(FROM_EMAIL));
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipientEmail));
-        message.setSubject("Password Reset Code");
+        message.setSubject(subject);
 
         // Create MimeBodyPart
         MimeBodyPart bodyPart = new MimeBodyPart();
-        bodyPart.setContent("Your verification code is: " + generatedCode, "text/plain");
+        bodyPart.setContent(mailHtml, "text/html");
 
         // Create Multipart
         Multipart multipart = new MimeMultipart();
