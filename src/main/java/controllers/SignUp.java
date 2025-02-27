@@ -150,7 +150,7 @@ public class SignUp implements Initializable {
     private void navigateToSignIn() {
         try {
             // Chargement de la scène de connexion
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/SignIn.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
             Scene signInScene = new Scene(loader.load());
 
             // Récupération de la fenêtre actuelle et changement de scène
@@ -159,7 +159,7 @@ public class SignUp implements Initializable {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error loading SignIn.fxml.");
+            System.out.println("Error loading login.fxml.");
         }
     }
 }

@@ -6,8 +6,8 @@ import java.util.List;
 public class Zone {
     private int idZone;
     private String nom;
-    private double latitudeCentre;
-    private double longitudeCentre;
+    private float latitudeCentre;
+    private float longitudeCentre;
     private float rayon;
     private int idUser;
     private int idLivraison;
@@ -15,7 +15,7 @@ public class Zone {
     private List<Trajet> trajets = new ArrayList<>();
     public Zone() {}
 
-    public Zone(String nom, double latitude, double longitude, float rayon, int idUser, int idLivraison, int max) {
+    public Zone(String nom, float latitude, float longitude, float rayon, int idUser, int idLivraison, int max) {
         this.nom = nom;
         this.latitudeCentre = latitude;
         this.longitudeCentre = longitude;
@@ -42,19 +42,19 @@ public class Zone {
         this.nom = nom;
     }
 
-    public double getLatitudeCentre() {
+    public float getLatitudeCentre() {
         return latitudeCentre;
     }
 
-    public void setLatitudeCentre(double latitudeCentre) {
+    public void setLatitudeCentre(float latitudeCentre) {
         this.latitudeCentre = latitudeCentre;
     }
 
-    public double getLongitudeCentre() {
+    public float getLongitudeCentre() {
         return longitudeCentre;
     }
 
-    public void setLongitudeCentre(double longitudeCentre) {
+    public void setLongitudeCentre(float longitudeCentre) {
         this.longitudeCentre = longitudeCentre;
     }
 

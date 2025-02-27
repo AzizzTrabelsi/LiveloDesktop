@@ -1,9 +1,15 @@
 package controllers;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import java.time.ZoneId;
+import java.time.LocalDate;
+import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,6 +33,11 @@ import services.CrudArticle;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import tests.MainUserInterface;
+
+import java.time.LocalDate;
+
+
+
 
 import java.io.IOException;
 import java.net.URL;
@@ -120,9 +131,9 @@ public class GestionArticle implements Initializable {
 
     @FXML
     void ShowByCategorie(ActionEvent showEvent) {
-        hbHedha.getChildren().clear();  // Clear existing content
 
-        // Récupérer tous les articles
+        hbHedha.getChildren().clear();
+
         List<Article> articleList = su.getAll();
         List<Article> Temp = new ArrayList<>();
         //List<Article> articleList = su.getArticlesByCategoryId(CategoryID);
@@ -198,7 +209,7 @@ public class GestionArticle implements Initializable {
         System.out.println("article sélectionné : " + article.getIdArticle() + " " + article.getNom());
 
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-        alert.setTitle("Détails de l'utilisateur");
+        alert.setTitle("Détails de l'article");
         alert.setHeaderText("Informations sur " + article.getIdArticle() + " " + article.getNom());
         alert.setContentText("nom de larticle : " + article.getNom() + "\n" +
                 "description : " + article.getDescription() + "\n" +
@@ -207,6 +218,12 @@ public class GestionArticle implements Initializable {
                 "quantité : " + article.getQuantite() + "\n" +
                 "date de creation : " + article.getCreatedAt());
 
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+
+        // Handle the X button click
+        stage.setOnCloseRequest(event -> {
+            stage.close();
+        });
         ButtonType updateButton = new ButtonType("Mettre à jour");
         ButtonType deleteButton = new ButtonType("Supprimer");
 
@@ -245,78 +262,111 @@ public class GestionArticle implements Initializable {
 
     @FXML
     private void showUpdatePopup(Article article) {
-        Dialog<Article> dialog = new Dialog<>();
-        dialog.setTitle("Mettre à jour l'larticle");
-        dialog.setHeaderText("Modifier les informations de l'article");
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Mettre à jour l'article");
 
-        ButtonType saveButtonType = new ButtonType("Enregistrer", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
-        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, cancelButtonType);
+        VBox popupLayout = new VBox(10);
+        popupLayout.setPadding(new Insets(10));
 
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
+        TextField nameField = new TextField(article.getNom());
+        TextField priceField = new TextField(String.valueOf(article.getPrix()));
+        TextArea descriptionField = new TextArea(article.getDescription());
 
-        TextField nomField = new TextField(article.getNom());
-        TextField urlimgField = new TextField(article.getUrlImage());
-        TextField descField = new TextField(article.getDescription());
-        TextField prixField =new TextField(Float.toString(article.getPrix()));
+        TextField imageUrlField = new TextField(article.getUrlImage());
+        imageUrlField.setEditable(false);
 
-        TextField statutField = new TextField(article.getStatut().name());
-        TextField createdatField = new TextField(article.getCreatedAt().toString());
-        TextField quantField = new TextField(String.valueOf(article.getQuantite()));
-        grid.add(new Label("nom article:"), 0, 0);
-        grid.add(nomField, 1, 0);
-        grid.add(new Label("url image:"), 0, 1);
-        grid.add(urlimgField, 1, 1);
-        grid.add(new Label("description:"), 0, 2);
-        grid.add(descField, 1, 2);
-        grid.add(new Label("prix:"), 0, 3);
-        grid.add(prixField, 1, 3);
-        grid.add(new Label("statut:"), 0, 4);
-        grid.add(statutField, 1, 4);
-        grid.add(new Label("created at:"), 0, 5);
-        grid.add(createdatField, 1, 5);
-        grid.add(new Label(" quantite:"), 0, 6);
-        grid.add(quantField, 1, 6);
+        Button browseButton = new Button("Parcourir...");
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(100);
+        imageView.setFitHeight(100);
+        imageView.setPreserveRatio(true);
 
-        dialog.getDialogPane().setContent(grid);
+        if (article.getUrlImage() != null && !article.getUrlImage().isEmpty()) {
+            Image image = new Image(new File(article.getUrlImage()).toURI().toString());
+            imageView.setImage(image);
+        }
 
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == saveButtonType) {
-                // Update the user object with the new values
-                article.setNom(nomField.getText());
-                article.setUrlImage(urlimgField.getText());
-                article.setDescription(descField.getText());
-                article.setPrix(Float.parseFloat(prixField.getText()));
+        browseButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
+            );
+            File selectedFile = fileChooser.showOpenDialog(MainUserInterface.GetPrimaryStage());
 
-                article.setStatut(article.statut.valueOf(statutField.getText()));
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-                try {
-                    Date createdAt = dateFormat.parse(createdatField.getText()); // Convertir String en Date
-                    article.setCreatedAt(createdAt); // Affecter la date à l'article
-                } catch (ParseException e) {
-                    System.out.println("Erreur : Format de date invalide. Veuillez entrer la date sous la forme YYYY-MM-DD.");
-                }
-
-
-
-
-
-                // Save the updated user to the database
-                su.update(article);
-
-                // Refresh the user list in the UI
-                loadArticle(); // Call loadUsers to refresh the list
-
-                return article;
+            if (selectedFile != null) {
+                imageUrlField.setText(selectedFile.getAbsolutePath());
+                Image image = new Image(selectedFile.toURI().toString());
+                imageView.setImage(image);
             }
-            return null;
         });
 
-        dialog.showAndWait();
+        TextField createdByField = new TextField(String.valueOf(article.getCreatedBy()));
+        TextField quantityField = new TextField(String.valueOf(article.getQuantite()));
+
+        ChoiceBox<String> statusChoiceBox = new ChoiceBox<>();
+        statusChoiceBox.getItems().addAll("Disponible", "En rupture de stock");
+        statusChoiceBox.setValue(article.getStatut() == statut_article.on_stock ? "Disponible" : "En rupture de stock");
+
+        DatePicker createdAtPicker = new DatePicker();
+        if (article.getCreatedAt() != null) {
+            // Conversion de java.sql.Date à java.util.Date
+            Date utilDate = new Date(article.getCreatedAt().getTime());
+            // Conversion en LocalDate
+            LocalDate localDate = utilDate.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            createdAtPicker.setValue(localDate);
+        }
+
+
+        Button saveButton = new Button("Enregistrer");
+
+        saveButton.setOnAction(event -> {
+            try {
+                String name = nameField.getText();
+                String description = descriptionField.getText();
+                String imageUrl = imageUrlField.getText();
+                String status = statusChoiceBox.getValue();
+                java.sql.Date createdAt = createdAtPicker.getValue() != null ? java.sql.Date.valueOf(createdAtPicker.getValue()) : null;
+
+                int createdBy = Integer.parseInt(createdByField.getText());
+                int quantity = Integer.parseInt(quantityField.getText());
+                float price = Float.parseFloat(priceField.getText());
+
+                if (name.isEmpty() || description.isEmpty() || imageUrl.isEmpty() || createdAt == null) {
+                    throw new IllegalArgumentException("Veuillez remplir tous les champs obligatoires.");
+                }
+
+                statut_article statusEnum = status.equals("Disponible") ? statut_article.on_stock : statut_article.out_of_stock;
+
+                article.setNom(name);
+                article.setDescription(description);
+                article.setUrlImage(imageUrl);
+                article.setPrix(price);
+                article.setStatut(statusEnum);
+                article.setCreatedAt(createdAt);
+                article.setCreatedBy(createdBy);
+                article.setQuantite(quantity);
+
+                su.update(article);
+                popupStage.close();
+                loadArticle();
+
+            } catch (NumberFormatException e) {
+                showAlert("Erreur", "Veuillez entrer des valeurs valides pour les champs numériques.");
+            } catch (IllegalArgumentException e) {
+                showAlert("Champs obligatoires", e.getMessage());
+            }
+        });
+
+        popupLayout.getChildren().addAll(nameField, priceField, descriptionField, imageUrlField, browseButton, imageView, createdByField, quantityField, statusChoiceBox, createdAtPicker, saveButton);
+
+        Scene popupScene = new Scene(popupLayout, 400, 500);
+        popupStage.setScene(popupScene);
+        popupStage.show();
     }
+
+
 
     @FXML
     public void loadArticle() {
@@ -655,7 +705,99 @@ public class GestionArticle implements Initializable {
             System.out.println("Error loading SignUp.fxml.");
         }
     }
+    @FXML
+    private void NavigateToGestionUsers() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionUtilisateurs.fxml"));
+            Scene GestionUtilisateursScene = new Scene(loader.load());
 
+            Stage stage = (Stage) anLogout.getScene().getWindow();
+            stage.setScene(GestionUtilisateursScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading SignUp.fxml.");
+        }
+    }
+    @FXML
+    void navigateToHome(MouseEvent event) {
+        try {
+            // Load the SignUp.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homeAdmin.fxml"));
+            Scene signUpScene = new Scene(loader.load());
+
+            // Get the current stage and set the new scene
+            Stage stage = (Stage) imLogo.getScene().getWindow();
+            stage.setScene(signUpScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading SignUp.fxml.");
+        }
+    }
+    @FXML
+    private void NavigateToPendingUsers() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionUsersVerification.fxml"));
+            Scene GestionUtilisateursScene = new Scene(loader.load());
+
+            Stage stage = (Stage) anPendingUsers.getScene().getWindow();
+            stage.setScene(GestionUtilisateursScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading SignUp.fxml.");
+        }
+    }
+    @FXML
+    private void navigateToZones() {
+        try {
+            // Load the SignUp.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionZoneAdmin.fxml"));
+            Scene signUpScene = new Scene(loader.load());
+
+            // Get the current stage and set the new scene
+            Stage stage = (Stage) anCoverageArea.getScene().getWindow();
+            stage.setScene(signUpScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading SignUp.fxml.");
+        }
+    }
+    @FXML
+    private void navigateToCommandes() {
+        try {
+            // Load the SignUp.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/commandeAdmin.fxml"));
+            Scene signUpScene = new Scene(loader.load());
+
+            // Get the current stage and set the new scene
+            Stage stage = (Stage) anOrder.getScene().getWindow();
+            stage.setScene(signUpScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading SignUp.fxml.");
+        }
+    }
+
+    @FXML
+    void NavigateToGestionCategorie(MouseEvent event) {
+        try {
+            // Load the SignUp.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionCategorie.fxml"));
+            Scene signUpScene = new Scene(loader.load());
+
+            // Get the current stage and set the new scene
+            Stage stage = (Stage) anCategories.getScene().getWindow();
+            stage.setScene(signUpScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading SignUp.fxml.");
+        }
+    }
     @FXML
     public void normalEffect(javafx.scene.input.MouseEvent event) {
         ((AnchorPane) event.getSource()).setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
@@ -672,6 +814,7 @@ public class GestionArticle implements Initializable {
     public void handleAddArticleClick(javafx.scene.input.MouseEvent event) {
         openAddArticlePopup();
     }
+
 
     @FXML
     private void openAddArticlePopup() {
@@ -728,11 +871,20 @@ public class GestionArticle implements Initializable {
         statusChoiceBox.getItems().addAll("Disponible", "En rupture de stock");
         statusChoiceBox.setValue("Disponible");
 
+
+        // DatePicker with today's date as default and no other dates selectable
         DatePicker createdAtPicker = new DatePicker();
+        createdAtPicker.setValue(LocalDate.now()); // Sets today's date automatically
         createdAtPicker.setPromptText("Date de création");
 
-        //TextField categoryIdField = new TextField();
-       // categoryIdField.setPromptText("ID de la catégorie");
+        // Restrict the DatePicker to today's date only
+        createdAtPicker.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(!date.isEqual(LocalDate.now())); // Disable all dates except today
+            }
+        });
 
         // Save button
         Button saveButton = new Button("Enregistrer");
@@ -758,7 +910,8 @@ public class GestionArticle implements Initializable {
                 }
 
                 statut_article statusenum = statut_article.out_of_stock;
-                if(Objects.equals(status, "on_stock")) statusenum = statut_article.on_stock;
+
+                if (Objects.equals(status, "on_stock")) statusenum = statut_article.on_stock;
                 // Create new Article object
                 Article newArticle = new Article(imageUrl, new Categorie(categoryId), name, price, description, createdBy, quantity, statusenum, createdAt, 0);
 
@@ -779,7 +932,8 @@ public class GestionArticle implements Initializable {
         });
 
         // Add components to layout
-        popupLayout.getChildren().addAll(nameField, priceField, descriptionField, imageUrlField,browseButton, createdByField, quantityField, statusChoiceBox, createdAtPicker, saveButton);
+
+        popupLayout.getChildren().addAll(nameField, priceField, descriptionField, imageUrlField, browseButton, createdByField, quantityField, statusChoiceBox, createdAtPicker, saveButton);
 
         // Create scene and set stage
         Scene popupScene = new Scene(popupLayout, 400, 500);
@@ -787,6 +941,7 @@ public class GestionArticle implements Initializable {
         popupStage.show();
 
     }
+
     // Helper method to show an alert
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -797,7 +952,7 @@ public class GestionArticle implements Initializable {
     @FXML
     private void logout() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/SignIn.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
             Scene SignInScene = new Scene(loader.load());
 
             Stage stage = (Stage) anLogout.getScene().getWindow();

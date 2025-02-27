@@ -4,9 +4,13 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
+import io.github.cdimascio.dotenv.Dotenv;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class StripeService {
-    private static final String API_KEY = "sk_test_51QwhxAChNTULKwpesVH9MqcSkRhmiK72R292zWGCyJsuDU9dsd1lvzGHKiZQ9PsU01uv7qsWgA8hT6gYpxtFrzEB00Oc4A1Rec";
+    Dotenv dotenv = Dotenv.load();
+    public String stripeKey = dotenv.get("SECRET_KEY_STRIPE");
+    private String API_KEY = stripeKey;
 
     public StripeService() {
         Stripe.apiKey = API_KEY;

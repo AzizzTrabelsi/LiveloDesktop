@@ -797,7 +797,7 @@ public class adminArt implements Initializable {
     @FXML
     private void logout() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/SignIn.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
             Scene SignInScene = new Scene(loader.load());
 
             Stage stage = (Stage) anLogout.getScene().getWindow();

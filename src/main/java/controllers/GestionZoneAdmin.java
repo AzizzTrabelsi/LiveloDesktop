@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -83,17 +84,14 @@ public class GestionZoneAdmin implements Initializable{
             lblmax.setMinWidth(80);
             lblmax.setMaxWidth(80);
 
-            Label lbltrajets = new Label(zone.getTrajets().stream().map(trajet -> String.valueOf(trajet.getIdTrajet())).collect(Collectors.joining(", ")));
-            lbltrajets.setMinWidth(150);
-            lbltrajets.setMaxWidth(150);
-
-            zoneRow.getChildren().addAll(lblName, lbllatitude, lbllongitude, lblrayon, lbluser, lbllivraison, lblmax, lbltrajets);
+            zoneRow.getChildren().addAll(lblName, lbllatitude, lbllongitude, lblrayon, lbluser, lbllivraison, lblmax);
 
             zoneRow.setOnMouseClicked(event -> showZoneDetailsPopup(zone));
 
             vListZones.getChildren().add(zoneRow);
         }
     }
+
 
     @FXML
     private void showZoneDetailsPopup(Zone zone) {
@@ -107,19 +105,21 @@ public class GestionZoneAdmin implements Initializable{
                 "Rayon : " + zone.getRayon() + " km\n" +
                 "Utilisateur associé : " + zone.getIdUser() + "\n" +
                 "Livraison associée : " + zone.getIdLivraison() + "\n" +
-                "Max : " + zone.getMax() + "\n" +
-                "Trajets : " + zone.getTrajets().stream()
-                .map(trajet -> String.valueOf(trajet.getIdTrajet()))
-                .collect(Collectors.joining(", ")));
+                "Max : " + zone.getMax());
 
+        // Add new button for "Show Trajets"
+        ButtonType showTrajetsButton = new ButtonType("Afficher Trajets");
         ButtonType updateButton = new ButtonType("Mettre à jour");
         ButtonType deleteButton = new ButtonType("Supprimer");
         ButtonType closeButton = new ButtonType("Fermer", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-        alert.getButtonTypes().setAll(updateButton, deleteButton, closeButton);
+        alert.getButtonTypes().setAll(showTrajetsButton, updateButton, deleteButton, closeButton);
 
         alert.showAndWait().ifPresent(response -> {
-            if (response == updateButton) {
+            if (response == showTrajetsButton) {
+                // Navigate to AfficherTrajets.fxml and pass the idZone
+                navigateToAfficherTrajets(zone.getIdZone());
+            } else if (response == updateButton) {
                 showUpdateZonePopup(zone);
                 System.out.println("Mettre à jour les informations de la zone.");
             } else if (response == deleteButton) {
@@ -149,6 +149,29 @@ public class GestionZoneAdmin implements Initializable{
         });
     }
 
+    private void navigateToAfficherTrajets(int idZone) {
+        try {
+            // Load the AfficherTrajets.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherTrajets.fxml"));
+            Parent root = loader.load();
+
+            // Get the controller for AfficherTrajets.fxml
+            AfficherTrajets AfficherTrajets = loader.getController();
+
+            // Pass the idZone to the AfficherTrajetsController
+            AfficherTrajets.setIdZone(idZone);
+
+            // Create a new stage (window) to display AfficherTrajets.fxml
+            Stage stage = new Stage();
+            stage.setTitle("Trajets de la Zone");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @FXML
     private void showUpdateZonePopup(Zone zone) {
         Dialog<Zone> dialog = new Dialog<>();
@@ -170,9 +193,6 @@ public class GestionZoneAdmin implements Initializable{
         TextField idUserField = new TextField(String.valueOf(zone.getIdUser()));
         TextField idLivraisonField = new TextField(String.valueOf(zone.getIdLivraison()));
         TextField maxField = new TextField(String.valueOf(zone.getMax()));
-        TextField trajetsField = new TextField(zone.getTrajets().stream()
-                .map(trajet -> String.valueOf(trajet.getIdTrajet()))
-                .collect(Collectors.joining(", "))); // Liste des IDs de trajets
 
         grid.add(new Label("Nom:"), 0, 0);
         grid.add(nomField, 1, 0);
@@ -188,28 +208,18 @@ public class GestionZoneAdmin implements Initializable{
         grid.add(idLivraisonField, 1, 5);
         grid.add(new Label("Max:"), 0, 6);
         grid.add(maxField, 1, 6);
-        grid.add(new Label("Trajets (IDs):"), 0, 7);
-        grid.add(trajetsField, 1, 7);
 
         dialog.getDialogPane().setContent(grid);
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
                 zone.setNom(nomField.getText());
-                zone.setLatitudeCentre(Double.parseDouble(latitudeField.getText()));
-                zone.setLongitudeCentre(Double.parseDouble(longitudeField.getText()));
+                zone.setLatitudeCentre(Float.parseFloat(latitudeField.getText()));
+                zone.setLongitudeCentre(Float.parseFloat(longitudeField.getText()));
                 zone.setRayon(Float.parseFloat(rayonField.getText()));
                 zone.setIdUser(Integer.parseInt(idUserField.getText()));
                 zone.setIdLivraison(Integer.parseInt(idLivraisonField.getText()));
                 zone.setMax(Integer.parseInt(maxField.getText()));
-
-                // Mettre à jour la liste des trajets
-                List<Trajet> updatedTrajets = Arrays.stream(trajetsField.getText().split(","))
-                        .map(String::trim)
-                        .filter(id -> !id.isEmpty())
-                        .map(id -> new Trajet(Integer.parseInt(id))) // Création d'objets Trajet avec les IDs
-                        .collect(Collectors.toList());
-                zone.setTrajets(updatedTrajets);
 
                 // Sauvegarde dans la base de données
                 su.update(zone);
@@ -224,6 +234,7 @@ public class GestionZoneAdmin implements Initializable{
 
         dialog.showAndWait();
     }
+
 
     @FXML
     public void loadZones() {
@@ -274,12 +285,7 @@ public class GestionZoneAdmin implements Initializable{
         lblHeaderMax.setMaxWidth(80);
         lblHeaderMax.setStyle("-fx-text-fill: black;");
 
-        Label lblHeaderTrajets = new Label("Trajets");
-        lblHeaderTrajets.setMinWidth(150);
-        lblHeaderTrajets.setMaxWidth(150);
-        lblHeaderTrajets.setStyle("-fx-text-fill: black;");
-
-        headerRow.getChildren().addAll(lblHeaderNom, lblHeaderLatitude, lblHeaderLongitude, lblHeaderRayon, lblHeaderUser, lblHeaderLivraison, lblHeaderMax, lblHeaderTrajets);
+        headerRow.getChildren().addAll(lblHeaderNom, lblHeaderLatitude, lblHeaderLongitude, lblHeaderRayon, lblHeaderUser, lblHeaderLivraison, lblHeaderMax);
 
         vListZones.getChildren().add(headerRow);
 
@@ -319,13 +325,7 @@ public class GestionZoneAdmin implements Initializable{
             lblMax.setMinWidth(80);
             lblMax.setMaxWidth(80);
 
-            Label lblTrajets = new Label(zone.getTrajets().stream()
-                    .map(trajet -> String.valueOf(trajet.getIdTrajet()))
-                    .collect(Collectors.joining(", ")));
-            lblTrajets.setMinWidth(150);
-            lblTrajets.setMaxWidth(150);
-
-            zoneRow.getChildren().addAll(lblName, lblLatitude, lblLongitude, lblRayon, lblUser, lblLivraison, lblMax, lblTrajets);
+            zoneRow.getChildren().addAll(lblName, lblLatitude, lblLongitude, lblRayon, lblUser, lblLivraison, lblMax);
 
             // Event listener to show details on click
             zoneRow.setOnMouseClicked(event -> showZoneDetailsPopup(zone));
@@ -333,6 +333,7 @@ public class GestionZoneAdmin implements Initializable{
             vListZones.getChildren().add(zoneRow);
         }
     }
+
 
     @FXML
     private void searchZones(String criteria) {
@@ -381,12 +382,7 @@ public class GestionZoneAdmin implements Initializable{
         lblHeaderMax.setMaxWidth(80);
         lblHeaderMax.setStyle("-fx-text-fill: black;");
 
-        Label lblHeaderTrajets = new Label("Trajets");
-        lblHeaderTrajets.setMinWidth(150);
-        lblHeaderTrajets.setMaxWidth(150);
-        lblHeaderTrajets.setStyle("-fx-text-fill: black;");
-
-        headerRow.getChildren().addAll(lblHeaderName, lblHeaderLatitude, lblHeaderLongitude, lblHeaderRayon, lblHeaderUser, lblHeaderLivraison, lblHeaderMax, lblHeaderTrajets);
+        headerRow.getChildren().addAll(lblHeaderName, lblHeaderLatitude, lblHeaderLongitude, lblHeaderRayon, lblHeaderUser, lblHeaderLivraison, lblHeaderMax);
         vListZones.getChildren().add(headerRow);
 
         // Récupération des zones qui correspondent aux critères de recherche
@@ -426,17 +422,12 @@ public class GestionZoneAdmin implements Initializable{
             lblmax.setMinWidth(80);
             lblmax.setMaxWidth(80);
 
-            Label lbltrajets = new Label(zone.getTrajets().stream()
-                    .map(trajet -> String.valueOf(trajet.getIdTrajet()))
-                    .collect(Collectors.joining(", ")));
-            lbltrajets.setMinWidth(150);
-            lbltrajets.setMaxWidth(150);
-
-            zoneRow.getChildren().addAll(lblName, lbllatitude, lbllongitude, lblrayon, lbluser, lbllivraison, lblmax, lbltrajets);
+            zoneRow.getChildren().addAll(lblName, lbllatitude, lbllongitude, lblrayon, lbluser, lbllivraison, lblmax);
 
             vListZones.getChildren().add(zoneRow);
         }
     }
+
     @FXML
     void AddZone(ActionEvent event) {
         try {
@@ -448,7 +439,6 @@ public class GestionZoneAdmin implements Initializable{
             String idUserStr = AnUserN.getText();
             String idLivraisonStr = anLivraisonN.getText();
             String maxStr = anMax.getText();
-            String trajetsStr = anTrajets.getText();
 
             // Validation des champs obligatoires
             if (nom.isEmpty() || latitudeCentreStr.isEmpty() || longitudeCentreStr.isEmpty() || rayonStr.isEmpty() ||
@@ -458,15 +448,15 @@ public class GestionZoneAdmin implements Initializable{
             }
 
             // Conversion des valeurs
-            double latitudeCentre;
-            double longitudeCentre;
+            float latitudeCentre;
+            float longitudeCentre;
             float rayon;
             int idUser;
             int idLivraison;
             int max;
             try {
-                latitudeCentre = Double.parseDouble(latitudeCentreStr);
-                longitudeCentre = Double.parseDouble(longitudeCentreStr);
+                latitudeCentre = Float.parseFloat(latitudeCentreStr);
+                longitudeCentre = Float.parseFloat(longitudeCentreStr);
                 rayon = Float.parseFloat(rayonStr);
                 idUser = Integer.parseInt(idUserStr);
                 idLivraison = Integer.parseInt(idLivraisonStr);
@@ -476,22 +466,6 @@ public class GestionZoneAdmin implements Initializable{
                 return;
             }
 
-            // Conversion des trajets (séparés par des virgules)
-            List<Trajet> trajets = new ArrayList<>();
-            if (!trajetsStr.isEmpty()) {
-                String[] trajetIds = trajetsStr.split(",");
-                for (String trajetId : trajetIds) {
-                    try {
-                        int idTrajet = Integer.parseInt(trajetId.trim());
-                        Trajet trajet = new Trajet();
-                        trajet.setIdTrajet(idTrajet);
-                        trajets.add(trajet);
-                    } catch (NumberFormatException e) {
-                        showErrorAlert("Invalid Trajet ID: " + trajetId);
-                        return;
-                    }
-                }
-            }
 
             // Création de l'objet Zone
             Zone zone = new Zone();
@@ -502,7 +476,6 @@ public class GestionZoneAdmin implements Initializable{
             zone.setIdUser(idUser);
             zone.setIdLivraison(idLivraison);
             zone.setMax(max);
-            zone.setTrajets(trajets);
 
             // Ajout à la base de données
             su.add(zone);
@@ -579,9 +552,6 @@ public class GestionZoneAdmin implements Initializable{
     private TextField anSearch;
 
     @FXML
-    private TextField anTrajets;
-
-    @FXML
     private AnchorPane anUsers;
 
     @FXML
@@ -612,9 +582,6 @@ public class GestionZoneAdmin implements Initializable{
     private Label lblrayon;
 
     @FXML
-    private Label lbltrajets;
-
-    @FXML
     private Label lbluser;
 
     @FXML
@@ -628,7 +595,7 @@ public class GestionZoneAdmin implements Initializable{
     @FXML
     private void logout() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/SignIn.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
             Scene signInScene = new Scene(loader.load());
 
             Stage stage = (Stage) anLogout.getScene().getWindow();
@@ -636,7 +603,7 @@ public class GestionZoneAdmin implements Initializable{
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors du chargement de SignIn.fxml.");
+            System.out.println("Erreur lors du chargement de login.fxml.");
         }
     }
 
@@ -644,7 +611,7 @@ public class GestionZoneAdmin implements Initializable{
     private void navigateToHome() {
         try {
             // Charger le fichier homeZone.fxml
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homeZone.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homeAdmin.fxml"));
             Scene homeScene = new Scene(loader.load());
 
             // Obtenir le stage actuel et définir la nouvelle scène
