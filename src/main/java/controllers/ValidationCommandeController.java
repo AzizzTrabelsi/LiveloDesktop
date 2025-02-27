@@ -122,6 +122,8 @@ public class ValidationCommandeController {
         commandeEnCours.setAdresse_arr(adresseArrField.getText());
         commandeEnCours.setType_livraison((String) typeLivraisonCombo.getValue());
 
+        commandeEnCours.setStatut(statutlCommande.Shipping);
+
         // Mise à jour dans la base de données
         crudCommande.update(commandeEnCours);
 

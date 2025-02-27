@@ -27,11 +27,10 @@ public class MainUserInterface extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+
+
         instance=this;
-        FXMLLoader loader= new FXMLLoader(getClass().getResource("/MarketClient.fxml"));
-
-
-
+        FXMLLoader loader= new FXMLLoader(getClass().getResource("/login.fxml"));
 
         try {
             Parent root =loader.load();

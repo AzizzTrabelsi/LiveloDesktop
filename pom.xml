@@ -89,6 +89,7 @@
             <version>24.9.0</version> <!-- Remplace par la dernière version si besoin -->
         </dependency>
 
+
         <dependency>
             <groupId>net.minidev</groupId>
             <artifactId>json-smart</artifactId>

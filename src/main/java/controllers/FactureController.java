@@ -32,6 +32,7 @@ public class FactureController {
     private final CrudFacture crudFacture = new CrudFacture();
     private final StripeService stripeService = new StripeService(); // Utilisation du service Stripe
 
+
     public void setFactureDetails(double montant, int userId, int commandeId) {
         this.montantLabel.setText(montant + " TND");
         this.userId = userId;
@@ -57,6 +58,7 @@ public class FactureController {
             retournerAuMarketClient();
         }
     }
+
 
     @FXML
     private void confirmerPaiement() {
@@ -95,6 +97,7 @@ public class FactureController {
     private void enregistrerFacture(String type) {
         Facture facture = new Facture(
                 getMontant(),
+
                 new Date(System.currentTimeMillis()),
                 type_paiement.valueOf(type),
                 userId, commandeId
@@ -115,6 +118,7 @@ public class FactureController {
     private void showAlert(Alert.AlertType type, String message) {
         Alert alert = new Alert(type, message, ButtonType.OK);
         alert.showAndWait();
+     
     }
 
     private void afficherFacture() {
