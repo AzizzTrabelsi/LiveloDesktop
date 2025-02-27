@@ -11,7 +11,7 @@ public class mainArticle {
     public static void main(String[] args) {
 
 
-        CrudCategorie crudCategorie = new CrudCategorie();
+        /*CrudCategorie crudCategorie = new CrudCategorie();
 
 
         Categorie categorie = crudCategorie.getById(27);
@@ -60,6 +60,9 @@ public class mainArticle {
 
         // Recherche d'articles par nom
         System.out.println("Recherche d'articles avec le critère 'Casque Bluetooth' :");
-        crudArticle.search("Casque Bluetooth");
+        crudArticle.search("Casque Bluetooth");*/
+        CrudArticle crudArticle = new CrudArticle();
+
+        System.out.println(crudArticle.getArticlesByStatus("out_of_stock"));
     }
 }

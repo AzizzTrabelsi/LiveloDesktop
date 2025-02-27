@@ -91,7 +91,7 @@ public class SignIn {
     private void navigateToSignUp() {
         try {
             // Load the SignUp.fxml file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/SignUp.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/SignIn.fxml"));
             Scene signUpScene = new Scene(loader.load());
 
             // Get the current stage and set the new scene
