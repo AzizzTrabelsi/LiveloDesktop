@@ -16,7 +16,7 @@ public class mainZone {
         CrudTrajet crudTrajet = new CrudTrajet();
 
         // 1. Ajouter une nouvelle zone
-        Zone zone = new Zone("Zone Test", 36, 10, 5.0f, 50, 0, 10);
+        Zone zone = new Zone("Zone Test", 36.8065f, 10.1815f, 5.0f, 50, 0, 10);
         crudZone.add(zone);
 
         // Récupérer l'ID de la zone nouvellement créée
@@ -69,6 +69,3 @@ public class mainZone {
         }*/
     }
 }
-
-
-

@@ -320,22 +320,22 @@ public class GestionUtilisateurs implements Initializable {
             lblVerified.setMaxWidth(80);
 
             // Gestion du transport avec vérification si type_vehicule est null
-            String transport = (user.getType_vehicule() != null) ? user.getType_vehicule().toString() : "Aucun transport";
+            String transport = (user.getType_vehicule() != null) ? user.getType_vehicule().toString() : "No transport";
             Label lblTransport = new Label(transport);
             lblTransport.setMinWidth(80);
             lblTransport.setMaxWidth(80);
 
             userRow.getChildren().addAll(lblPrenom, lblNom, lblCin, lblAdress, lblEmail, lblRole, lblVerified, lblTransport);
 
-            Button deleteButton = new Button("Supprimer");
+            Button deleteButton = new Button("Delete");
             deleteButton.setOnAction(event -> {
                 javafx.scene.control.Alert confirmationAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
-                confirmationAlert.setTitle("Confirmation de la suppression");
-                confirmationAlert.setHeaderText("Êtes-vous sûr de vouloir supprimer cet utilisateur ?");
-                confirmationAlert.setContentText("Cette action est irréversible.");
+                confirmationAlert.setTitle("Delete confirmation");
+                confirmationAlert.setHeaderText("Are you sure you want to delete this user?");
+                confirmationAlert.setContentText("This action is irreversible.");
 
-                ButtonType yesButton = new ButtonType("Oui");
-                ButtonType noButton = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
+                ButtonType yesButton = new ButtonType("Yes");
+                ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
 
                 confirmationAlert.getButtonTypes().setAll(yesButton, noButton);
 
@@ -343,10 +343,10 @@ public class GestionUtilisateurs implements Initializable {
                     if (confirmationResponse == yesButton) {
                         // Effectuer la suppression
                         su.delete(user.getId());
-                        System.out.println("Utilisateur supprimé.");
+                        System.out.println("User deleted.");
                         loadUsers();
                     } else {
-                        System.out.println("Suppression annulée.");
+                        System.out.println("Deletion canceled.");
                     }
                 });
             });
@@ -449,7 +449,7 @@ public class GestionUtilisateurs implements Initializable {
             lblVerified.setMinWidth(80);
             lblVerified.setMaxWidth(80);
 
-            Label lblTransport = new Label(user.getType_vehicule().toString());
+            Label lblTransport = new Label(user.getType_vehicule() != null ? user.getType_vehicule().toString() : "No transport");
             lblTransport.setMinWidth(80);
             lblTransport.setMaxWidth(80);
 
@@ -544,13 +544,11 @@ public class GestionUtilisateurs implements Initializable {
         }
     }
     @FXML
-    private void navigateToZones() {
+    public void navigateToZones() {
         try {
-            // Load the SignUp.fxml file
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionZoneAdmin.fxml"));
             Scene signUpScene = new Scene(loader.load());
 
-            // Get the current stage and set the new scene
             Stage stage = (Stage) anCoverageArea.getScene().getWindow();
             stage.setScene(signUpScene);
             stage.show();
@@ -591,7 +589,7 @@ public class GestionUtilisateurs implements Initializable {
     @FXML
     private void logout() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/SignIn.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
             Scene SignInScene = new Scene(loader.load());
 
             Stage stage = (Stage) anLogout.getScene().getWindow();

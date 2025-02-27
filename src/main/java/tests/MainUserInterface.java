@@ -29,8 +29,8 @@ public class MainUserInterface extends Application {
     public void start(Stage primaryStage) {
 
 
-        instance =this;
-        FXMLLoader loader= new FXMLLoader(getClass().getResource("/homePartner.fxml"));
+        instance=this;
+        FXMLLoader loader= new FXMLLoader(getClass().getResource("/login.fxml"));
 
         try {
             Parent root =loader.load();

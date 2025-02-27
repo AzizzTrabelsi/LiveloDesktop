@@ -93,6 +93,7 @@ public class GestionCategorie implements Initializable  {
 
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
 
+
         // Handle the X button click
         stage.setOnCloseRequest(event -> {
             stage.close();

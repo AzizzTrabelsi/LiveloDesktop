@@ -64,7 +64,7 @@ public class HomeAdmin {
     @FXML
     private void logout() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/SignIn.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
             Scene SignInScene = new Scene(loader.load());
 
             Stage stage = (Stage) anLogout.getScene().getWindow();
@@ -120,11 +120,9 @@ public class HomeAdmin {
     @FXML
     private void navigateToZones() {
         try {
-            // Load the SignUp.fxml file
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionZoneAdmin.fxml"));
             Scene signUpScene = new Scene(loader.load());
 
-            // Get the current stage and set the new scene
             Stage stage = (Stage) anCoverageArea.getScene().getWindow();
             stage.setScene(signUpScene);
             stage.show();

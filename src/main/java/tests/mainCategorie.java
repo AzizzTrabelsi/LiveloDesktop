@@ -11,7 +11,6 @@ public class mainCategorie {
                 "lemino",
                 "description delemino",
                 "C:/projetpidev/LiveloDesktop/src/main/resources/image/bin.png",
-
                 "img1.jpg",
                 53
 
@@ -22,6 +21,7 @@ public class mainCategorie {
 
                 50
 
+        );
 
 
         CrudCategorie crudCategorie = new CrudCategorie();
@@ -40,10 +40,14 @@ public class mainCategorie {
 
 
 
+
    
 
         crudCategorie.search("amine");*/
 
 
-    }}
+    }
+
+
+}
 
