@@ -667,6 +667,8 @@ public class GestionArticle implements Initializable {
 
     @FXML
     private AnchorPane anOrder;
+    @FXML
+    private Button idfilter;
 
     @FXML
     private AnchorPane anPendingUsers;
@@ -719,6 +721,98 @@ public class GestionArticle implements Initializable {
             System.out.println("Error loading SignUp.fxml.");
         }
     }
+
+
+
+    @FXML
+    private void showFilterPopup() {
+
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Filtrer les articles");
+        alert.setHeaderText("Choisissez un filtre");
+        alert.setContentText("Sélectionnez le statut des articles à afficher :");
+
+        ButtonType buttonOnStock = new ButtonType("En stock");
+        ButtonType buttonOutOfStock = new ButtonType("En rupture");
+        ButtonType buttonCancel = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(buttonOnStock, buttonOutOfStock, buttonCancel);
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == buttonOnStock) {
+                ShowFilteredArticles("on_stock");
+            } else if (response == buttonOutOfStock) {
+                ShowFilteredArticles( "out_of_stock");
+            }
+        });
+    }
+
+    @FXML
+    void ShowFilteredArticles(String statut) {
+        hbHedha.getChildren().clear();  // Vider la liste avant d'ajouter les articles filtrés
+
+        // Récupérer les articles selon le statut (sans filtrer par catégorie)
+        List<Article> articleList = su.getArticlesByStatus(statut);
+
+        if (articleList.isEmpty()) {
+            System.out.println("⚠️ Aucun article trouvé avec le statut: " + statut);
+            return;
+        }
+
+        System.out.println("✅ Articles trouvés : " + articleList.size());
+
+        // Affichage des articles filtrés
+        for (Article article : articleList) {
+            HBox artRow = new HBox(4);
+            artRow.setPrefHeight(32.0);
+            artRow.setPrefWidth(765.0);
+
+            Label lblIdCategorie = new Label(String.valueOf(article.getCategorie().getId_categorie()));
+            lblIdCategorie.setMinWidth(80);
+            lblIdCategorie.setMaxWidth(80);
+
+            Label lblurlimg = new Label(article.getUrlImage());
+            lblurlimg.setMinWidth(80);
+            lblurlimg.setMaxWidth(80);
+
+            Label lblNom = new Label(article.getNom());
+            lblNom.setMinWidth(80);
+            lblNom.setMaxWidth(80);
+
+            Label lblPrix = new Label(String.valueOf(article.getPrix()));
+            lblPrix.setMinWidth(80);
+            lblPrix.setMaxWidth(80);
+
+            Label lblDesc = new Label(article.getDescription());
+            lblDesc.setMinWidth(130);
+            lblDesc.setMaxWidth(130);
+
+            Label lblStatu = new Label(article.getStatut().name());
+            lblStatu.setMinWidth(105);
+            lblStatu.setMaxWidth(105);
+
+            Label lblQuant = new Label(String.valueOf(article.getQuantite()));
+            lblQuant.setMinWidth(80);
+            lblQuant.setMaxWidth(80);
+
+            Label lblcreatedat = new Label(article.getCreatedAt().toString());
+            lblcreatedat.setMinWidth(80);
+            lblcreatedat.setMaxWidth(80);
+
+            artRow.getChildren().addAll(lblIdCategorie, lblurlimg, lblNom, lblPrix, lblDesc, lblStatu, lblQuant, lblcreatedat);
+
+            // Ajouter un événement au clic pour voir les détails de l'article
+            artRow.setOnMouseClicked(event -> showArticleDetailsPopup(article));
+
+            vListUsers.getChildren().add(artRow);
+        }
+    }
+
+
+
+
+
     @FXML
     void navigateToHome(MouseEvent event) {
         try {

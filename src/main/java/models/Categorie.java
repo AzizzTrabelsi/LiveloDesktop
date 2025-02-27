@@ -14,8 +14,10 @@ public class Categorie {
     private String description;
     private String url_image;
     private int createdBy;
-    private List<Article> articles = new ArrayList<>(); // 🔹 Relation One-to-Many avec Article
+    private List<Article> articles = new ArrayList<>();
 
+    public Categorie() {
+    }
 
     public Categorie(int id_categorie, String nom, String description, String url_image, int createdBy) {
         this.id_categorie = id_categorie;

@@ -37,7 +37,7 @@ public class article {
         System.out.println("🖼️ Chemin de l'image : " + "/" + article.getUrlImage());
 
         // Charger l'image (si URL correcte)
-        String imagePath = "/" + article.getUrlImage() + ".jpg";
+        String imagePath = "/" + article.getUrlImage()+ ".jpg" ;
         Image img = new Image(getClass().getResourceAsStream(imagePath));
         System.out.println("🖼️ Chemin de l'image : " + "/" + article.getUrlImage());
         articleImage.setImage(img);
