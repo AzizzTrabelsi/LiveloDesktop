@@ -16,6 +16,7 @@ import models.Article;
 import models.Commande;
 import models.statutlCommande;
 import services.CrudArticle;
+
 import services.CrudCategorie;
 import services.CrudCommande;
 
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class MarketClient implements Initializable {
+
         private final CrudArticle su = new CrudArticle();
         private CrudCategorie crudCategorie = new CrudCategorie();
         private List<Article> articleList;
@@ -40,6 +42,7 @@ public class MarketClient implements Initializable {
 
         @FXML
         private ImageView imLogo;
+
 
         @FXML
         void navigateToHome(MouseEvent event) {
@@ -61,11 +64,14 @@ public class MarketClient implements Initializable {
                 nouvelleCommande.setType_livraison("Standard");
                 nouvelleCommande.setHoraire(new Timestamp(System.currentTimeMillis()));
                 nouvelleCommande.setStatut(statutlCommande.Processing);
-                nouvelleCommande.setCreated_by(50);
+
+                nouvelleCommande.setCreated_by(55);
+
 
                 crudCommande.add(nouvelleCommande);
                 System.out.println("Commande ID enregistrée dans MarketClient: " + getCommandeId());
         }
+
 
 
 
@@ -116,6 +122,7 @@ public class MarketClient implements Initializable {
                                         continue;
                                 }
 
+
                                 articleController.setData(a);
                                 articleBox.setOnMouseClicked(event -> afficherPopupArticle(a));
 
@@ -130,17 +137,6 @@ public class MarketClient implements Initializable {
                         }
                 } catch (IOException e) {
                         e.printStackTrace();
-                }
-        }
-        @Override
-        public void initialize(URL url, ResourceBundle rb) {
-                int column = 0;
-                int row = 0;
-                System.out.println("🔄 MarketClient initialisé, attente de categoryId...");
-                ajouterNouvelleCommande();
-                // Si l'ID a déjà été défini, charge les articles directement
-                if (isCategorySet) {
-                        loadArticlesByCategory();
                 }
 
                 /*int column = 0;

@@ -1,7 +1,6 @@
 package tests;
 
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -27,6 +26,7 @@ public class MainUserInterface extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
 
 
         instance=this;

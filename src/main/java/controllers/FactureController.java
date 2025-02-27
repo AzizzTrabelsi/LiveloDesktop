@@ -1,82 +1,124 @@
 package controllers;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.stage.Stage;
 import models.Facture;
 import models.type_paiement;
 import services.CrudFacture;
+import services.StripeService;
+import com.stripe.exception.StripeException;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Date;
+import java.sql.Date;
 
 public class FactureController {
     @FXML
-    private Label montantLabel;
+    private Label montantLabel, labelTotal;
     @FXML
-    private CheckBox cashCheckBox;
-    @FXML
-    private CheckBox onlineCheckBox;
+    private CheckBox cashCheckBox, onlineCheckBox;
+    private Image btn;
 
     private int userId;
     private int commandeId;
-    CrudFacture crudFacture = new CrudFacture();
+    private final CrudFacture crudFacture = new CrudFacture();
+    private final StripeService stripeService = new StripeService(); // Utilisation du service Stripe
+
 
     public void setFactureDetails(double montant, int userId, int commandeId) {
         this.montantLabel.setText(montant + " TND");
         this.userId = userId;
         this.commandeId = commandeId;
     }
+    private void retournerAuMarketClient() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/MarketClient.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) cashCheckBox.getScene().getWindow(); // Utilise un élément existant
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void attendrePaiementEtRediriger() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Successful Payment !!", ButtonType.OK);
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.OK) {
+            retournerAuMarketClient();
+        }
+    }
+
 
     @FXML
     private void confirmerPaiement() {
         System.out.println("Paiement confirmé !");
-        String type = "";
 
         if (cashCheckBox.isSelected()) {
-            type = "CASH";
-            enregistrerFacture(type); // Enregistre directement la facture en cash
+            enregistrerFacture("CASH");
+            attendrePaiementEtRediriger();
         } else if (onlineCheckBox.isSelected()) {
-            type = "ONLINE";
-            ouvrirPagePaiement(); // Ouvre une page pour le paiement en ligne
+            try {
+                String paymentUrl = stripeService.createCheckoutSession(commandeId, (getMontant() / 3));
+                ouvrirPagePaiement(paymentUrl);
+
+                // Ici, on attend la confirmation du paiement AVANT d'enregistrer la facture et de rediriger
+                attendrePaiementEtRedirigerEnLigne();
+            } catch (StripeException e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Error in stripe : " + e.getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Error, try later !");
+            }
         } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "Veuillez choisir un mode de paiement", ButtonType.OK);
-            alert.showAndWait();
+            showAlert(Alert.AlertType.WARNING, "Choose Payment Method");
         }
     }
+    private void attendrePaiementEtRedirigerEnLigne() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Payment Completed Successfully!", ButtonType.OK);
+        alert.showAndWait();
 
+        if (alert.getResult() == ButtonType.OK) {
+            enregistrerFacture("ONLINE");
+            attendrePaiementEtRediriger();
+        }
+    }
     private void enregistrerFacture(String type) {
         Facture facture = new Facture(
-                Float.parseFloat(montantLabel.getText().replace(" TND", "")),
+                getMontant(),
+
                 new Date(System.currentTimeMillis()),
                 type_paiement.valueOf(type),
                 userId, commandeId
         );
         crudFacture.add(facture);
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Commande validée avec succès !", ButtonType.OK);
-        alert.showAndWait();
-
-        // Rediriger vers la facture
+        showAlert(Alert.AlertType.INFORMATION, "Order Valid continue to payement!");
         afficherFacture();
     }
 
-    private void ouvrirPagePaiement() {
-        try {
-            String urlPaiement = "https://buy.stripe.com/test_4gw3cP8TtdtSa80cMM"; // 🔥 LIEN TEST STRIPE
-            Desktop.getDesktop().browse(new URI(urlPaiement));
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
-        }
+    private void ouvrirPagePaiement(String paymentUrl) throws Exception {
+        Desktop.getDesktop().browse(new URI(paymentUrl));
+    }
+
+    private float getMontant() {
+        return Float.parseFloat(montantLabel.getText().replace(" TND", ""));
+    }
+
+    private void showAlert(Alert.AlertType type, String message) {
+        Alert alert = new Alert(type, message, ButtonType.OK);
+        alert.showAndWait();
+     
     }
 
     private void afficherFacture() {
@@ -88,6 +130,7 @@ public class FactureController {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+
         }
     }
 }
