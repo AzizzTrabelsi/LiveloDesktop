@@ -62,6 +62,7 @@
                </font>
             </Text>
             <PasswordField fx:id="tfPassword" layoutX="99.0" layoutY="393.0" prefHeight="41.0" prefWidth="480.0" promptText="Password*" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" />
+            <TextField fx:id="tfPasswordVisible" layoutX="99.0" layoutY="393.0" prefHeight="41.0" prefWidth="480.0" promptText="Password*" style="-fx-background-color: transparent; -fx-border-color: #398c3e; -fx-border-width: 0px 0px 2px 0px;" visible="false" />
             <ImageView fx:id="imView" fitHeight="29.0" fitWidth="29.0" layoutX="550.0" layoutY="399.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@image/eye.png" />

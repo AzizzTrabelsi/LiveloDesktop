@@ -8,7 +8,7 @@ public class Avis {
     private int idAvis, createdBy;
     private Date createdAt;
     private String description;
-    private Livraison livraison; // Relation avec Livraison, puisque plusieurs avis peuvent être associés à une livraison
+    private Livraison livraison;
 
     public Avis() {}
 
