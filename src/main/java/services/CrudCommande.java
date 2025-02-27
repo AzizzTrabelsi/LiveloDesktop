@@ -260,6 +260,43 @@ public class CrudCommande implements interfaces.IServiceCrud<Commande> {
         }
         return null;
     }
+    public List<Commande> getCommandesByStatut(String statut) {
+        List<Commande> commandes = new ArrayList<>();
+        String qry = "SELECT * FROM `commande` WHERE statut = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(qry)) {
+            stmt.setString(1, statutlCommande.valueOf(statut).toString());
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Commande commande = new Commande(
+                        rs.getInt("id_commande"),
+                        rs.getString("adresse_dep"),
+                        rs.getString("adresse_arr"),
+                        rs.getString("type_livraison"),
+                        rs.getTimestamp("horaire"),
+                        statutlCommande.valueOf(rs.getString("statut")),
+                        rs.getInt("created_by")
+                );
+                if(!commande.getAdresse_arr().equals("Adresse inconnue"))
+                {commandes.add(commande);}
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (commandes.isEmpty()) {
+            System.out.println("Aucun commande trouvé pour le critère : " + statut);
+        } else {
+            System.out.println("Nombre de commandes trouvés : " + commandes.size());
+            for (Commande commande : commandes) {
+                System.out.println("Commande trouvé : ");
+                System.out.println(commande.toString());
+            }
+        }
+
+        return commandes;
+
+    }
 
     @Override
     public List<Commande> search(String criteria) {

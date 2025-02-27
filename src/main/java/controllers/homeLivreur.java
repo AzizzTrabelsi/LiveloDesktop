@@ -2,6 +2,7 @@ package controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -57,6 +58,18 @@ public class homeLivreur {
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error loading SignUp.fxml.");
+        }
+    }
+
+    @FXML
+    void navToAvailableDeL(MouseEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AvailableDeliveries.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) anAvdeliveries.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     @FXML
