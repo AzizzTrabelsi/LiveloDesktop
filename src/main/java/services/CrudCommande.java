@@ -5,10 +5,7 @@ import models.*;
 import utils.MyDatabase;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class CrudCommande implements interfaces.IServiceCrud<Commande> {
     Connection conn= MyDatabase.getInstance().getConnection();
@@ -260,6 +257,43 @@ public class CrudCommande implements interfaces.IServiceCrud<Commande> {
         }
         return null;
     }
+    public List<Commande> getCommandesByStatut(String statut) {
+        List<Commande> commandes = new ArrayList<>();
+        String qry = "SELECT * FROM `commande` WHERE statut = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(qry)) {
+            stmt.setString(1, statutlCommande.valueOf(statut).toString());
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Commande commande = new Commande(
+                        rs.getInt("id_commande"),
+                        rs.getString("adresse_dep"),
+                        rs.getString("adresse_arr"),
+                        rs.getString("type_livraison"),
+                        rs.getTimestamp("horaire"),
+                        statutlCommande.valueOf(rs.getString("statut")),
+                        rs.getInt("created_by")
+                );
+                if(!commande.getAdresse_arr().equals("Adresse inconnue"))
+                {commandes.add(commande);}
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (commandes.isEmpty()) {
+            System.out.println("Aucun commande trouvé pour le critère : " + statut);
+        } else {
+            System.out.println("Nombre de commandes trouvés : " + commandes.size());
+            for (Commande commande : commandes) {
+                System.out.println("Commande trouvé : ");
+                System.out.println(commande.toString());
+            }
+        }
+
+        return commandes;
+
+    }
 
     @Override
     public List<Commande> search(String criteria) {
@@ -313,7 +347,7 @@ public class CrudCommande implements interfaces.IServiceCrud<Commande> {
         }
 
 
-        }
+    }
     public List<Article> getlisteArticleCommande(int id_commande) {
         List<Article> articles = new ArrayList<>();
         Set<Integer> idArticlesSet = new HashSet<>(); // Utilisation d'un Set pour éviter les doublons
@@ -344,7 +378,7 @@ public class CrudCommande implements interfaces.IServiceCrud<Commande> {
         String query = "SELECT quantity FROM articlecommande WHERE idCommande = ? AND idArticle = ?";
 
         try (
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+                PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, idCommande);
             stmt.setInt(2, idArticle);
@@ -372,6 +406,29 @@ public class CrudCommande implements interfaces.IServiceCrud<Commande> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    public Map<String, Integer> getOrderStatistics(int userId) {
+        Map<String, Integer> orderStats = new HashMap<>();
+
+        String query = "SELECT a.nom, COUNT(ac.idArticle) AS order_count " +
+                "FROM article a " +
+                "LEFT JOIN articlecommande ac ON a.id_article = ac.idArticle " +
+                "WHERE a.created_by = ? " +  // Filtrer par le partenaire connecté
+                "GROUP BY a.nom";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                orderStats.put(rs.getString("nom"), rs.getInt("order_count"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return orderStats;
     }
 
 }

@@ -66,6 +66,31 @@ public class CrudFacture  implements IServiceCrud<Facture> {
 
         return factures;
     }
+    public List<Facture> getByIdUser(int idUser) {
+        List<Facture> factures = new ArrayList<>();
+        String qry = "SELECT * FROM `facture` WHERE `userId`=?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(qry)) {
+            stmt.setInt(1, idUser);
+            ResultSet rs = stmt.executeQuery(); // Don't pass the query string here
+
+            while (rs.next()) {
+                Facture f = new Facture();
+                f.setIdFacture(rs.getInt("idFacture"));
+                f.setMontant(rs.getFloat("montant")); // Using column names instead of index
+                f.setDatef(rs.getDate("date"));
+                f.setTypePaiement(type_paiement.valueOf(rs.getString("type_Payement").toUpperCase())); // Ensure proper column name
+                f.setUserId(rs.getInt("userId"));
+                f.setCommandeId(rs.getInt("commandeId"));
+
+                factures.add(f);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return factures;
+    }
 
     @Override
     public void update(Facture facture) {
@@ -113,17 +138,43 @@ public class CrudFacture  implements IServiceCrud<Facture> {
 
             if (rs.next()) {
                 Facture facture = new Facture(
-                rs.getInt("idFacture"),
-                rs.getFloat(2),
-                rs.getDate("date"),
-                type_paiement.valueOf(rs.getString(4).toUpperCase()),
-                rs.getInt(5),
-                rs.getInt(6)
+                        rs.getInt("idFacture"),
+                        rs.getFloat(2),
+                        rs.getDate("date"),
+                        type_paiement.valueOf(rs.getString(4).toUpperCase()),
+                        rs.getInt(5),
+                        rs.getInt(6)
                 );
                 System.out.println("Facture trouvé : " + facture);
                 return facture;
             } else {
                 System.out.println("Aucune facture trouvé avec l'ID : " + id);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public Facture getByCommandID(int id) {
+        System.out.println("ena id taa facture bel commande id"+id);
+        String query = "SELECT * FROM `facture` WHERE `commandeId` = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Facture facture = new Facture(
+                        rs.getInt("idFacture"),
+                        rs.getFloat(2),
+                        rs.getDate("date"),
+                        type_paiement.valueOf(rs.getString(4).toUpperCase()),
+                        rs.getInt(5),
+                        rs.getInt(6)
+                );
+                System.out.println("Facture trouvé  : " + facture);
+                return facture;
+            } else {
+                System.out.println("Aucune facture trouvé avec l'ID de commande  : " + id);
             }
         } catch (SQLException e) {
             e.printStackTrace();
