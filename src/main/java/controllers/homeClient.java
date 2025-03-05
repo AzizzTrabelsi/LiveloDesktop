@@ -29,7 +29,7 @@ public class homeClient implements Initializable  {
     @Override
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Charger toutes les catégories au démarrage
+
         loadCategories();
     }
     @FXML
@@ -37,6 +37,8 @@ public class homeClient implements Initializable  {
     @FXML
     private AnchorPane anLogout;
 
+    @FXML
+    private ImageView imBills;
 
     @FXML
     private ImageView imLogo;
@@ -49,6 +51,24 @@ public class homeClient implements Initializable  {
         List<String> categoryNames = su.getAllCategoryNames();  // Méthode pour récupérer les noms des catégories
         combo.getItems().clear();
         combo.getItems().addAll(categoryNames);  // Ajouter les noms des catégories au ComboBox
+    }
+
+
+    @FXML
+    void navigateToBillsClient(MouseEvent event) {
+        try {
+            // Load the ClientBills.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ClientBills.fxml"));
+            Scene billsClientScene = new Scene(loader.load());
+
+            // Get the current stage and set the new scene
+            Stage stage = (Stage) imLogo.getScene().getWindow();
+            stage.setScene(billsClientScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading ClientBills.fxml.");
+        }
     }
 
 

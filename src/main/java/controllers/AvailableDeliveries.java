@@ -1,7 +1,9 @@
 package controllers;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -23,14 +25,28 @@ import services.CrudUser;
 
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class AvailableDeliveries {
+public class AvailableDeliveries implements Initializable {
 
-    @FXML
-    private VBox ordersContainer;  // Conteneur où seront affichées les commandes
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        Platform.runLater(this::loadAvailableOrders);
+    }
+
+
+
+
+
     @FXML
     private ImageView backButton;
+
+    @FXML
+    private VBox ordersContainer;
+
+
 
     private final CrudCommande crudCommande = new CrudCommande();
     private final CrudFacture crudFacture = new CrudFacture();
@@ -39,10 +55,7 @@ public class AvailableDeliveries {
     private Scene scene;
     private Parent root;
 
-    @FXML
-    public void initialize() {
-        loadAvailableOrders(); // Charger les commandes au lancement
-    }
+
     @FXML
     private void navigerVersHomeLivreur() {
         try {
@@ -128,3 +141,4 @@ public class AvailableDeliveries {
         loadAvailableOrders(); // Rafraîchir la liste
     }
 }
+

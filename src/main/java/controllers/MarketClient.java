@@ -43,12 +43,11 @@ public class MarketClient implements Initializable {
         @FXML
         private ImageView imLogo;
 
-
         @FXML
         void navigateToHome(MouseEvent event) {
 
         }
-        private static int commandeId = -1;
+        public static int commandeId = -1;
         public static void setCommandeId(int id) {
                 commandeId = id;
         }
@@ -64,8 +63,7 @@ public class MarketClient implements Initializable {
                 nouvelleCommande.setType_livraison("Standard");
                 nouvelleCommande.setHoraire(new Timestamp(System.currentTimeMillis()));
                 nouvelleCommande.setStatut(statutlCommande.Processing);
-
-                nouvelleCommande.setCreated_by(55);
+                nouvelleCommande.setCreated_by(53);
 
 
                 crudCommande.add(nouvelleCommande);
@@ -122,7 +120,6 @@ public class MarketClient implements Initializable {
                                         continue;
                                 }
 
-
                                 articleController.setData(a);
                                 articleBox.setOnMouseClicked(event -> afficherPopupArticle(a));
 
@@ -138,6 +135,18 @@ public class MarketClient implements Initializable {
                 } catch (IOException e) {
                         e.printStackTrace();
                 }
+        }
+        @Override
+        public void initialize(URL url, ResourceBundle rb) {
+                int column = 0;
+                int row = 0;
+                System.out.println("🔄 MarketClient initialisé, attente de categoryId...");
+                ajouterNouvelleCommande();
+                // Si l'ID a déjà été défini, charge les articles directement
+                if (isCategorySet) {
+                        loadArticlesByCategory();
+                }
+
 
                 /*int column = 0;
                 int row = 0;

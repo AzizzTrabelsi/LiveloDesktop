@@ -1,5 +1,9 @@
 package controllers;
 
+import com.stripe.exception.StripeException;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -9,10 +13,7 @@ import models.Facture;
 import models.type_paiement;
 import services.CrudFacture;
 import services.StripeService;
-import com.stripe.exception.StripeException;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
+
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -107,19 +108,31 @@ public class FactureController {
         afficherFacture();
     }
 
-    private void ouvrirPagePaiement(String paymentUrl) throws Exception {
-        Desktop.getDesktop().browse(new URI(paymentUrl));
-    }
+  
+   /* private void ouvrirPagePaiement() {
+        try {
+            String urlPaiement = "https://buy.stripe.com/test_4gw3cP8TtdtSa80cMM"; // 🔥 LIEN TEST STRIPE
+            Desktop.getDesktop().browse(new URI(urlPaiement));
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }*/
+   private void ouvrirPagePaiement() {
+       try {
+           StripeService stripeService = new StripeService();
+           String urlPaiement = stripeService.createCheckoutSession(commandeId, Float.parseFloat(montantLabel.getText().replace(" TND", "")));
 
-    private float getMontant() {
-        return Float.parseFloat(montantLabel.getText().replace(" TND", ""));
-    }
+           if (urlPaiement != null && !urlPaiement.isEmpty()) {
+               Desktop.getDesktop().browse(new URI(urlPaiement));
+           } else {
+               System.out.println("Erreur : URL de paiement non générée.");
+           }
+       } catch (IOException | URISyntaxException | StripeException e) {
+           e.printStackTrace();
+       }
+   }
 
-    private void showAlert(Alert.AlertType type, String message) {
-        Alert alert = new Alert(type, message, ButtonType.OK);
-        alert.showAndWait();
-     
-    }
+
 
     private void afficherFacture() {
         try {
