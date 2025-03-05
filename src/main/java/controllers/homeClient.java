@@ -29,6 +29,7 @@ public class homeClient implements Initializable  {
     @Override
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         loadCategories();
     }
     @FXML
@@ -38,6 +39,7 @@ public class homeClient implements Initializable  {
 
     @FXML
     private ImageView imBills;
+
     @FXML
     private ImageView imLogo;
 
@@ -50,6 +52,7 @@ public class homeClient implements Initializable  {
         combo.getItems().clear();
         combo.getItems().addAll(categoryNames);  // Ajouter les noms des catégories au ComboBox
     }
+
 
     @FXML
     void navigateToBillsClient(MouseEvent event) {
@@ -67,6 +70,7 @@ public class homeClient implements Initializable  {
             System.out.println("Error loading ClientBills.fxml.");
         }
     }
+
 
 
     @FXML
@@ -117,3 +121,4 @@ public class homeClient implements Initializable  {
         alert.showAndWait();
     }
 }
+

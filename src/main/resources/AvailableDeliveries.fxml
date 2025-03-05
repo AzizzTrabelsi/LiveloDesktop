@@ -26,6 +26,7 @@
                      <image>
                         <Image url="@image/chevron-left.png" />
                      </image>
+
                         </ImageView>
 
                         <!-- Texte stylé -->

@@ -126,6 +126,7 @@ public class SignIn {
     @FXML
     private void navigateToSignUp() {
         try {
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/SignUp.fxml"));
             Scene signUpScene = new Scene(loader.load());
             Stage stage = (Stage) BtnSignUp.getScene().getWindow();

@@ -16,6 +16,7 @@ import models.Article;
 import models.Commande;
 import models.statutlCommande;
 import services.CrudArticle;
+
 import services.CrudCategorie;
 import services.CrudCommande;
 
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class MarketClient implements Initializable {
+
         private final CrudArticle su = new CrudArticle();
         private CrudCategorie crudCategorie = new CrudCategorie();
         private List<Article> articleList;
@@ -63,9 +65,11 @@ public class MarketClient implements Initializable {
                 nouvelleCommande.setStatut(statutlCommande.Processing);
                 nouvelleCommande.setCreated_by(53);
 
+
                 crudCommande.add(nouvelleCommande);
                 System.out.println("Commande ID enregistrée dans MarketClient: " + getCommandeId());
         }
+
 
 
 
@@ -142,6 +146,7 @@ public class MarketClient implements Initializable {
                 if (isCategorySet) {
                         loadArticlesByCategory();
                 }
+
 
                 /*int column = 0;
                 int row = 0;
